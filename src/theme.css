@@ -1,0 +1,57 @@
+:root { color-scheme: light; }
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --primary: #fcee0a;
+  --background: #14112c;
+  --surface: #201d36;
+  --surface-soft: #29253f;
+  --ink: #f5f5ef;
+  --muted: #b6b3c9;
+  --border: #403c58;
+  --selected: #18333e;
+  --selected-border: #00f0ff;
+  --scene-background: #14112c;
+  --lavender: #29253f;
+  --lavender-ink: #00f0ff;
+  --scroll-thumb: #68617f;
+  --scroll-track: #201d36;
+  --scroll-hover: #938aa9;
+  --scroll-active: #00f0ff;
+}
+.header-actions { display: flex; align-items: center; gap: 12px; margin-left: auto; flex-shrink: 0; }
+.header-actions .source-link { display: inline-flex; align-items: center; margin-left: 0; min-height: 36px; padding: 0; }
+.source-link-short { display: none; }
+.theme-toggle { width: 36px; height: 36px; padding: 0; display: grid; place-items: center; flex-shrink: 0; border: 1px solid var(--border); border-radius: 50%; background: var(--surface); color: var(--ink); }
+.theme-toggle:hover { background: var(--surface-soft); color: var(--primary); }
+.theme-toggle svg { display: block; }
+
+[data-theme="dark"] :is(.brand-word, .brand-mark, .theme-toggle) { color: var(--primary); }
+[data-theme="dark"] :is(.workspace .viewer-panel, .scene-region-card, .scene-circuit-label) { border-color: var(--border); }
+[data-theme="dark"] :is(.view-switch, .atlas-mesh-status, .mobile-workspace-nav, .slice-card, .search-field, .icon-button, .scene-help-content, .scene-error, .circuit-load-status) { background: var(--surface); color: var(--ink); }
+[data-theme="dark"] :is(.viewer-loading, .slice-placeholder, .slice-card-map .slice-stage) { background: var(--scene-background); }
+[data-theme="dark"] :is(.slice-card-map .orient, .slice-card-map .scale-mark) { color: var(--muted); border-color: var(--muted); }
+[data-theme="dark"] :is(.scene-mode-switch button[aria-pressed="true"], .guide-region-card.selected, .inspector-navigation button[aria-pressed="true"], .mobile-workspace-nav button[aria-pressed="true"]) { background: var(--selected); color: var(--selected-border); }
+[data-theme="dark"] :is(.view-switch button[aria-pressed="true"], .scene-actions .scene-details-button, .primary-button) { background: var(--primary); color: var(--background); border-color: var(--primary); }
+[data-theme="dark"] :is(.view-switch button[aria-pressed="true"]:hover, .scene-actions .scene-details-button:hover, .primary-button:hover) { background: var(--selected-border); color: var(--background); border-color: var(--selected-border); }
+[data-theme="dark"] .scene-actions .scene-details-button[aria-expanded="true"] { background: var(--selected-border); border-color: var(--selected-border); color: var(--background); }
+[data-theme="dark"] .scene-hover-label { background: var(--surface); color: var(--ink); border: 1px solid var(--selected-border); }
+[data-theme="dark"] .scene-hover-label small { color: var(--muted); }
+[data-theme="dark"] :is(.region-summary, .function-note p, .function-note .eyebrow, .category-tag, .reference a svg, .circuit-disclaimer) { color: var(--ink); }
+[data-theme="dark"] :is(.sidebar-heading > span, .category-tag, .function-note, .probe-inspect-button, .probe-inspect-button:disabled, .circuit-map, .circuit-map-node.muted, .circuit-selection-note, .circuit-edges button, .circuit-disclaimer) { background: var(--surface-soft); border-color: var(--border); }
+[data-theme="dark"] :is(.segmented-control button:hover, .search-field button:hover, .region-group-toggle:hover, .region-option:hover, .detail-tabs button:hover, .probe-inspect-button:hover:not(:disabled), .circuit-edges button:hover, .development-timeline a:hover) { background: var(--selected); border-color: var(--selected-border); }
+[data-theme="dark"] .guide-region-symbol { background: color-mix(in srgb, var(--region-color) 14%, var(--surface)); color: var(--ink); }
+[data-theme="dark"] .search-field:focus-within { border-color: var(--selected-border); }
+[data-theme="dark"] :is(.white-matter-badge, .slice-region-list .slice-region-white strong) { color: #ddbd8e; }
+[data-theme="dark"] .circuit-map-node.emphasized { outline-color: var(--selected-border); }
+[data-theme="dark"] ::selection { background: var(--selected-border); color: var(--background); }
+@media (max-width: 1000px) {
+  .source-link-full { display: none; }
+  .source-link-short { display: inline; }
+  .header-actions { gap: 8px; }
+}
+@media (max-width: 700px) {
+  .header-actions { margin-left: auto; }
+}
+@media (forced-colors: active) {
+  .theme-toggle { border-color: ButtonText; }
+}
