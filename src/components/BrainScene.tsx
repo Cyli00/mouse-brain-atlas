@@ -6,6 +6,7 @@ import * as THREE from "three";
 import { OrbitControls } from "three/addons/controls/OrbitControls.js";
 import { RotateCcw, Plus, Minus, Focus, CircleHelp, X, ArrowUpRight, Crosshair } from "lucide-react";
 import { ScenePointerGesture } from "../lib/scene-interaction";
+import type { Vasculature, VesselDiameter } from "../lib/vasculature";
 import { invalidateMeshCache, loadMeshGeometry } from "../lib/mesh-cache";
 import {
   PLANES,
@@ -20,6 +21,8 @@ import {
 } from "../lib/atlas";
 type Props = {
   data: AtlasData;
+  vasculature?: Vasculature | null;
+  vesselDiameter?: VesselDiameter;
   whiteMatterData?: AtlasData | null;
   sliceData?: AtlasData | null;
   position: Position;
@@ -209,6 +212,8 @@ export function BrainScene(props: Props) {
       circuitAbort: AbortController | undefined,
       lastCircuit = "";
     const atlasMeshes = new Map<number, THREE.Mesh>();
+    let vesselLines: THREE.LineSegments<THREE.BufferGeometry, THREE.LineBasicMaterial> | undefined;
+    let lastVasculature: Vasculature | null = null;
     let atlasStarted = false;
     let cameraFrame: number | undefined;
     let hoverMesh: THREE.Mesh | null = null;
@@ -259,6 +264,7 @@ export function BrainScene(props: Props) {
     };
     const themeObserver = new MutationObserver(() => {
       renderer.setClearColor(getComputedStyle(container).getPropertyValue("--scene-background").trim(), 1);
+      vesselLines?.material.color.set(getComputedStyle(container).getPropertyValue("--vessel-color").trim());
       render();
     });
     themeObserver.observe(document.documentElement, { attributes: true, attributeFilter: ["data-theme"] });
@@ -406,6 +412,34 @@ export function BrainScene(props: Props) {
       void Promise.all(Array.from({ length: Math.min(4, catalog.length) }, worker));
     };
     function update(p: Props) {
+      if (lastVasculature !== (p.vasculature ?? null)) {
+        if (vesselLines) {
+          scene.remove(vesselLines);
+          vesselLines.geometry.dispose();
+          vesselLines.material.dispose();
+          vesselLines = undefined;
+        }
+        lastVasculature = p.vasculature ?? null;
+        if (p.vasculature) {
+          const source = p.vasculature.positions;
+          const positions = new Float32Array(source.length);
+          for (let i = 0; i < source.length; i += 3) {
+            positions.set(toWorld([source[i] / p.data.spacing, source[i + 1] / p.data.spacing,
+              source[i + 2] / p.data.spacing], p.data.dimensions, p.data.spacing), i);
+          }
+          const geometry = new THREE.BufferGeometry();
+          geometry.setAttribute("position", new THREE.BufferAttribute(positions, 3));
+          vesselLines = new THREE.LineSegments(geometry, new THREE.LineBasicMaterial({
+            color: getComputedStyle(container).getPropertyValue("--vessel-color").trim(),
+            transparent: true, opacity: 0.85, depthWrite: false,
+          }));
+          vesselLines.renderOrder = 3;
+          scene.add(vesselLines);
+        }
+      }
+      if (vesselLines && p.vasculature)
+        vesselLines.geometry.setDrawRange(0, p.vasculature.counts[p.vesselDiameter ?? 48] * 2);
+      container.dataset.vascularSegments = String(p.vasculature?.counts[p.vesselDiameter ?? 48] ?? 0);
       if (!p.circuit && p.selected > 0) loadAtlasMeshes();
       const selectedData = p.selected < 0 ? p.whiteMatterData : p.data;
       const selectedId = Math.abs(p.selected);
@@ -426,12 +460,16 @@ export function BrainScene(props: Props) {
       atlasMeshes.forEach((mesh, id) => {
         mesh.visible = !p.circuit && !p.isolateRegion && p.selected > 0 &&
           !(region && region.userData.regionId === id);
+        const material = mesh.material as THREE.MeshStandardMaterial;
+        material.transparent = !!p.vasculature;
+        material.opacity = p.vasculature ? 0.025 : 1;
+        material.depthWrite = !p.vasculature;
       });
       if (region) {
         const material = region.material as THREE.MeshPhysicalMaterial;
         material.color.set(p.color);
-        material.opacity = p.circuit?.id ? 0.42 : 0.94;
-        material.depthWrite = !p.circuit;
+        material.opacity = p.circuit?.id ? 0.42 : p.vasculature ? 0.1 : 0.94;
+        material.depthWrite = !p.circuit && !p.vasculature;
       }
       if (root)
         (root.material as THREE.MeshPhysicalMaterial).opacity = p.opacity;
@@ -988,6 +1026,8 @@ export function BrainScene(props: Props) {
       props.whiteMatterData,
       props.sliceData,
       props.isolateRegion,
+      props.vasculature,
+      props.vesselDiameter,
     ],
   );
   return (

@@ -45,6 +45,9 @@ import {
 import { BrainScene } from "./BrainScene";
 import { CoordinateField } from "./CoordinateField";
 import { ThemeToggle } from "./ThemeToggle";
+import { VasculatureControls } from "./VasculatureControls";
+import { useVasculature } from "../lib/use-vasculature";
+import type { VesselDiameter } from "../lib/vasculature";
 import { SliceView } from "./SliceView";
 import { SlicePresentationControl } from "./SlicePresentationControl";
 import {
@@ -127,6 +130,9 @@ export function AtlasWorkspace({
   const [focusMode, setFocusMode] = useState(false);
   const [isolateRegion, setIsolateRegion] = useState(false);
   const [sceneInspection, setSceneInspection] = useState(0);
+  const [showVessels, setShowVessels] = useState(false);
+  const [vesselDiameter, setVesselDiameter] = useState<VesselDiameter>(48);
+  const vessels = useVasculature(showVessels && !config.embryonic);
   const [expandedPlane, setExpandedPlane] = useState<PlaneName | null>(null);
   const slices = useSliceAtlas(data, !config.embryonic);
   const [mapView, setMapView] = useState(() =>
@@ -353,6 +359,8 @@ export function AtlasWorkspace({
     setOverlay(true);
     setContrast(config.contrast);
     setIsolateRegion(false);
+    setShowVessels(false);
+    setVesselDiameter(48);
   };
   return (
     <div
@@ -493,6 +501,8 @@ export function AtlasWorkspace({
             {data ? (
               <BrainScene
                 data={data}
+                vasculature={config.embryonic ? null : vessels.data}
+                vesselDiameter={vesselDiameter}
                 position={position}
                 selected={selected}
                 color={region.color}
@@ -589,6 +599,10 @@ export function AtlasWorkspace({
                 恢复显示
               </button>
             </div>
+            {!config.embryonic && <VasculatureControls
+              enabled={showVessels} onEnabled={setShowVessels}
+              diameter={vesselDiameter} onDiameter={setVesselDiameter}
+              data={vessels.data} error={vessels.error} onRetry={vessels.retry} disabled={!data} />}
           </section>
           <section
             id="linked-slices"

@@ -32,6 +32,8 @@ spacing:
 
 ## Colors
 
+血管使用语义变量 --vessel-color，日间为 #9b3657，夜间为 #ff86ae；运行时分别由 styles.css 和 theme.css 定义。BrainScene 与血管控件色样共用变量。颜色只区别血管层，不表示动静脉分类。控件沿用现有 checkbox、native select 和 details；显示在三维面板底部，源说明按需展开。
+
 src/styles.css 的 :root 是运行时唯一 token 来源，以上 frontmatter 记录相同值。src/studio.css 负责工作室布局与组件外观，复用这些变量；BrainScene 从 --scene-background 读取 WebGL 底色。墨蓝用于文字及主要按钮，鼠尾草绿用于选中状态，雾紫用于画布和辅助控件。切面颜色在 src/lib/atlas.ts 的 PLANES 中定义并在 2D、3D 和滑杆间复用。Allen ontology 的脑区颜色保留原定义，不跟随界面色调改色。
 
 日间保留现有工作室配色。夜间采用用户确认的 Cyberpunk 风格三色：夜蓝紫 #14112c 为背景和画布，电光黄 #fcee0a 为品牌及主要操作，霓虹青 #00f0ff 为选中与焦点。src/theme.css 的 :root[data-theme="dark"] 统一覆盖语义变量，正文与边框采用相应中性色。图谱本身的脑区颜色、切片灰度与标签填色不随主题改动。
