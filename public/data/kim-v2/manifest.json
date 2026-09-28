@@ -1,0 +1,68 @@
+{
+  "schemaVersion": 1,
+  "dataset": "Enhanced and unified mouse brain atlas v2 (2024)",
+  "sourceUrl": "https://figshare.com/articles/dataset/Unified_mouse_brain_atlas_v2/25750983",
+  "citation": "Chon et al. (2019), Nature Communications 10:5067",
+  "doi": "10.1038/s41467-019-13057-w",
+  "license": "CC BY 4.0",
+  "licenseUrl": "https://creativecommons.org/licenses/by/4.0/",
+  "basis": "Franklin–Paxinos 3rd edition with 4th edition updates; not a 5th edition reproduction",
+  "space": "allen-ccf-v3",
+  "resolutionUm": 50,
+  "dimensions": [
+    264,
+    160,
+    228
+  ],
+  "orientation": "PIR",
+  "axisOrder": [
+    "AP",
+    "DV",
+    "ML"
+  ],
+  "storageOrder": "AP-fastest",
+  "sourceResolutionUm": 20,
+  "sourceShape": [
+    570,
+    400,
+    660
+  ],
+  "unmappedLabelIds": [
+    728
+  ],
+  "sourceOrientation": "RSP origin sides (BrainGlobe)",
+  "orientationSource": "https://github.com/brainglobe/brainglobe-atlasapi/blob/main/atlas_scripts/kim_mouse_isotropic.py",
+  "conversion": "Transpose (2,1,0), reverse AP and ML; nearest neighbor at floor(index*50/20+0.5). No label interpolation.",
+  "referenceValidation": {
+    "allenTemplateSha256": "b11041b7e26ca15aa98412a40b2a316c8853863972819cc4d6a09db27fa7f194",
+    "pearsonEveryFifthVoxel": 0.9966250202989052
+  },
+  "annotation": {
+    "url": "/data/kim-v2/annotation.uint32.gz",
+    "dtype": "uint32",
+    "bytes": 1004538,
+    "uncompressedBytes": 38522880,
+    "sha256": "890a8428834108e6d25033780d2df66b224d72f6a9816c45b14e2e418436cf99",
+    "uncompressedSha256": "d8888dd013773896fa64c25170200c821531921ac02a4158d8f40c9dc0514a3e",
+    "presentStructureCount": 1103
+  },
+  "ontology": {
+    "url": "/data/kim-v2/ontology.json",
+    "structureCount": 1429,
+    "sha256": "d86b71c438dc6f93568fc9a57d5314ab2421ef0bea927097804e28dca18d4b4e"
+  },
+  "sources": [
+    {
+      "url": "https://ndownloader.figshare.com/files/46096131",
+      "sha256": "51ab055af0b9c7ea9f5879fdb55e7e3199c02db81bce0ad78921b8740b863c80"
+    },
+    {
+      "url": "https://ndownloader.figshare.com/files/46096122",
+      "sha256": "3d3004f0de9410f6cadfd93ac08d78aaf4a2c504fd2c07275bd5064b6b0a7e0a"
+    },
+    {
+      "url": "https://ndownloader.figshare.com/files/46096116",
+      "sha256": "9b7a17ccaeab12bb0962c2675a4a3e448b1a3262e59283425dee03bea3763607"
+    }
+  ]
+}

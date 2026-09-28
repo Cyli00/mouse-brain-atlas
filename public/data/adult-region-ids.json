@@ -1,0 +1,327 @@
+[
+  {
+    "id": 972,
+    "acronym": "PL",
+    "name": "Prelimbic area"
+  },
+  {
+    "id": 44,
+    "acronym": "ILA",
+    "name": "Infralimbic area"
+  },
+  {
+    "id": 382,
+    "acronym": "CA1",
+    "name": "Field CA1"
+  },
+  {
+    "id": 385,
+    "acronym": "VISp",
+    "name": "Primary visual area"
+  },
+  {
+    "id": 985,
+    "acronym": "MOp",
+    "name": "Primary motor area"
+  },
+  {
+    "id": 322,
+    "acronym": "SSp",
+    "name": "Primary somatosensory area"
+  },
+  {
+    "id": 549,
+    "acronym": "TH",
+    "name": "Thalamus"
+  },
+  {
+    "id": 1097,
+    "acronym": "HY",
+    "name": "Hypothalamus"
+  },
+  {
+    "id": 672,
+    "acronym": "CP",
+    "name": "Caudoputamen"
+  },
+  {
+    "id": 512,
+    "acronym": "CB",
+    "name": "Cerebellum"
+  },
+  {
+    "id": 507,
+    "acronym": "MOB",
+    "name": "Main olfactory bulb"
+  },
+  {
+    "id": 295,
+    "acronym": "BLA",
+    "name": "Basolateral amygdalar nucleus"
+  },
+  {
+    "id": 477,
+    "acronym": "STR",
+    "name": "Striatum"
+  },
+  {
+    "id": 56,
+    "acronym": "ACB",
+    "name": "Nucleus accumbens"
+  },
+  {
+    "id": 1022,
+    "acronym": "GPe",
+    "name": "Globus pallidus, external segment"
+  },
+  {
+    "id": 1031,
+    "acronym": "GPi",
+    "name": "Globus pallidus, internal segment"
+  },
+  {
+    "id": 470,
+    "acronym": "STN",
+    "name": "Subthalamic nucleus"
+  },
+  {
+    "id": 362,
+    "acronym": "MD",
+    "name": "Mediodorsal nucleus of thalamus"
+  },
+  {
+    "id": 629,
+    "acronym": "VAL",
+    "name": "Ventral anterior-lateral complex of the thalamus"
+  },
+  {
+    "id": 685,
+    "acronym": "VM",
+    "name": "Ventral medial nucleus of the thalamus"
+  },
+  {
+    "id": 149,
+    "acronym": "PVT",
+    "name": "Paraventricular nucleus of the thalamus"
+  },
+  {
+    "id": 181,
+    "acronym": "RE",
+    "name": "Nucleus of reuniens"
+  },
+  {
+    "id": 536,
+    "acronym": "CEA",
+    "name": "Central amygdalar nucleus"
+  },
+  {
+    "id": 351,
+    "acronym": "BST",
+    "name": "Bed nuclei of the stria terminalis"
+  },
+  {
+    "id": 726,
+    "acronym": "DG",
+    "name": "Dentate gyrus"
+  },
+  {
+    "id": 463,
+    "acronym": "CA3",
+    "name": "Field CA3"
+  },
+  {
+    "id": 909,
+    "acronym": "ENT",
+    "name": "Entorhinal area"
+  },
+  {
+    "id": 242,
+    "acronym": "LS",
+    "name": "Lateral septal nucleus"
+  },
+  {
+    "id": 313,
+    "acronym": "MB",
+    "name": "Midbrain"
+  },
+  {
+    "id": 302,
+    "acronym": "SCs",
+    "name": "Superior colliculus, sensory related"
+  },
+  {
+    "id": 294,
+    "acronym": "SCm",
+    "name": "Superior colliculus, motor related"
+  },
+  {
+    "id": 4,
+    "acronym": "IC",
+    "name": "Inferior colliculus"
+  },
+  {
+    "id": 795,
+    "acronym": "PAG",
+    "name": "Periaqueductal gray"
+  },
+  {
+    "id": 374,
+    "acronym": "SNc",
+    "name": "Substantia nigra, compact part"
+  },
+  {
+    "id": 381,
+    "acronym": "SNr",
+    "name": "Substantia nigra, reticular part"
+  },
+  {
+    "id": 749,
+    "acronym": "VTA",
+    "name": "Ventral tegmental area"
+  },
+  {
+    "id": 128,
+    "acronym": "MRN",
+    "name": "Midbrain reticular nucleus"
+  },
+  {
+    "id": 214,
+    "acronym": "RN",
+    "name": "Red nucleus"
+  },
+  {
+    "id": 872,
+    "acronym": "DR",
+    "name": "Dorsal nucleus raphe"
+  },
+  {
+    "id": 100,
+    "acronym": "IPN",
+    "name": "Interpeduncular nucleus"
+  },
+  {
+    "id": 771,
+    "acronym": "P",
+    "name": "Pons"
+  },
+  {
+    "id": 147,
+    "acronym": "LC",
+    "name": "Locus ceruleus"
+  },
+  {
+    "id": 867,
+    "acronym": "PB",
+    "name": "Parabrachial nucleus"
+  },
+  {
+    "id": 1052,
+    "acronym": "PPN",
+    "name": "Pedunculopontine nucleus"
+  },
+  {
+    "id": 1093,
+    "acronym": "PRNc",
+    "name": "Pontine reticular nucleus, caudal part"
+  },
+  {
+    "id": 146,
+    "acronym": "PRNr",
+    "name": "Pontine reticular nucleus"
+  },
+  {
+    "id": 162,
+    "acronym": "LDT",
+    "name": "Laterodorsal tegmental nucleus"
+  },
+  {
+    "id": 354,
+    "acronym": "MY",
+    "name": "Medulla"
+  },
+  {
+    "id": 651,
+    "acronym": "NTS",
+    "name": "Nucleus of the solitary tract"
+  },
+  {
+    "id": 839,
+    "acronym": "DMX",
+    "name": "Dorsal motor nucleus of the vagus nerve"
+  },
+  {
+    "id": 773,
+    "acronym": "XII",
+    "name": "Hypoglossal nucleus"
+  },
+  {
+    "id": 83,
+    "acronym": "IO",
+    "name": "Inferior olivary complex"
+  },
+  {
+    "id": 1048,
+    "acronym": "GRN",
+    "name": "Gigantocellular reticular nucleus"
+  },
+  {
+    "id": 661,
+    "acronym": "VII",
+    "name": "Facial motor nucleus"
+  },
+  {
+    "id": 621,
+    "acronym": "V",
+    "name": "Motor nucleus of trigeminal"
+  },
+  {
+    "id": 202,
+    "acronym": "MV",
+    "name": "Medial vestibular nucleus"
+  },
+  {
+    "id": 209,
+    "acronym": "LAV",
+    "name": "Lateral vestibular nucleus"
+  },
+  {
+    "id": 217,
+    "acronym": "SUV",
+    "name": "Superior vestibular nucleus"
+  },
+  {
+    "id": 225,
+    "acronym": "SPIV",
+    "name": "Spinal vestibular nucleus"
+  },
+  {
+    "id": 607,
+    "acronym": "CN",
+    "name": "Cochlear nuclei"
+  },
+  {
+    "id": 398,
+    "acronym": "SOC",
+    "name": "Superior olivary complex"
+  },
+  {
+    "id": 612,
+    "acronym": "NLL",
+    "name": "Nucleus of the lateral lemniscus"
+  },
+  {
+    "id": 1002,
+    "acronym": "AUDp",
+    "name": "Primary auditory area"
+  },
+  {
+    "id": 194,
+    "acronym": "LHA",
+    "name": "Lateral hypothalamic area"
+  },
+  {
+    "id": 797,
+    "acronym": "ZI",
+    "name": "Zona incerta"
+  }
+]

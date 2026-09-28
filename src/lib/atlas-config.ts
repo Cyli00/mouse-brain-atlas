@@ -1,0 +1,24 @@
+import type { BrainReference, BrainRegion } from "../data/regions";
+export type AtlasConfig = {
+  id: string;
+  embryonic: boolean;
+  title: string;
+  manifestUrl: string;
+  initialId: number;
+  regions: BrainRegion[];
+  references: BrainReference[];
+  badge: string;
+  resolutionUm: number;
+  contrast: number;
+  maxContrast: number;
+  templateLabel: string;
+  coordinateLabel: string;
+  apBregmaUm?: number;
+  mlMidlineUm?: number;
+  description: string;
+  sliceNote: string;
+  coordinateNote: string;
+  focusNote: string;
+  sourceUrl: string;
+  annotationUrl: string;
+};
