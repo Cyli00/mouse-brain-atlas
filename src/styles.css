@@ -1,24 +1,27 @@
 :root {
-  --primary: #256b63;
-  --background: #f5f7f8;
-  --surface: #fff;
-  --ink: #243c46;
-  --muted: #657780;
-  --border: #dde5e7;
-  --surface-soft: #edf3f1;
-  --selected: #e3efea;
-  --selected-border: #adcbbd;
+  --primary: #486354;
+  --background: #f3f1f5;
+  --surface: #fcfbf9;
+  --ink: #29334b;
+  --muted: #666579;
+  --border: #ddd9e3;
+  --surface-soft: #eeebf2;
+  --selected: #e1e9df;
+  --selected-border: #a5b6a2;
+  --scene-background: #eeebf2;
+  --lavender: #e4dbee;
+  --lavender-ink: #705783;
   --font-body:
     -apple-system, BlinkMacSystemFont, "PingFang SC", "Microsoft YaHei",
     sans-serif;
   --font-display: Georgia, "Noto Serif SC", serif;
   --font-mono: "SFMono-Regular", Consolas, monospace;
-  --scroll-thumb: #b0bec3;
-  --scroll-track: #edf1f2;
-  --scroll-hover: #7b9198;
-  --scroll-active: #546e78;
+  --scroll-thumb: #bcb5c6;
+  --scroll-track: #eeebf2;
+  --scroll-hover: #90859f;
+  --scroll-active: #6c607d;
   --radius-control: 8px;
-  --radius-panel: 14px;
+  --radius-panel: 20px;
   --z-sticky: 100;
   --z-overlay: 200;
   --z-dialog: 600;
@@ -1596,6 +1599,9 @@ select.category-select {
 .coordinate-fields {
   display: flex;
   gap: 6px;
+}
+.coordinate-help {
+  color: var(--ink);
 }
 .coordinate-fields label {
   display: flex;

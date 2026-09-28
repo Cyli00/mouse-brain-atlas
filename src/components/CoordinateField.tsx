@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { snapCoordinateMm } from "../lib/coordinates";
 export function CoordinateField({
   axis,
   value,
@@ -6,6 +7,8 @@ export function CoordinateField({
   max,
   reference,
   step,
+  midpointPreference = "upper",
+  describedBy,
   disabled,
   onCommit,
 }: {
@@ -15,6 +18,8 @@ export function CoordinateField({
   max: number;
   reference?: string;
   step: number;
+  midpointPreference?: "lower" | "upper";
+  describedBy?: string;
   disabled: boolean;
   onCommit: (value: number) => void;
 }) {
@@ -26,11 +31,7 @@ export function CoordinateField({
       setDraft(value.toFixed(2));
       return;
     }
-    const bounded = Math.max(min, Math.min(max, parsed));
-    const next = Math.max(
-      min,
-      Math.min(max, min + Math.round((bounded - min) / step) * step),
-    );
+    const next = snapCoordinateMm(parsed, min, max, step, midpointPreference);
     setDraft(next.toFixed(2));
     onCommit(next);
   };
@@ -39,6 +40,7 @@ export function CoordinateField({
       <span>{axis}</span>
       <input
         aria-label={`${axis} 坐标，毫米`}
+        aria-describedby={describedBy}
         title={`${reference ? `${reference}；` : ""}${min.toFixed(2)} 至 ${max.toFixed(2)} mm，步长 ${step.toFixed(2)} mm，按 Enter 应用`}
         type="number"
         min={min}

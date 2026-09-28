@@ -21,7 +21,12 @@ import {
   type PlaneName,
   type Position,
 } from "../src/lib/atlas";
-import { coordinateMm, coordinateVoxel } from "../src/lib/coordinates";
+import {
+  coordinateMm,
+  coordinateVoxel,
+  coordinateRange,
+  snapCoordinateMm,
+} from "../src/lib/coordinates";
 
 type Asset = {
   url: string;
@@ -171,6 +176,32 @@ test("each embryo stage loads its own real coordinate space, labels and mesh ass
         }
       for (let axis = 0; axis < 3; axis++)
         assert.equal(toMm(origins[axis] / data.spacing, axis), 0);
+      for (let axis = 0; axis < 3; axis++) {
+        const { min, max } = coordinateRange(
+          data.dimensions[axis], axis, data.spacing,
+          origins[0], origins[2], origins[1],
+        );
+        const preference = axis === 1 ? "upper" : "lower";
+        const snap = (mm: number) =>
+          snapCoordinateMm(mm, min, max, data.spacing / 1000, preference);
+        const zeroSlice = Math.round(toVoxel(snap(0), axis));
+        assert.equal(toMm(zeroSlice, axis), axis === 1 ? 0.02 : -0.02);
+        const stride = axis === 0 ? 1
+          : axis === 1 ? data.dimensions[0]
+          : data.dimensions[0] * data.dimensions[1];
+        assert.ok(
+          data.annotation.some((label, i) =>
+            label !== 0 && Math.floor(i / stride) % data.dimensions[axis] === zeroSlice,
+          ),
+          `${stage.stage} axis ${axis}: zero input must select a slice containing annotation`,
+        );
+        for (let voxel = 0; voxel < data.dimensions[axis]; voxel++)
+          assert.equal(
+            Math.round(toVoxel(snap(toMm(voxel, axis)), axis)),
+            voxel,
+            "valid coordinates, including padding, must not move",
+          );
+      }
       assert.ok(toMm(0, 0) > 0);
       assert.ok(toMm(0, 1) < 0);
       assert.ok(toMm(0, 2) < 0);

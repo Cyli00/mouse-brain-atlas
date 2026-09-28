@@ -44,6 +44,7 @@ import {
 } from "../lib/atlas";
 import { BrainScene } from "./BrainScene";
 import { CoordinateField } from "./CoordinateField";
+import { ThemeToggle } from "./ThemeToggle";
 import { SliceView } from "./SliceView";
 import { SlicePresentationControl } from "./SlicePresentationControl";
 import {
@@ -93,8 +94,8 @@ export function AtlasWorkspace({
   const [position, setPosition] = useState<Position>([0, 0, 0]),
     [selected, setSelected] = useState(initialId),
     [overlay, setOverlay] = useState(true),
-    [showPlanes, setShowPlanes] = useState(!initialCircuit),
-    [opacity, setOpacity] = useState(initialCircuit?.id ? 0.12 : 0.22),
+    [showPlanes, setShowPlanes] = useState(false),
+    [opacity, setOpacity] = useState(initialCircuit?.id ? 0.12 : 0.1),
     [contrast, setContrast] = useState(config.contrast),
     [panel, setPanel] = useState<"region" | "methods" | "circuit">(
       initialCircuit ? "circuit" : "region",
@@ -124,6 +125,8 @@ export function AtlasWorkspace({
     initialCircuit ? "details" : "catalog",
   );
   const [focusMode, setFocusMode] = useState(false);
+  const [isolateRegion, setIsolateRegion] = useState(false);
+  const [sceneInspection, setSceneInspection] = useState(0);
   const [expandedPlane, setExpandedPlane] = useState<PlaneName | null>(null);
   const slices = useSliceAtlas(data, !config.embryonic);
   const [mapView, setMapView] = useState(() =>
@@ -349,6 +352,7 @@ export function AtlasWorkspace({
     setShowPlanes(settings.showPlanes);
     setOverlay(true);
     setContrast(config.contrast);
+    setIsolateRegion(false);
   };
   return (
     <div
@@ -359,9 +363,7 @@ export function AtlasWorkspace({
           <span className="brand-mark">
             <Brain size={26} strokeWidth={1.35} />
           </span>
-          <span className="brand-word">
-            murine<span>小鼠脑图谱</span>
-          </span>
+          <span className="brand-word">Mouse Brain Atlas</span>
         </a>
         <nav className="atlas-navigation" aria-label="图谱页面">
           <a href="/" aria-current={!config.embryonic ? "page" : undefined}>
@@ -371,19 +373,25 @@ export function AtlasWorkspace({
             href="/embryo"
             aria-current={config.embryonic ? "page" : undefined}
           >
-            胚胎小鼠<span>发育图谱</span>
+            胚胎小鼠
           </a>
         </nav>
+        <div className="header-actions">
         <a
           className="source-link"
+          aria-label="Allen Institute 数据，打开原始图谱"
           href={config.sourceUrl}
           target="_blank"
           rel="noreferrer"
         >
-          Allen Institute 数据
+          <span className="source-link-full">Allen Institute 数据</span>
+          <span className="source-link-short" aria-hidden="true">Allen</span>
           <ArrowUpRight size={15} />
         </a>
+        <ThemeToggle />
+        </div>
       </header>
+      <section aria-label="当前图谱">
       <div className="page-heading">
         <div>
           <span className="eyebrow">
@@ -409,6 +417,7 @@ export function AtlasWorkspace({
           <span>{config.description}</span>
         </div>
       )}
+      </section>
       <nav className="mobile-workspace-nav" aria-label="工作区导航">
         <button
           aria-pressed={mobilePane === "catalog"}
@@ -442,7 +451,7 @@ export function AtlasWorkspace({
       >
         <div className="visual-column">
           <div className="workspace-toolbar">
-            <span className="workspace-view-label"><Layers3 size={16} />联动对照</span>
+            <span className="workspace-view-label"><Layers3 size={16} />三维探索 <small>让解剖关系变得可见</small></span>
             <button
               className="workspace-focus-toggle"
               type="button"
@@ -492,6 +501,15 @@ export function AtlasWorkspace({
                 overlay={overlay}
                 contrast={contrast}
                 onPosition={move}
+                onRegionSelect={(id) => focus(id, false, false)}
+                onReadRegion={() => { setPanel("region"); showMobilePane("details"); focusDetails(); }}
+                onLocateSlices={() => {
+                  focus(selected, false, false);
+                  document.getElementById("linked-slices")?.scrollIntoView({ block: "start", behavior: "instant" });
+                }}
+                isolateRegion={isolateRegion || whiteSelected}
+                onIsolateRegion={setIsolateRegion}
+                inspectionRequest={sceneInspection}
                 circuit={activeCircuit}
                 circuitTarget={circuitTarget}
                 circuitFlow={circuitFlow}
@@ -531,6 +549,12 @@ export function AtlasWorkspace({
               </div>
             )}
             <div className="viewer-controls">
+              {!activeCircuit && !whiteSelected && (
+                <div className="scene-mode-switch" role="group" aria-label="三维显示范围">
+                  <button aria-pressed={!isolateRegion} onClick={() => setIsolateRegion(false)}>分区探索</button>
+                  <button aria-pressed={isolateRegion} onClick={() => setIsolateRegion(true)}>只看选区</button>
+                </div>
+              )}
               <label className="check-field">
                 <input
                   type="checkbox"
@@ -542,7 +566,7 @@ export function AtlasWorkspace({
                 <span>显示切面</span>
               </label>
               <div className="opacity-field">
-                <label htmlFor="opacity">不透明度</label>
+                <label htmlFor="opacity">外壳</label>
                 <input
                   id="opacity"
                   aria-label="脑表面不透明度"
@@ -619,7 +643,7 @@ export function AtlasWorkspace({
               />
               <span className="slice-coordinate-note">
                 {config.embryonic
-                  ? `Allen 发育图谱 · ${config.id} · 阶段内参考坐标`
+                  ? `Allen 发育图谱 · ${config.id} · 标注边界相对坐标`
                   : "AP · Bregma 近似参考 / ML · 正中线"}
               </span>
             </div>
@@ -722,7 +746,7 @@ export function AtlasWorkspace({
                 <small>
                   {!config.embryonic
                     ? "mm · ML 左负右正 / DV 为 CCF"
-                    : "mm · 脑前缘 / 背缘 / 标注内侧缘为零"}
+                    : "mm · 前 / 背 / 内侧边界为零"}
                 </small>
               </div>
             </div>
@@ -754,6 +778,12 @@ export function AtlasWorkspace({
                     config.embryonic,
                   )}
                   step={data ? data.spacing / 1000 : config.resolutionUm / 1000}
+                  midpointPreference={
+                    config.embryonic && i !== 1 ? "lower" : "upper"
+                  }
+                  describedBy={
+                    config.embryonic ? "embryo-coordinate-help" : undefined
+                  }
                   disabled={!data}
                   onCommit={(value) => {
                     if (data) {
@@ -799,8 +829,18 @@ export function AtlasWorkspace({
               <ArrowRight size={13} />
             </button>
           </section>
+          {config.embryonic && (
+            <p
+              id="embryo-coordinate-help"
+              className="slice-coordinate-note coordinate-help"
+            >
+              正中线未校准。0 位于相邻切片之间，输入 0 选择标注侧最近切片，
+              显示实际坐标：AP / ML −0.02 mm，DV +0.02 mm。
+            </p>
+          )}
         </div>
         <aside className="inspector-panel" aria-label="导览与解说">
+          <div className="inspector-intro"><span className="eyebrow">BRAIN INDEX</span><h2>从一个脑区开始</h2><p>点击模型，或在这里查找。</p></div>
           <div
             className="inspector-navigation"
             role="group"
@@ -843,8 +883,7 @@ export function AtlasWorkspace({
               activeCircuitId={activeCircuit?.id}
               onSelect={(id) => {
                 focus(id);
-                setInspectorView("details");
-                if (matchMedia("(min-width: 1051px)").matches) focusDetails();
+                setSceneInspection((request) => request + 1);
               }}
               onCircuitSelect={(id) => {
                 openCircuit(id);

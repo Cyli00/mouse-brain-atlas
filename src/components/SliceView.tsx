@@ -358,7 +358,7 @@ export function SliceView({
                     vectorEffect="non-scaling-stroke"
                   />
                 )}
-                {p.u === 2 && mlZeroUm !== undefined && (
+                {!embryonic && p.u === 2 && mlZeroUm !== undefined && (
                   <line
                     className="slice-midline"
                     x1={mlZeroUm / data.spacing + 0.5}

@@ -4,7 +4,8 @@ import { circuitEmphasis, CONNECTION_COLORS, sameCircuitTarget, type CircuitTarg
 import { useEffect, useId, useRef, useState } from "react";
 import * as THREE from "three";
 import { OrbitControls } from "three/addons/controls/OrbitControls.js";
-import { RotateCcw, Plus, Minus, Focus, CircleHelp } from "lucide-react";
+import { RotateCcw, Plus, Minus, Focus, CircleHelp, X, ArrowUpRight, Crosshair } from "lucide-react";
+import { ScenePointerGesture } from "../lib/scene-interaction";
 import { invalidateMeshCache, loadMeshGeometry } from "../lib/mesh-cache";
 import {
   PLANES,
@@ -29,6 +30,12 @@ type Props = {
   overlay: boolean;
   contrast: number;
   onPosition: (p: Position) => void;
+  onRegionSelect: (id: number) => void;
+  onReadRegion: () => void;
+  onLocateSlices: () => void;
+  isolateRegion: boolean;
+  onIsolateRegion: (value: boolean) => void;
+  inspectionRequest: number;
   circuit?: BrainCircuit;
   circuitTarget?: CircuitTarget | null;
   circuitFlow?: boolean;
@@ -68,6 +75,24 @@ export function BrainScene(props: Props) {
   const [circuitStatus, setCircuitStatus] = useState("");
   const [ready, setReady] = useState(false);
   const [rootLoading, setRootLoading] = useState(true);
+  const [atlasStatus, setAtlasStatus] = useState("");
+  const [hovered, setHovered] = useState<{ id: number; x: number; y: number } | null>(null);
+  const [detailsOpen, setDetailsOpen] = useState(false);
+  const selectedRegion = props.regions?.find((r) => r.id === props.selected);
+  const hoveredRegion = props.regions?.find((r) => r.id === hovered?.id);
+  const cardTitle = useId();
+  const card = useRef<HTMLElement>(null);
+  const previousSelected = useRef(props.selected);
+  useEffect(() => {
+    if (props.inspectionRequest > 0) setDetailsOpen(true);
+  }, [props.inspectionRequest]);
+  useEffect(() => {
+    if (previousSelected.current !== props.selected && !props.circuit)
+      setDetailsOpen(true);
+    previousSelected.current = props.selected;
+  }, [props.selected, props.circuit]);
+  useEffect(() => { setHovered(null); }, [props.isolateRegion, props.circuit, props.selected]);
+  useEffect(() => { if (props.circuit) setDetailsOpen(false); }, [props.circuit]);
   const activeEdge = props.circuitTarget?.kind === "edge" ? props.circuit?.edges[props.circuitTarget.index] : undefined;
   const activeNodeId = props.circuitTarget?.kind === "node" ? props.circuitTarget.id : undefined;
   const activeNode = props.regions?.find((r) => r.id === activeNodeId);
@@ -81,6 +106,7 @@ export function BrainScene(props: Props) {
       current.data.rootId ?? 997,
       current.selected,
       ...(current.circuit?.nodeIds ?? []),
+      ...(current.regions?.filter((r) => r.id > 0).map((r) => r.id) ?? []),
     ];
     invalidateMeshCache([
       ...ids.flatMap((id) => current.data.meshes[String(id)]?.url ?? []),
@@ -109,18 +135,21 @@ export function BrainScene(props: Props) {
     setError("");
     setMeshStatus("正在载入三维脑表面…");
     renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
-    renderer.setClearColor("#edf2f3", 1);
+    const sceneColor = getComputedStyle(container).getPropertyValue("--scene-background").trim() || "#eeebf2";
+    renderer.setClearColor(sceneColor, 1);
     renderer.outputColorSpace = THREE.SRGBColorSpace;
+    renderer.toneMapping = THREE.ACESFilmicToneMapping;
+    renderer.toneMappingExposure = 1.05;
     container.appendChild(renderer.domElement);
     renderer.domElement.setAttribute(
       "aria-label",
-      "小鼠三维脑视图，方向键旋转，加减键缩放，F 聚焦所选结构，Home 查看全脑",
+      "小鼠三维脑视图，点击脑区查看详情，拖动旋转，Shift 拖动平移，方向键旋转，Enter 查看所选脑区，F 聚焦，Home 查看全脑",
     );
     renderer.domElement.setAttribute("role", "img");
     renderer.domElement.setAttribute("aria-describedby", helpId);
     renderer.domElement.setAttribute(
       "aria-keyshortcuts",
-      "ArrowLeft ArrowRight ArrowUp ArrowDown + - f Home",
+      "ArrowLeft ArrowRight ArrowUp ArrowDown + - f Home Enter Escape",
     );
     renderer.domElement.tabIndex = 0;
     const scene = new THREE.Scene(),
@@ -146,6 +175,7 @@ export function BrainScene(props: Props) {
     );
     let framing: "whole" | "region" | "circuit" = "whole";
     let autoFit = true;
+    const reducedMotion = matchMedia("(prefers-reduced-motion: reduce)");
     camera.position.copy(baseCamera);
     let controls = new OrbitControls(camera, renderer.domElement);
     controls.target.set(0, 0, 0);
@@ -155,15 +185,20 @@ export function BrainScene(props: Props) {
         0.1 * modelScale,
       );
       orbit.maxDistance = gridSize.length() * 12;
-      orbit.enableDamping = false;
+      orbit.enableDamping = !reducedMotion.matches;
+      orbit.dampingFactor = 0.1;
+      orbit.rotateSpeed = 0.65;
+      orbit.zoomSpeed = 0.85;
+      orbit.panSpeed = 0.7;
       orbit.enablePan = true;
+      orbit.screenSpacePanning = true;
     };
     configureControls(controls);
-    scene.add(new THREE.HemisphereLight("#ffffff", "#99a5af", 2.4));
-    const light = new THREE.DirectionalLight("#ffffff", 3);
+    scene.add(new THREE.HemisphereLight("#fffdf9", "#77718c", 1.8));
+    const light = new THREE.DirectionalLight("#fffdf9", 2.5);
     light.position.set(-8, 15, 8);
     scene.add(light);
-    const light2 = new THREE.DirectionalLight("#b5d9df", 1.6);
+    const light2 = new THREE.DirectionalLight("#c6d4d0", 1.3);
     light2.position.set(8, -2, -8);
     scene.add(light2);
     let root: THREE.Mesh | undefined,
@@ -173,7 +208,10 @@ export function BrainScene(props: Props) {
     let circuitGroup: THREE.Group | undefined,
       circuitAbort: AbortController | undefined,
       lastCircuit = "";
-    const reducedMotion = matchMedia("(prefers-reduced-motion: reduce)");
+    const atlasMeshes = new Map<number, THREE.Mesh>();
+    let atlasStarted = false;
+    let cameraFrame: number | undefined;
+    let hoverMesh: THREE.Mesh | null = null;
     type FlowLink = { index: number; group: THREE.Group; curve: THREE.QuadraticBezierCurve3; dots: THREE.Mesh[]; hit: THREE.Mesh };
     let flowLinks: FlowLink[] = [];
     let flowFrame: number | undefined;
@@ -219,8 +257,24 @@ export function BrainScene(props: Props) {
     const render = () => {
       if (!abort.signal.aborted) renderer.render(scene, camera);
     };
+    const themeObserver = new MutationObserver(() => {
+      renderer.setClearColor(getComputedStyle(container).getPropertyValue("--scene-background").trim(), 1);
+      render();
+    });
+    themeObserver.observe(document.documentElement, { attributes: true, attributeFilter: ["data-theme"] });
+    const cameraChanged = () => {
+      render();
+      if (cameraFrame === undefined && controls.enableDamping) {
+        cameraFrame = requestAnimationFrame(() => {
+          cameraFrame = undefined;
+          if (!abort.signal.aborted) controls.update();
+        });
+      }
+    };
     const startInteraction = () => {
       autoFit = false;
+      clearHover();
+      setView("3d");
     };
     const setCameraUp = (up: THREE.Vector3) => {
       if (camera.up.equals(up)) return;
@@ -231,7 +285,7 @@ export function BrainScene(props: Props) {
       controls = new OrbitControls(camera, renderer.domElement);
       controls.target.copy(target);
       configureControls(controls);
-      controls.addEventListener("change", render);
+      controls.addEventListener("change", cameraChanged);
       controls.addEventListener("start", startInteraction);
     };
     const selectedSphere = () => {
@@ -317,7 +371,42 @@ export function BrainScene(props: Props) {
     );
     marker.renderOrder = 10;
     scene.add(marker);
+    const loadAtlasMeshes = () => {
+      if (atlasStarted) return;
+      atlasStarted = true;
+      const catalog = (latest.current.regions ?? []).filter((r) => r.id > 0 && props.data.meshes[String(r.id)]);
+      let next = 0, completed = 0, failed = 0;
+      setAtlasStatus(`正在载入可选脑区 0 / ${catalog.length}`);
+      const worker = async () => {
+        while (next < catalog.length && !abort.signal.aborted) {
+          const entry = catalog[next++];
+          try {
+            const geometry = await loadMeshGeometry(props.data.meshes[String(entry.id)].url, props.data, abort.signal);
+            if (abort.signal.aborted) { geometry.dispose(); return; }
+            const mesh = new THREE.Mesh(geometry, new THREE.MeshStandardMaterial({
+              color: entry.color, roughness: 0.72, metalness: 0,
+              side: THREE.DoubleSide,
+            }));
+            mesh.userData.regionId = entry.id;
+            atlasMeshes.set(entry.id, mesh);
+            scene.add(mesh);
+            update(latest.current);
+          } catch {
+            if (!abort.signal.aborted) failed++;
+          }
+          if (!abort.signal.aborted) {
+            completed++;
+            setAtlasStatus(completed < catalog.length
+              ? `正在载入可选脑区 ${completed} / ${catalog.length}`
+              : failed ? `${failed} 个脑区表面未能载入` : "");
+          }
+        }
+      };
+      // Bound decoding and uploads so loading the atlas does not block dragging.
+      void Promise.all(Array.from({ length: Math.min(4, catalog.length) }, worker));
+    };
     function update(p: Props) {
+      if (!p.circuit && p.selected > 0) loadAtlasMeshes();
       const selectedData = p.selected < 0 ? p.whiteMatterData : p.data;
       const selectedId = Math.abs(p.selected);
       const selectedInfo = selectedData?.meshes[String(selectedId)];
@@ -333,6 +422,11 @@ export function BrainScene(props: Props) {
         d = p.data.dimensions,
         s = p.data.spacing / 1000;
       marker.position.set(...world);
+      marker.visible = p.showPlanes;
+      atlasMeshes.forEach((mesh, id) => {
+        mesh.visible = !p.circuit && !p.isolateRegion && p.selected > 0 &&
+          !(region && region.userData.regionId === id);
+      });
       if (region) {
         const material = region.material as THREE.MeshPhysicalMaterial;
         material.color.set(p.color);
@@ -606,12 +700,21 @@ export function BrainScene(props: Props) {
     };
     const observer = new ResizeObserver(resize);
     observer.observe(container);
-    controls.addEventListener("change", render);
+    controls.addEventListener("change", cameraChanged);
     controls.addEventListener("start", startInteraction);
     const keyboard = (event: KeyboardEvent) => {
       if (event.altKey || event.ctrlKey || event.metaKey || event.isComposing)
         return;
       const key = event.key.toLowerCase();
+      if (key === "enter" && !latest.current.circuit) {
+        event.preventDefault();
+        setDetailsOpen(true);
+        requestAnimationFrame(() => card.current?.focus({ preventScroll: true }));
+        return;
+      }
+      if (key === "escape" && !latest.current.circuit) {
+        setDetailsOpen(false); setHovered(null); return;
+      }
       if (key === "escape" && latest.current.circuit) { latest.current.onCircuitClear?.(); return; }
       if (key === "+" || key === "=" || key === "-") {
         event.preventDefault();
@@ -689,8 +792,27 @@ export function BrainScene(props: Props) {
           ),
         );
     };
-    let pointerStart: [number, number] | null = null;
+    const gesture = new ScenePointerGesture();
+    let hoverFrame: number | undefined;
     let previewTarget: CircuitTarget | null = null;
+    const anatomicalHit = (event: PointerEvent) => {
+      const rect = renderer.domElement.getBoundingClientRect();
+      const ray = new THREE.Raycaster();
+      ray.setFromCamera(new THREE.Vector2(
+        (event.clientX - rect.left) / rect.width * 2 - 1,
+        -(event.clientY - rect.top) / rect.height * 2 + 1,
+      ), camera);
+      const targets = [...atlasMeshes.values(), ...(region ? [region] : [])].filter((mesh) => mesh.visible);
+      return ray.intersectObjects(targets, false)[0]?.object as THREE.Mesh | undefined;
+    };
+    const clearHover = () => {
+      if (hoverMesh) {
+        (hoverMesh.material as THREE.MeshStandardMaterial).emissive.set(0x000000);
+        hoverMesh = null;
+        render();
+      }
+      setHovered(null);
+    };
     const circuitHit = (event: PointerEvent): CircuitTarget | null => {
       if (!latest.current.circuit || !circuitGroup) return null;
       const rect = renderer.domElement.getBoundingClientRect();
@@ -707,31 +829,73 @@ export function BrainScene(props: Props) {
       return hit.object.userData.edgeIndex !== undefined ? { kind: "edge", index: hit.object.userData.edgeIndex } : { kind: "node", id: hit.object.userData.regionId };
     };
     const preview = (event: PointerEvent) => {
-      if (event.buttons) return;
-      const target = circuitHit(event);
-      if (!sameCircuitTarget(previewTarget, target)) {
-        previewTarget = target;
-        latest.current.onCircuitPreview?.(target);
-        renderer.domElement.style.cursor = target ? "pointer" : "grab";
-      }
+      gesture.move(event);
+      if (event.buttons || event.pointerType === "touch") return;
+      if (hoverFrame !== undefined) cancelAnimationFrame(hoverFrame);
+      hoverFrame = requestAnimationFrame(() => {
+        hoverFrame = undefined;
+        if (latest.current.circuit) {
+          const target = circuitHit(event);
+          if (!sameCircuitTarget(previewTarget, target)) {
+            previewTarget = target;
+            latest.current.onCircuitPreview?.(target);
+          }
+          renderer.domElement.style.cursor = target ? "pointer" : "grab";
+        } else {
+          const mesh = anatomicalHit(event);
+          if (hoverMesh !== mesh) {
+            clearHover();
+            hoverMesh = mesh ?? null;
+            if (hoverMesh) {
+              const material = hoverMesh.material as THREE.MeshStandardMaterial;
+              material.emissive.copy(material.color).multiplyScalar(0.22);
+              render();
+            }
+          }
+          const rect = renderer.domElement.getBoundingClientRect();
+          setHovered(mesh ? { id: mesh.userData.regionId, x: event.clientX - rect.left, y: event.clientY - rect.top } : null);
+          renderer.domElement.style.cursor = mesh ? "pointer" : "grab";
+        }
+      });
     };
-    const leave = () => { previewTarget = null; latest.current.onCircuitPreview?.(null); renderer.domElement.style.cursor = "grab"; };
-    const down = (event: PointerEvent) => { pointerStart = [event.clientX, event.clientY]; };
+    const leave = () => {
+      if (hoverFrame !== undefined) cancelAnimationFrame(hoverFrame);
+      hoverFrame = undefined;
+      clearHover(); previewTarget = null;
+      latest.current.onCircuitPreview?.(null);
+      renderer.domElement.style.cursor = "grab";
+    };
+    const down = (event: PointerEvent) => {
+      gesture.down(event); leave();
+      renderer.domElement.style.cursor = "grabbing";
+    };
     const up = (event: PointerEvent) => {
-      if (event.button === 0 && pointerStart && Math.hypot(event.clientX - pointerStart[0], event.clientY - pointerStart[1]) < 5) {
-        const target = circuitHit(event);
-        if (target) latest.current.onCircuitSelect?.(target);
-        else if (latest.current.circuit) latest.current.onCircuitClear?.();
+      renderer.domElement.style.cursor = "grab";
+      if (gesture.up(event)) {
+        if (latest.current.circuit) {
+          const target = circuitHit(event);
+          if (target) latest.current.onCircuitSelect?.(target);
+          else latest.current.onCircuitClear?.();
+        } else {
+          const mesh = anatomicalHit(event);
+          if (mesh) {
+            latest.current.onRegionSelect(mesh.userData.regionId);
+            setDetailsOpen(true);
+          } else setDetailsOpen(false);
+        }
       }
-      pointerStart = null;
     };
-    const cancelPointer = () => { pointerStart = null; leave(); };
+    const cancelPointer = () => { gesture.cancel(); leave(); };
     renderer.domElement.addEventListener("pointercancel", cancelPointer);
     renderer.domElement.addEventListener("pointermove", preview);
     renderer.domElement.addEventListener("pointerleave", leave);
     renderer.domElement.addEventListener("pointerdown", down);
     renderer.domElement.addEventListener("pointerup", up);
-    reducedMotion.addEventListener("change", syncFlow);
+    const motionPreference = () => {
+      controls.enableDamping = !reducedMotion.matches;
+      syncFlow();
+    };
+    reducedMotion.addEventListener("change", motionPreference);
     document.addEventListener("visibilitychange", syncFlow);
     renderer.domElement.addEventListener("dblclick", pick);
     const rootInfo = props.data.meshes[String(props.data.rootId ?? 997)];
@@ -745,7 +909,7 @@ export function BrainScene(props: Props) {
           root = new THREE.Mesh(
             geometry,
             new THREE.MeshPhysicalMaterial({
-              color: "#c4c5ba",
+              color: "#b8b0c6",
               roughness: 0.53,
               metalness: 0,
               transparent: true,
@@ -779,17 +943,20 @@ export function BrainScene(props: Props) {
     renderer.domElement.addEventListener("webglcontextlost", lost);
     return () => {
       abort.abort();
+      if (cameraFrame !== undefined) cancelAnimationFrame(cameraFrame);
+      if (hoverFrame !== undefined) cancelAnimationFrame(hoverFrame);
       regionAbort?.abort();
       clearCircuit();
       api.current = null;
       observer.disconnect();
+      themeObserver.disconnect();
       controls.dispose();
       renderer.domElement.removeEventListener("pointercancel", cancelPointer);
       renderer.domElement.removeEventListener("pointermove", preview);
       renderer.domElement.removeEventListener("pointerleave", leave);
       renderer.domElement.removeEventListener("pointerdown", down);
       renderer.domElement.removeEventListener("pointerup", up);
-      reducedMotion.removeEventListener("change", syncFlow);
+      reducedMotion.removeEventListener("change", motionPreference);
       document.removeEventListener("visibilitychange", syncFlow);
       renderer.domElement.removeEventListener("dblclick", pick);
       renderer.domElement.removeEventListener("keydown", keyboard);
@@ -820,15 +987,54 @@ export function BrainScene(props: Props) {
       props.circuitFlow,
       props.whiteMatterData,
       props.sliceData,
+      props.isolateRegion,
     ],
   );
   return (
     <div className="brain-scene">
       <div ref={host} className="three-host" />
       <div className="scene-caption">
-        <span className="eyebrow">三维结构</span>
+        <span className="eyebrow">ANATOMY STUDIO</span>
         <span>{props.datasetLabel ?? "Allen CCFv3"}</span>
+        <span className="scene-coverage">{props.circuit ? `${props.circuit.nodeIds.length} 个环路节点` : props.selected < 0 ? "当前白质结构" : `${props.regions?.filter((r) => r.id > 0 && props.data.meshes[String(r.id)]).length ?? 0} 个导览脑区`}</span>
       </div>
+      {hovered && hoveredRegion && !props.circuit && (
+        <div className="scene-hover-label" style={{
+          left: Math.min(hovered.x + 16, Math.max(12, (host.current?.clientWidth ?? 500) - 220)),
+          top: Math.max(72, hovered.y - 52),
+        }}>
+          <span className="region-dot" style={{ background: hoveredRegion.color }} />
+          <strong>{hoveredRegion.name}</strong><small>{hoveredRegion.acronym} · 点击查看</small>
+        </div>
+      )}
+      {detailsOpen && selectedRegion && !props.circuit && (
+        <section ref={card} tabIndex={-1} className="scene-region-card" aria-labelledby={cardTitle}
+          onKeyDown={(event) => {
+            if (event.key === "Escape") {
+              setDetailsOpen(false);
+              host.current?.querySelector("canvas")?.focus({ preventScroll: true });
+            }
+          }}>
+          <div className="scene-region-meta">
+            <span className="region-dot" style={{ background: selectedRegion.color }} />
+            <span>{selectedRegion.category}</span>
+            <button aria-label="关闭脑区详情" title="关闭脑区详情" onClick={() => {
+              setDetailsOpen(false);
+              host.current?.querySelector("canvas")?.focus({ preventScroll: true });
+            }}><X size={17} /></button>
+          </div>
+          <h2 id={cardTitle}>{selectedRegion.name}</h2>
+          <p className="scene-region-english">{selectedRegion.englishName} · {selectedRegion.acronym}</p>
+          <p className="scene-region-summary">{selectedRegion.summary}</p>
+          <div className="scene-region-actions">
+            <button onClick={() => { props.onIsolateRegion(true); api.current?.focus(); }}><Focus size={15} />单独观察</button>
+            <button onClick={props.onLocateSlices}><Crosshair size={15} />定位切片</button>
+          </div>
+          <button className="scene-read-more" onClick={() => { setDetailsOpen(false); props.onReadRegion(); }}>
+            功能、证据与文献 <ArrowUpRight size={16} />
+          </button>
+        </section>
+      )}
       <div className="view-switch" aria-label="三维观察方向">
         {[
           ["3d", "自由视角"],
@@ -851,6 +1057,7 @@ export function BrainScene(props: Props) {
         ))}
       </div>
       <div className="scene-actions">
+        {!props.circuit && <button className="scene-details-button" disabled={!ready} onClick={() => setDetailsOpen(!detailsOpen)} aria-expanded={detailsOpen}>脑区详情</button>}
         {props.circuit && <button className="scene-circuit-focus" type="button" aria-label="聚焦整个环路" title="聚焦整个环路" disabled={!ready} onClick={() => api.current?.focusCircuit()}>全环路</button>}
         <button
           type="button"
@@ -898,7 +1105,7 @@ export function BrainScene(props: Props) {
         </button>
       </div>
       <div className="scene-instruction" id={helpId}>
-        {props.circuit ? "悬停强调 · 点击保持 · 拖动旋转 · Esc 清除" : `拖动旋转 · 滚轮缩放 · ${props.showPlanes ? "双击切面定位" : "双击脑表面定位"}`}
+        {props.circuit ? "悬停强调 · 点击保持 · 拖动旋转 · Esc 清除" : "点击脑区查看 · 拖动旋转 · Shift 拖动平移 · 滚轮缩放"}
       </div>
       <details className="scene-help">
         <summary>
@@ -907,11 +1114,11 @@ export function BrainScene(props: Props) {
         </summary>
         <div className="scene-help-content">
           <p>
-            拖动旋转视角，滚轮缩放；双指可在触屏上缩放和平移。双击有标注的切面可联动定位。
+            单击彩色脑区打开详情并同步目录和切片。拖动旋转，Shift + 拖动或右键拖动平移，滚轮缩放；触屏单指旋转、双指缩放和平移。
           </p>
           <p>
             按 Tab 聚焦三维视图后，用方向键旋转，+ / − 缩放，F
-            聚焦所选结构，Home 返回全脑。
+            聚焦所选结构，Home 返回全脑，Enter 打开详情，Esc 关闭。也可用脑区索引选择被外层遮挡的结构。
           </p>
           <p>
             切换脑区后，可用“聚焦所选结构”查看小核团。观察方向按钮沿当前观察范围切换视角。
@@ -936,6 +1143,12 @@ export function BrainScene(props: Props) {
               重试
             </button>
           )}
+        </div>
+      )}
+      {atlasStatus && !props.circuit && (
+        <div className="atlas-mesh-status" role="status">
+          {atlasStatus}
+          {atlasStatus.includes("未能") && <button onClick={retryScene}>重试</button>}
         </div>
       )}
       {(rootLoading || meshStatus) && (

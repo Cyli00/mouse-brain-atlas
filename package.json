@@ -10,7 +10,10 @@
     "dev": "vite --host 127.0.0.1",
     "build": "tsc -b && vite build",
     "preview": "vite preview --host 127.0.0.1",
-    "test": "node --import tsx --test tests/*.test.ts"
+    "test": "node --import tsx --test tests/*.test.ts",
+    "test:coordinates:browser": "node --import tsx --test tests/coordinate-input.browser.ts",
+    "test:scene:browser": "node --import tsx --test tests/scene.browser.ts",
+    "test:theme:browser": "node --import tsx --test tests/theme.browser.ts"
   },
   "dependencies": {
     "react": "^19.2.0",

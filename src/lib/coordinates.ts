@@ -50,6 +50,25 @@ export function coordinateRange(
   return { min: Math.min(...ends), max: Math.max(...ends) };
 }
 
+export function snapCoordinateMm(
+  mm: number,
+  min: number,
+  max: number,
+  step: number,
+  midpointPreference: "lower" | "upper" = "upper",
+) {
+  const bounded = Math.max(min, Math.min(max, mm));
+  const index = (bounded - min) / step;
+  const lower = Math.floor(index);
+  // Surface origins lie halfway between slices. Resolve ties explicitly so
+  // floating-point error cannot send a boundary input to the empty side.
+  const atMidpoint = Math.abs(index - lower - 0.5) < 1e-9;
+  const nearest = atMidpoint
+    ? lower + (midpointPreference === "upper" ? 1 : 0)
+    : Math.round(index);
+  return Math.max(min, Math.min(max, min + nearest * step));
+}
+
 export function coordinateReference(
   axis: number,
   apZeroUm?: number,
@@ -57,9 +76,10 @@ export function coordinateReference(
   embryonic = false,
 ) {
   if (embryonic) {
-    if (axis === 0) return "该阶段标注脑部前缘为零，前正、后负";
-    if (axis === 1) return "该阶段标注脑部背缘为零，向腹侧增加";
-    return "单侧标注内侧缘近似正中线为零，左负、右正";
+    if (axis === 0) return "标注前边界相对坐标，前正、后负";
+    if (axis === 1)
+      return "标注背侧边界相对坐标，向腹侧增加；不是当前位置的脑表面深度";
+    return "标注内侧边界相对坐标，向右增加；正中线未校准";
   }
   if (axis === 2 && mlZeroUm !== undefined)
     return "脑正中线为零，左负、右正";

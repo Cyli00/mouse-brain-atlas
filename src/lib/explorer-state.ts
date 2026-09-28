@@ -11,5 +11,5 @@ export type DisplaySettings = { opacity: number; showPlanes: boolean };
 export function displayDefaults(circuit: boolean): DisplaySettings {
   return circuit
     ? { opacity: 0.12, showPlanes: false }
-    : { opacity: 0.22, showPlanes: true };
+    : { opacity: 0.1, showPlanes: false };
 }

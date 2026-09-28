@@ -6,7 +6,48 @@ import {
   coordinateMm,
   coordinateVoxel,
   coordinateRange,
+  coordinateReference,
+  snapCoordinateMm,
 } from "../src/lib/coordinates";
+
+test("coordinate input resolves midpoint ties consistently without moving nearby values", () => {
+  for (const min of [-7.9, -2.3, -1.9, -1.38, -0.1, -0.06]) {
+    for (const delta of [-1e-14, 0, 1e-14]) {
+      assert.ok(
+        Math.abs(snapCoordinateMm(delta, min, 1, 0.04, "lower") + 0.02) < 1e-12,
+      );
+      assert.ok(
+        Math.abs(snapCoordinateMm(delta, min, 1, 0.04, "upper") - 0.02) < 1e-12,
+      );
+    }
+    for (const preference of ["lower", "upper"] as const) {
+      assert.ok(
+        Math.abs(snapCoordinateMm(-0.001, min, 1, 0.04, preference) + 0.02) < 1e-12,
+      );
+      assert.ok(
+        Math.abs(snapCoordinateMm(0.001, min, 1, 0.04, preference) - 0.02) < 1e-12,
+      );
+    }
+  }
+  assert.equal(snapCoordinateMm(-100, -1, 1, 0.05), -1);
+  assert.equal(snapCoordinateMm(100, -1, 1, 0.05), 1);
+  for (const [min, max] of [
+    [-7.75, 5.4],
+    [0, 7.95],
+    [-5.7, 5.65],
+  ])
+    assert.ok(Math.abs(snapCoordinateMm(0, min, max, 0.05)) < 1e-12);
+});
+
+test("embryo references describe annotation boundaries without claiming calibrated landmarks", () => {
+  assert.match(coordinateReference(0, 60, 1380, true), /标注前边界相对坐标/);
+  assert.match(coordinateReference(1, 60, 1380, true), /不是当前位置的脑表面深度/);
+  assert.match(coordinateReference(2, 60, 1380, true), /正中线未校准/);
+  assert.match(
+    coordinateReference(2, ALLEN_BREGMA_AP_UM, ALLEN_MIDLINE_ML_UM),
+    /脑正中线为零/,
+  );
+});
 
 test("adult AP zero is the IBL Bregma landmark, anterior positive and posterior negative", () => {
   assert.equal(coordinateMm(108, 0, 50, ALLEN_BREGMA_AP_UM), 0);
