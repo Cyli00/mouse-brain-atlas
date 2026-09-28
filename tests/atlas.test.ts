@@ -21,6 +21,7 @@ import {
   type PlaneName,
   type Position,
 } from "../src/lib/atlas";
+import { coordinateMm, coordinateVoxel } from "../src/lib/coordinates";
 
 type Asset = {
   url: string;
@@ -157,6 +158,22 @@ test("each embryo stage loads its own real coordinate space, labels and mesh ass
       assert.equal(data.spacing, 40);
       assert.equal(data.spacing, stage.resolutionUm);
       assert.equal(data.rootId, stageManifest.rootId);
+      const bounds = stageManifest.rootMesh.boundsUm!;
+      const origins: Position = [bounds[0][0], bounds[1][0], bounds[2][1]];
+      assert.deepEqual(data.coordinateOriginsUm, origins);
+      const toMm = (voxel: number, axis: number) =>
+        coordinateMm(voxel, axis, data.spacing, origins[0], origins[2], origins[1]);
+      const toVoxel = (mm: number, axis: number) =>
+        coordinateVoxel(mm, axis, data.spacing, origins[0], origins[2], origins[1]);
+      for (let axis = 0; axis < 3; axis++)
+        for (let voxel = 0; voxel < data.dimensions[axis]; voxel++) {
+          assert.equal(Math.round(toVoxel(toMm(voxel, axis), axis)), voxel);
+        }
+      for (let axis = 0; axis < 3; axis++)
+        assert.equal(toMm(origins[axis] / data.spacing, axis), 0);
+      assert.ok(toMm(0, 0) > 0);
+      assert.ok(toMm(0, 1) < 0);
+      assert.ok(toMm(0, 2) < 0);
       assert.equal(
         data.meshes[String(data.rootId)].url,
         stageManifest.rootMesh.url,

@@ -41,8 +41,10 @@ export function SliceView({
   onPosition,
   onExpand,
   expanded = false,
-  apBregmaUm,
-  mlMidlineUm,
+  apZeroUm,
+  mlZeroUm,
+  dvZeroUm,
+  embryonic = false,
   detailed = false,
   mapView = false,
 }: {
@@ -55,8 +57,10 @@ export function SliceView({
   onPosition: (p: Position) => void;
   onExpand?: () => void;
   expanded?: boolean;
-  apBregmaUm?: number;
-  mlMidlineUm?: number;
+  apZeroUm?: number;
+  mlZeroUm?: number;
+  dvZeroUm?: number;
+  embryonic?: boolean;
   detailed?: boolean;
   mapView?: boolean;
 }) {
@@ -140,15 +144,16 @@ export function SliceView({
   );
   const axis = ANATOMICAL_AXES[p.axis];
   const increasing =
-    p.axis === 0 && apBregmaUm !== undefined ? "向前" : axis.increasing;
-  const reference = coordinateReference(p.axis, apBregmaUm, mlMidlineUm);
+    p.axis === 0 && apZeroUm !== undefined ? "向前" : axis.increasing;
+  const reference = coordinateReference(p.axis, apZeroUm, mlZeroUm, embryonic);
   const scale = sliceScale(width, data.spacing);
   const depthMm = coordinateMm(
     position[p.axis],
     p.axis,
     data.spacing,
-    apBregmaUm,
-    mlMidlineUm,
+    apZeroUm,
+    mlZeroUm,
+    dvZeroUm,
   ).toFixed(2);
   const instructions =
     "点击或拖动定位交点；方向键在切面内移动，Page Up / Page Down 切换相邻切片，按住 Shift 每次移动 5 个体素，Enter 或空格将交点放到切面中央。";
@@ -280,7 +285,7 @@ export function SliceView({
           className="slice-image"
           type="button"
           style={displayedSize}
-          aria-label={`${p.name}定位，${ANATOMICAL_AXES.map((a, i) => `${a.abbreviation} ${coordinateMm(position[i], i, data.spacing, apBregmaUm, mlMidlineUm).toFixed(2)} 毫米`).join("，")}`}
+          aria-label={`${p.name}定位，${ANATOMICAL_AXES.map((a, i) => `${a.abbreviation} ${coordinateMm(position[i], i, data.spacing, apZeroUm, mlZeroUm, dvZeroUm).toFixed(2)} 毫米`).join("，")}`}
           aria-describedby={instructionsId}
           title={instructions}
           onPointerDown={(e) => {
@@ -353,11 +358,11 @@ export function SliceView({
                     vectorEffect="non-scaling-stroke"
                   />
                 )}
-                {p.u === 2 && mlMidlineUm !== undefined && (
+                {p.u === 2 && mlZeroUm !== undefined && (
                   <line
                     className="slice-midline"
-                    x1={mlMidlineUm / data.spacing + 0.5}
-                    x2={mlMidlineUm / data.spacing + 0.5}
+                    x1={mlZeroUm / data.spacing + 0.5}
+                    x2={mlZeroUm / data.spacing + 0.5}
                     y1={0}
                     y2={height}
                     vectorEffect="non-scaling-stroke"

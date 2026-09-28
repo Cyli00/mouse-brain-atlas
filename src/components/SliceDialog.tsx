@@ -22,8 +22,10 @@ type Props = {
   probeName: string;
   sourceLabel?: string;
   partitionControl?: React.ReactNode;
-  apBregmaUm?: number;
-  mlMidlineUm?: number;
+  apZeroUm?: number;
+  mlZeroUm?: number;
+  dvZeroUm?: number;
+  embryonic?: boolean;
   detailed?: boolean;
   mapView?: boolean;
   onMapView: (value: boolean) => void;
@@ -109,8 +111,10 @@ export function SliceDialog(props: Props) {
             contrast={props.contrast}
             onPosition={props.onPosition}
             expanded
-            apBregmaUm={props.apBregmaUm}
-            mlMidlineUm={props.mlMidlineUm}
+            apZeroUm={props.apZeroUm}
+            mlZeroUm={props.mlZeroUm}
+            dvZeroUm={props.dvZeroUm}
+            embryonic={props.embryonic}
             detailed={props.detailed}
             mapView={props.mapView}
           />

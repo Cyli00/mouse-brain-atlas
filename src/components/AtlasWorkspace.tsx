@@ -87,6 +87,9 @@ export function AtlasWorkspace({
     [loading, setLoading] = useState("正在读取图谱数据…"),
     [error, setError] = useState(""),
     [attempt, setAttempt] = useState(0);
+  const apZeroUm = config.apBregmaUm ?? data?.coordinateOriginsUm?.[0];
+  const dvZeroUm = data?.coordinateOriginsUm?.[1];
+  const mlZeroUm = config.mlMidlineUm ?? data?.coordinateOriginsUm?.[2];
   const [position, setPosition] = useState<Position>([0, 0, 0]),
     [selected, setSelected] = useState(initialId),
     [overlay, setOverlay] = useState(true),
@@ -616,7 +619,7 @@ export function AtlasWorkspace({
               />
               <span className="slice-coordinate-note">
                 {config.embryonic
-                  ? `Allen 发育图谱 · ${config.id}`
+                  ? `Allen 发育图谱 · ${config.id} · 阶段内参考坐标`
                   : "AP · Bregma 近似参考 / ML · 正中线"}
               </span>
             </div>
@@ -633,8 +636,10 @@ export function AtlasWorkspace({
                       contrast={contrast}
                       onPosition={move}
                       onExpand={() => setExpandedPlane(name)}
-                      apBregmaUm={config.apBregmaUm}
-                      mlMidlineUm={config.mlMidlineUm}
+                      apZeroUm={apZeroUm}
+                      mlZeroUm={mlZeroUm}
+                      dvZeroUm={dvZeroUm}
+                      embryonic={config.embryonic}
                       detailed
                       mapView={mapView}
                     />
@@ -715,9 +720,9 @@ export function AtlasWorkspace({
               <div>
                 {config.coordinateLabel}
                 <small>
-                  {config.apBregmaUm !== undefined
+                  {!config.embryonic
                     ? "mm · ML 左负右正 / DV 为 CCF"
-                    : "mm · 阶段体积原点"}
+                    : "mm · 脑前缘 / 背缘 / 标注内侧缘为零"}
                 </small>
               </div>
             </div>
@@ -730,20 +735,23 @@ export function AtlasWorkspace({
                     position[i],
                     i,
                     data?.spacing ?? config.resolutionUm,
-                    config.apBregmaUm,
-                    config.mlMidlineUm,
+                    apZeroUm,
+                    mlZeroUm,
+                    dvZeroUm,
                   )}
                   {...coordinateRange(
                     data?.dimensions[i] ?? 1,
                     i,
                     data?.spacing ?? config.resolutionUm,
-                    config.apBregmaUm,
-                    config.mlMidlineUm,
+                    apZeroUm,
+                    mlZeroUm,
+                    dvZeroUm,
                   )}
                   reference={coordinateReference(
                     i,
-                    config.apBregmaUm,
-                    config.mlMidlineUm,
+                    apZeroUm,
+                    mlZeroUm,
+                    config.embryonic,
                   )}
                   step={data ? data.spacing / 1000 : config.resolutionUm / 1000}
                   disabled={!data}
@@ -754,8 +762,9 @@ export function AtlasWorkspace({
                         value,
                         i,
                         data.spacing,
-                        config.apBregmaUm,
-                        config.mlMidlineUm,
+                        apZeroUm,
+                        mlZeroUm,
+                        dvZeroUm,
                       );
                       move(next);
                     }
@@ -941,11 +950,7 @@ export function AtlasWorkspace({
                     </div>
                     <div>
                       <dt>正方向</dt>
-                      <dd>
-                        {config.apBregmaUm !== undefined
-                          ? "前 / 腹侧 / 右"
-                          : "后 / 腹侧 / 右"}
-                      </dd>
+                      <dd>前 / 腹侧 / 右</dd>
                     </div>
                   </dl>
                   <h3 className="detail-section-heading">切片从哪里来</h3>
@@ -1077,8 +1082,10 @@ export function AtlasWorkspace({
             disabled={!data}
           />
         ) : undefined}
-        apBregmaUm={config.apBregmaUm}
-        mlMidlineUm={config.mlMidlineUm}
+        apZeroUm={apZeroUm}
+        mlZeroUm={mlZeroUm}
+        dvZeroUm={dvZeroUm}
+        embryonic={config.embryonic}
         detailed
         mapView={mapView}
         onMapView={setMapView}

@@ -30,7 +30,7 @@ test("all AP samples round-trip without moving the underlying slice", () => {
     }
 });
 
-test("AP conversion never silently changes DV, ML, or embryonic reference coordinates", () => {
+test("adult AP conversion leaves unconfigured DV and ML coordinates unchanged", () => {
   for (const axis of [1, 2]) {
     assert.equal(coordinateMm(40, axis, 50, ALLEN_BREGMA_AP_UM), 2);
     assert.equal(coordinateVoxel(2, axis, 50, ALLEN_BREGMA_AP_UM), 40);
@@ -66,7 +66,7 @@ test("adult ML has its zero at the template midline, left negative and right pos
   assert.equal(
     coordinateMm(114, 2, 40),
     4.56,
-    "embryos must retain their own local origin",
+    "default ML coordinates retain the volume origin",
   );
   assert.equal(
     coordinateMm(40, 1, 50, ALLEN_BREGMA_AP_UM, ALLEN_MIDLINE_ML_UM),

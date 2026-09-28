@@ -47,6 +47,7 @@ export type AtlasData = {
   structures: Map<number, Structure>;
   meshes: Record<string, MeshInfo>;
   manifest: Record<string, unknown>;
+  coordinateOriginsUm?: Position;
 };
 export function voxelIndex(p: Position, d: Position) {
   return p[0] + d[0] * (p[1] + d[1] * p[2]);
@@ -204,12 +205,15 @@ export function makeSlice(
   return new ImageData(pixels, width, height);
 }
 export type AtlasManifest = {
+  stage?: string;
   dimensions: Position;
   resolutionUm: number;
   template: { url: string };
   annotation: { url: string };
   ontology: { url: string };
-  rootMesh: MeshInfo;
+  rootMesh: MeshInfo & {
+    boundsUm?: [[number, number], [number, number], [number, number]];
+  };
   rootId?: number;
   regions: { id: number; mesh: MeshInfo; focusVoxel: Position }[];
 };
@@ -231,6 +235,23 @@ export async function loadAtlas(
     manifest.resolutionUm <= 0
   )
     throw new Error("图谱坐标定义无效");
+  const bounds = manifest.rootMesh.boundsUm;
+  if (manifest.stage && (
+    !Array.isArray(bounds) ||
+    bounds.length !== 3 ||
+    bounds.some(
+      (range) =>
+        !Array.isArray(range) ||
+        range.length !== 2 ||
+        !range.every(Number.isFinite) ||
+        range[0] > range[1],
+    )
+  ))
+    throw new Error("胚胎图谱坐标边界无效");
+  const coordinateOriginsUm: Position | undefined =
+    manifest.stage && bounds
+      ? [bounds[0][0], bounds[1][0], bounds[2][1]]
+      : undefined;
   onProgress(`正在载入 ${manifest.resolutionUm} μm 参考体积与脑区标注…`);
   const [templateBuffer, annotationBuffer, ontology] = await Promise.all([
     getBinary(manifest.template.url, bounded),
@@ -281,5 +302,6 @@ export async function loadAtlas(
     structures,
     meshes,
     manifest: manifest as unknown as Record<string, unknown>,
+    coordinateOriginsUm,
   };
 }
