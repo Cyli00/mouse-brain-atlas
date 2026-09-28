@@ -110,6 +110,30 @@ Wang Q, Ding S-L, Li Y, et al. The Allen Mouse Brain Common Coordinate Framework
 
 本项目与 Allen Institute 无隶属关系。
 
+## 成年血管网络
+
+血管来源为 Todorov 等 2020 的 [VesSAP](https://doi.org/10.1038/s41592-020-0792-1) 和 Paetzold 等 2021 的 [VesselGraph](https://github.com/jocpae/VesselGraph)，使用成年 BL6J-no1 单标本。Allen 的参考图谱下载目录未列出可直接使用的独立血管网络；本层是第三方数据，不能称为 Allen 官方血管图谱。数据及衍生文件遵循 [CC BY-NC 4.0](https://creativecommons.org/licenses/by-nc/4.0/)，不随应用代码改变许可。
+
+源图含 5,614,677 条边。网页保留源平均半径至少 6 体素的 154,045 条边；源体素为 3 μm，即估计直径至少 36 μm。默认显示至少 48 μm 的 39,214 条边，另可选择至少 60 μm 的 13,967 条边。文件按源半径降序排列，筛选取前缀，不随机抽样。线段连接作者提取的实测节点，近似节点间走向，不重建管壁和完整曲率，也没有动静脉或血流标签。显示线宽不表示实际管径。直径阈值来自变形前标本，不能作为 CCF 中的局部管径测量。
+
+配准采用 [VesSAP 数据服务器](https://discotechnologies.org/VesSAP/)发布的该标本 `TransformParameters.0.FullRes.txt` 和 `TransformParameters.1.FullRes.txt`。作者把 Allen 标签映射到标本空间，Elastix 的重采样变换把标本点映射回参考空间。按其 [Compose 定义](https://elastix.dev/doxygen/classelastix_1_1TransformBase.html)，先应用 Euler ZXY 刚体变换，再应用三次 B-spline。这里的参数单位不是毫米，固定网格间距 0.1 对应标本 3 μm；输出 ML、AP、DV 重排为本项目的 AP、DV、ML。恢复作者由 10 μm 到 3 μm 网格重采样的体素中心偏移，最终 `CCF_um = transformed_[AP,DV,ML] * 30 - 3.5`。没有通过拉伸脑外形拟合血管。
+
+用独立发布的标签结果核验这条坐标转换，2026-09-28 的结果如下。
+
+| 检查 | 匹配数 | 范围与限制 |
+| --- | --- | --- |
+| 作者配准结果与 Allen 10 μm 标签 | 639 / 641，99.688% | 来自配准结果文件前部的非零抽样点，不覆盖整个体积 |
+| 左右半球方向 | 641 / 641，100% | 作者用负 ID 标记左半球，与 CCF ML < 5700 μm 一致 |
+| 图节点所属脑区组 | 16,794 / 16,869，99.555% | 从全脑节点按每 211 项抽样，与作者发布的脑区组比较，排除背景、root 和本地本体无对应组的项目 |
+
+作者配准 NIfTI 用 float32 保存 ID，大整数会舍入，核验时把 Allen ID 转为同一精度。脑区组采用作者的颜色分组，并接受本体祖先组。这些数值验证转换复现，不能解释为独立解剖标志点误差或个体血管定位精度。Allen 官方 `annotation_10.nrrd` 的 SHA-256 为 `a9e9654ef491f0af107dc0a61bd720dabe7f36e8f3e9239532bf3dbdc94ef24c`。
+
+`public/vasculature/adult/manifest.json` 保存源图地址、SHA-256、变换文件校验值和输出校验值。`scripts/prepare_vasculature.py` 需要 numpy、scipy、pandas，使用完整 `C57BL_6_no1.zip` 可复现网页文件。`tests/fixtures/vascular-registration.json.gz` 保存从作者文件抽出的核验点及原始标签，沿用相同数据许可。`scripts/verify_vasculature.py --annotation-raw <Allen_10um_uint32_payload> --report <临时报告路径>` 可重新核验，两个一致率均须达到 99%。
+
+另一候选是 [Demeulenaere 等的 3D ULM 数据](https://zenodo.org/records/6328308)，CC BY 4.0。实查其密度 MAT 只有 588 × 651 × 651 数组，没有原点、轴向或配准矩阵，因此未接入本页。
+
+本次范围仅限成年血管。胚胎 E11.5、E13.5、E15.5、E18.5 暂无本项目已核验的血管层。[Walls 等的早期胚胎血管图谱](https://doi.org/10.1371/journal.pone.0002853)覆盖 E8.0–E10.0，阶段不匹配；[Berrios-Otero 等的胚胎脑动脉研究](https://pmc.ncbi.nlm.nih.gov/articles/PMC2859666/)提供相关成像研究，但此次未取得可直接接入的体数据及本页四阶段配准。胚胎界面保持原样，不显示血管入口，不把成年血管缩放到胚胎。
+
 ### ML 正中线与分区图显示
 
 成年 ML 采用本模板的正中矢状面 CCF ML = 5700 μm。换算 `ML_mm = (ml_voxel * spacing_um - 5700) / 1000`，左负、右正。50 μm 网格第 114 号索引为 ML 0。模板镜像核验中，左右索引和为 228 的配对平均绝对强度差为 1.20386，优于以存储范围端点中点配对的 4.50803。偶数长度数组包含左右不对称的末端采样范围，不能用 `(228 - 1) / 2` 把原点放在两个体素之间。此定义是当前模板中线，不是 IBL 所用的 5739 μm Bregma ML 近似值。

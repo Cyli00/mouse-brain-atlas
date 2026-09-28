@@ -1,0 +1,46 @@
+{
+  "dataset": "VesSAP / VesselGraph BL6J-no1",
+  "stage": "adult",
+  "license": "CC-BY-NC-4.0",
+  "sourceVoxelSpacingUm": 3,
+  "coordinateSpace": "Allen CCFv3 2017",
+  "axisOrder": [
+    "AP",
+    "DV",
+    "ML"
+  ],
+  "units": "um",
+  "representation": "straight graph edges between measured vessel nodes",
+  "minimumSourceDiameterUm": 36,
+  "segmentCount": 154045,
+  "countsByMinimumDiameterUm": {
+    "36": 154045,
+    "48": 39214,
+    "60": 13967
+  },
+  "segments": {
+    "url": "/vasculature/adult/segments.float32.gz",
+    "bytes": 3239124,
+    "uncompressedBytes": 3697080,
+    "sha256": "fb2cbf95bcefbda1a6d90b7d274464c43c7d8b27d21499fc0ce4eb810dfb8f7c"
+  },
+  "sources": {
+    "paper": "https://doi.org/10.1038/s41592-020-0792-1",
+    "graphs": "https://github.com/jocpae/VesselGraph",
+    "graphUrl": "https://syncandshare.lrz.de/dl/fiVTuLxJeLrqyWdMBy5BGrug/C57BL_6_no1.zip",
+    "graphSha256": "41d4d9d44e4b04190d7f1039615fb08e58aacd707d6d0baffb6c4090162d236f",
+    "transformsGuide": "https://discotechnologies.org/VesSAP/"
+  },
+  "transforms": {
+    "TransformParameters.0.FullRes.txt": "28ebf9b1776bd7f42631ed5d9d8f56012d4fd2a734fdb8f44810eb88b197d24f",
+    "TransformParameters.1.FullRes.txt": "b480096276d7258b0b85ba44470256107d74177cf463ce7d4b90f02d659e6dd5"
+  },
+  "limitations": [
+    "One adult specimen, not a population vascular atlas.",
+    "Straight edges approximate paths; no vessel walls or artery/vein classification.",
+    "Source diameters are estimates before atlas deformation; smaller vessels omitted.",
+    "Registration reproduction checks do not measure biological landmark error."
+  ],
+  "licenseUrl": "https://creativecommons.org/licenses/by-nc/4.0/",
+  "attribution": "Todorov et al., Nature Methods 2020; Paetzold et al., NeurIPS Datasets and Benchmarks 2021."
+}
