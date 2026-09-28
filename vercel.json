@@ -6,6 +6,6 @@
   "outputDirectory": "dist",
   "trailingSlash": false,
   "rewrites": [
-    { "source": "/embryo", "destination": "/index.html" }
+    { "source": "/embryo", "destination": "/embryo/index.html" }
   ]
 }

@@ -20,7 +20,7 @@ npm run preview
 
 ## Vercel 部署
 
-在 Vercel 导入仓库根目录。`vercel.json` 已固定 Vite、`npm ci`、`npm run build` 和 `dist`，`package.json` 固定 Node.js 24.x；当前站点不需要环境变量。`/embryo` 由 Vercel 重写到单页应用入口，阶段参数仍留在浏览器 URL 中。`public/` 内的图谱文件会随 Vite 构建复制到 `dist/`。
+在 Vercel 导入仓库根目录。`vercel.json` 已固定 Vite、`npm ci`、`npm run build` 和 `dist`，`package.json` 固定 Node.js 24.x；当前站点不需要环境变量。构建会生成 `dist/embryo/index.html`，Vercel 将 `/embryo` 重写到这个页面入口，阶段参数仍留在浏览器 URL 中。`public/` 内的图谱文件会随 Vite 构建复制到 `dist/`。
 
 部署预览中直接打开 `/`、`/embryo?stage=E11.5` 和 `/embryo?stage=E18.5`，再检查 `/data/manifest.json`、`/data/kim-v2/manifest.json` 与 `/embryo/E11.5/manifest.json` 是否能读取。正式公开前请核对 [Allen Institute 使用条款](https://alleninstitute.org/legal/terms-of-use)与页面署名。
 
