@@ -1,0 +1,47 @@
+.circuit-article h2 { font-size: 23px; line-height: 1.5; font-weight: 600; }
+.circuit-subtitle { font-size: 13px; line-height: 1.7; color: var(--muted); margin-top: 7px; }
+.circuit-tools { display: flex; justify-content: space-between; align-items: center; gap: 8px; margin: 20px 0 10px; font-size: 12px; color: var(--muted); }
+.circuit-tools label, .circuit-tools button { display: flex; align-items: center; gap: 5px; }
+.circuit-tools button { padding: 6px 0 6px 6px; color: var(--primary); }
+.circuit-tools button:hover:not(:disabled) { text-decoration: underline; }
+.circuit-map { position: relative; width: 100%; aspect-ratio: 320 / 270; background: #f7f9f9; border: 1px solid var(--border); border-radius: 10px; }
+.circuit-map svg { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; }
+.circuit-edge-line, .circuit-edge-flow { fill: none; stroke: var(--connection-color); stroke-width: 2; pointer-events: none; }
+.circuit-map-edge.muted .circuit-edge-line { opacity: 0.14; }
+.circuit-map-edge.emphasized .circuit-edge-line { stroke-width: 3; }
+.circuit-edge-flow { stroke: white; stroke-width: 1.5; stroke-dasharray: 3 15; }
+.flow-enabled .circuit-edge-flow { animation: circuit-flow 1.3s linear infinite; }
+.circuit-map:not(.flow-enabled) .circuit-edge-flow { display: none; }
+.circuit-edge-hit { fill: none; stroke: transparent; stroke-width: 15; cursor: pointer; }
+.circuit-edge-hit:focus-visible { stroke: color-mix(in srgb, var(--connection-color) 22%, transparent); outline: none; }
+.circuit-map-node { position: absolute; transform: translate(-50%, -50%); width: 27%; min-height: 46px; padding: 6px 4px; display: grid; gap: 2px; border: 1px solid var(--border); border-top: 3px solid var(--node-color); border-radius: 6px; background: var(--surface); color: var(--ink); text-align: center; }
+.circuit-map-node strong { font: 600 14px/1.3 var(--font-mono); }
+.circuit-map-node > span { font-size: 12px; line-height: 1.5; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.circuit-map-node > i { position: absolute; right: 4px; top: 4px; width: 4px; height: 4px; border-radius: 50%; background: var(--primary); }
+.circuit-map-node.emphasized, .circuit-map-node:hover, .circuit-map-node[aria-pressed="true"] { border-color: var(--primary); outline: 2px solid #256b6326; outline-offset: 2px; background: var(--selected); }
+.circuit-map-node.muted { background: #f3f5f5; color: var(--muted); border-top-color: #b9c7c7; }
+.circuit-map-help { font-size: 12px; line-height: 1.7; color: var(--muted); margin: 9px 0 12px; }
+.circuit-selection-note { min-height: 94px; padding: 12px; background: #f3f7f5; border-radius: 8px; font-size: 13px; line-height: 1.75; }
+.circuit-selection-note strong { font-size: 13px; font-weight: 600; }
+.circuit-selection-note p { color: var(--muted); margin-top: 3px; }
+.circuit-show-model { display: flex; align-items: center; gap: 6px; color: var(--primary); font-size: 12px; padding: 10px 0; }
+.circuit-show-model:hover { text-decoration: underline; }
+.circuit-connection-list { display: grid; gap: 5px; margin: 6px 0 16px; }
+.circuit-connection-list button { display: flex; justify-content: space-between; align-items: center; gap: 8px; padding: 9px 10px; border: 1px solid var(--border); border-radius: 6px; text-align: left; font: 13px var(--font-mono); }
+.circuit-connection-list small { font: 12px var(--font-body); }
+.circuit-connection-list button:hover, .circuit-connection-list button[aria-pressed="true"] { border-color: var(--primary); background: var(--selected); }
+.circuit-schematic-note { font-size: 12px; line-height: 1.8; color: var(--muted); margin: 12px 0 20px; }
+.scene-actions .scene-circuit-focus { width: auto; padding: 0 9px; font-size: 12px; color: var(--primary); }
+@keyframes circuit-flow { to { stroke-dashoffset: -36; } }
+@media (prefers-reduced-motion: reduce) { .flow-enabled .circuit-edge-flow { animation: none; display: none; } }
+@media (forced-colors: active) {
+  .circuit-edge-line { stroke: CanvasText; }
+  .circuit-map-node[aria-pressed="true"] { outline-color: Highlight; }
+}
+
+.circuit-path-directory > summary { padding: 10px 0; font-size: 13px; color: var(--muted); cursor: pointer; }
+.circuit-path-directory > summary:hover { color: var(--primary); }
+
+.circuit-kind-legend { display: flex; flex-wrap: wrap; gap: 7px 12px; margin-top: 10px; font-size: 12px; color: var(--muted); }
+.circuit-kind-legend span { display: inline-flex; align-items: center; gap: 5px; }
+.circuit-kind-legend i { width: 12px; height: 3px; border-radius: 2px; }

@@ -64,5 +64,4789 @@
       "url": "https://ndownloader.figshare.com/files/46096116",
       "sha256": "9b7a17ccaeab12bb0962c2675a4a3e448b1a3262e59283425dee03bea3763607"
     }
+  ],
+  "whiteMatterProvenance": {
+    "classificationRule": "structureIdPath contains fiber-tracts root 1009, or id is an explicit ontology exception; exclude I8 nucleus 2461; no name matching",
+    "fiberTractsRootId": 1009,
+    "excludedNucleusIds": [
+      2461
+    ],
+    "exceptionIds": [
+      17,
+      42,
+      851,
+      2219
+    ],
+    "exceptionNote": "17 InWh, 42 DpWh and 851 Op are white layers of the superior colliculus (Op carries retinal afferent and myelinated fibers) filed under SC subtrees 294/302; 2219 SMV is a white-matter lamina filed under the ventricular branch. All four sit outside the fiber-tracts subtree in the Kim ontology.",
+    "ontologyStructureCount": 121,
+    "ontologyWithoutVoxels": [
+      14,
+      21,
+      37,
+      46,
+      54,
+      380,
+      388,
+      404,
+      459,
+      490,
+      514,
+      553,
+      618,
+      633,
+      673,
+      737,
+      752,
+      760,
+      768,
+      784,
+      792,
+      808,
+      813,
+      824,
+      832,
+      840,
+      841,
+      848,
+      871,
+      896,
+      901,
+      911,
+      917,
+      932,
+      948,
+      960,
+      967,
+      983,
+      991,
+      1000,
+      1009,
+      1083,
+      1099,
+      1131,
+      2394
+    ],
+    "ontologyWithoutVoxelsNote": "These fiber-tract structures exist in the Kim v2 ontology but have no voxels in the packaged 50 um label volume (mostly grouping parents and tracts the authors did not paint), so no mesh can be built from real labels.",
+    "meshMethod": "skimage.measure.marching_cubes level 0.5 on the exact padded label mask, 50 um spacing; no smoothing, no simplification, all connected components kept",
+    "sharedHelper": "src/lib/white-matter.ts",
+    "runtime": {
+      "python": "3.14.4",
+      "numpy": "2.5.3",
+      "scikit-image": "0.26.0"
+    }
+  },
+  "whiteMatterRegions": [
+    {
+      "id": 6,
+      "name": "internal capsule",
+      "acronym": "ic",
+      "classification": "fiber-tracts-subtree",
+      "mesh": {
+        "url": "/data/kim-v2/meshes/6.bin.gz",
+        "format": "allen-mesh-v1",
+        "compression": "gzip",
+        "bytes": 212713,
+        "uncompressedBytes": 686612,
+        "sha256": "12b64f8c63efd689dbaf67342462ce4d4a72b29a2d37af2e385422b5595ca9fc",
+        "uncompressedSha256": "836838c386fc512428d42596b613789aa1ccd8f5055ffbff856070bb8e20f47c",
+        "vertexCount": 19031,
+        "triangleCount": 38186,
+        "boundsUm": [
+          [
+            5075.0,
+            7675.0
+          ],
+          [
+            3175.0,
+            5925.0
+          ],
+          [
+            2175.0,
+            9175.0
+          ]
+        ]
+      },
+      "voxelCount": 21710,
+      "volumeMm3": 2.71375,
+      "centroidVoxel": [
+        131.062,
+        90.285,
+        113.512
+      ],
+      "focusVoxel": [
+        131,
+        90,
+        69
+      ],
+      "focusUm": [
+        6550,
+        4500,
+        3450
+      ],
+      "boundsVoxel": [
+        [
+          102,
+          153
+        ],
+        [
+          64,
+          118
+        ],
+        [
+          44,
+          183
+        ]
+      ]
+    },
+    {
+      "id": 17,
+      "name": "Intermediate white layer of the superior colliculus",
+      "acronym": "InWh",
+      "classification": "superior-colliculus-white-layer-exception",
+      "mesh": {
+        "url": "/data/kim-v2/meshes/17.bin.gz",
+        "format": "allen-mesh-v1",
+        "compression": "gzip",
+        "bytes": 134230,
+        "uncompressedBytes": 428324,
+        "sha256": "7a68a520f903eec406b806f48fa55452e45cdfd962f1569b13292af07102e490",
+        "uncompressedSha256": "8b697ae44ea4b62bda8bde15ed3de951a8b4166274e376e1026d769d3635d8a6",
+        "vertexCount": 11887,
+        "triangleCount": 23806,
+        "boundsUm": [
+          [
+            8175.0,
+            10275.0
+          ],
+          [
+            1625.0,
+            3375.0
+          ],
+          [
+            3825.0,
+            7525.0
+          ]
+        ]
+      },
+      "voxelCount": 16366,
+      "volumeMm3": 2.04575,
+      "centroidVoxel": [
+        183.198,
+        47.345,
+        113.504
+      ],
+      "focusVoxel": [
+        183,
+        47,
+        95
+      ],
+      "focusUm": [
+        9150,
+        2350,
+        4750
+      ],
+      "boundsVoxel": [
+        [
+          164,
+          205
+        ],
+        [
+          33,
+          67
+        ],
+        [
+          77,
+          150
+        ]
+      ]
+    },
+    {
+      "id": 42,
+      "name": "Deep white layer of the superior colliculus",
+      "acronym": "DpWh",
+      "classification": "superior-colliculus-white-layer-exception",
+      "mesh": {
+        "url": "/data/kim-v2/meshes/42.bin.gz",
+        "format": "allen-mesh-v1",
+        "compression": "gzip",
+        "bytes": 83847,
+        "uncompressedBytes": 276308,
+        "sha256": "c796c207f34e47a149f440f6e3f840ae01bcbb7322cdee33e387cb0c1c403ff1",
+        "uncompressedSha256": "0eb8c5deb76840edffcd2e436c928cd6ad59ba2ae90bba2b9077026c1715225a",
+        "vertexCount": 7491,
+        "triangleCount": 15534,
+        "boundsUm": [
+          [
+            8275.0,
+            10175.0
+          ],
+          [
+            1975.0,
+            3425.0
+          ],
+          [
+            4525.0,
+            6825.0
+          ]
+        ]
+      },
+      "voxelCount": 4434,
+      "volumeMm3": 0.55425,
+      "centroidVoxel": [
+        186.165,
+        53.932,
+        113.516
+      ],
+      "focusVoxel": [
+        186,
+        52,
+        99
+      ],
+      "focusUm": [
+        9300,
+        2600,
+        4950
+      ],
+      "boundsVoxel": [
+        [
+          166,
+          203
+        ],
+        [
+          40,
+          68
+        ],
+        [
+          91,
+          136
+        ]
+      ]
+    },
+    {
+      "id": 62,
+      "name": "medial longitudinal fasciculus",
+      "acronym": "mlf",
+      "classification": "fiber-tracts-subtree",
+      "mesh": {
+        "url": "/data/kim-v2/meshes/62.bin.gz",
+        "format": "allen-mesh-v1",
+        "compression": "gzip",
+        "bytes": 59961,
+        "uncompressedBytes": 205256,
+        "sha256": "2943ff8a38db17cc85bd5e5d681762cc2be8ced11e08ccb57d3a23dca826ead0",
+        "uncompressedSha256": "d2c9e1139965b5df06727ffd0b798c1f126c73f9dddedac14f77e38bbba07f7d",
+        "vertexCount": 5668,
+        "triangleCount": 11436,
+        "boundsUm": [
+          [
+            8575.0,
+            13175.0
+          ],
+          [
+            3625.0,
+            7375.0
+          ],
+          [
+            4775.0,
+            6575.0
+          ]
+        ]
+      },
+      "voxelCount": 4168,
+      "volumeMm3": 0.521,
+      "centroidVoxel": [
+        228.058,
+        109.742,
+        113.515
+      ],
+      "focusVoxel": [
+        228,
+        110,
+        111
+      ],
+      "focusUm": [
+        11400,
+        5500,
+        5550
+      ],
+      "boundsVoxel": [
+        [
+          172,
+          263
+        ],
+        [
+          73,
+          147
+        ],
+        [
+          96,
+          131
+        ]
+      ]
+    },
+    {
+      "id": 78,
+      "name": "middle cerebellar peduncle",
+      "acronym": "mcp",
+      "classification": "fiber-tracts-subtree",
+      "mesh": {
+        "url": "/data/kim-v2/meshes/78.bin.gz",
+        "format": "allen-mesh-v1",
+        "compression": "gzip",
+        "bytes": 268601,
+        "uncompressedBytes": 865796,
+        "sha256": "091682e6d326624c3d6bfff062bd7ff85d08a98c9ed15ed261cfd987be558fbd",
+        "uncompressedSha256": "e2f4f3f4f131dda1a192d7cbdadfe30c104ab208ac52155d385da507e69521ee",
+        "vertexCount": 23791,
+        "triangleCount": 48358,
+        "boundsUm": [
+          [
+            9175.0,
+            11175.0
+          ],
+          [
+            1775.0,
+            7025.0
+          ],
+          [
+            1475.0,
+            9875.0
+          ]
+        ]
+      },
+      "voxelCount": 20177,
+      "volumeMm3": 2.522125,
+      "centroidVoxel": [
+        213.726,
+        87.536,
+        113.543
+      ],
+      "focusVoxel": [
+        214,
+        88,
+        68
+      ],
+      "focusUm": [
+        10700,
+        4400,
+        3400
+      ],
+      "boundsVoxel": [
+        [
+          184,
+          223
+        ],
+        [
+          36,
+          140
+        ],
+        [
+          30,
+          197
+        ]
+      ]
+    },
+    {
+      "id": 85,
+      "name": "ventral spinocerebellar tract",
+      "acronym": "vsc",
+      "classification": "fiber-tracts-subtree",
+      "mesh": {
+        "url": "/data/kim-v2/meshes/85.bin.gz",
+        "format": "allen-mesh-v1",
+        "compression": "gzip",
+        "bytes": 103608,
+        "uncompressedBytes": 343796,
+        "sha256": "e9edfe9064ed2ced7eb6d0cacb53bbb49b7ce17648895975c57b511539f08784",
+        "uncompressedSha256": "8902c28c695c40f1cfbab002e8b3f8c14715b16a8ea426f42cf13aea5c4aa494",
+        "vertexCount": 9527,
+        "triangleCount": 19122,
+        "boundsUm": [
+          [
+            9675.0,
+            12775.0
+          ],
+          [
+            3525.0,
+            7475.0
+          ],
+          [
+            3475.0,
+            7875.0
+          ]
+        ]
+      },
+      "voxelCount": 6648,
+      "volumeMm3": 0.831,
+      "centroidVoxel": [
+        226.954,
+        124.103,
+        113.457
+      ],
+      "focusVoxel": [
+        227,
+        135,
+        79
+      ],
+      "focusUm": [
+        11350,
+        6750,
+        3950
+      ],
+      "boundsVoxel": [
+        [
+          194,
+          255
+        ],
+        [
+          71,
+          149
+        ],
+        [
+          70,
+          157
+        ]
+      ]
+    },
+    {
+      "id": 93,
+      "name": "motor root of the trigeminal nerve",
+      "acronym": "m5",
+      "classification": "fiber-tracts-subtree",
+      "mesh": {
+        "url": "/data/kim-v2/meshes/93.bin.gz",
+        "format": "allen-mesh-v1",
+        "compression": "gzip",
+        "bytes": 14229,
+        "uncompressedBytes": 47396,
+        "sha256": "9800722c2675a0f73539c01efbe0e7a2cf5b1d56f805aa809ced025c8674426c",
+        "uncompressedSha256": "a47009b902f29fddeaec04d94a9f413fb2b1231a8c65bc8204f514eaf449561b",
+        "vertexCount": 1315,
+        "triangleCount": 2634,
+        "boundsUm": [
+          [
+            9575.0,
+            10075.0
+          ],
+          [
+            5125.0,
+            6375.0
+          ],
+          [
+            3525.0,
+            7825.0
+          ]
+        ]
+      },
+      "voxelCount": 684,
+      "volumeMm3": 0.0855,
+      "centroidVoxel": [
+        195.316,
+        114.887,
+        112.974
+      ],
+      "focusVoxel": [
+        195,
+        115,
+        75
+      ],
+      "focusUm": [
+        9750,
+        5750,
+        3750
+      ],
+      "boundsVoxel": [
+        [
+          192,
+          201
+        ],
+        [
+          103,
+          127
+        ],
+        [
+          71,
+          156
+        ]
+      ]
+    },
+    {
+      "id": 102,
+      "name": "nigrostriatal bundle",
+      "acronym": "ns",
+      "classification": "fiber-tracts-subtree",
+      "mesh": {
+        "url": "/data/kim-v2/meshes/102.bin.gz",
+        "format": "allen-mesh-v1",
+        "compression": "gzip",
+        "bytes": 19782,
+        "uncompressedBytes": 65288,
+        "sha256": "2264297b66825743a5dab6c4205d7a2e33387d0b78655b67e3b3c47bf77c30ac",
+        "uncompressedSha256": "252b6ece444a596748a76c75462061ceb5e67b1aeff1430621ce4e9fc17149bc",
+        "vertexCount": 1792,
+        "triangleCount": 3648,
+        "boundsUm": [
+          [
+            6475.0,
+            7475.0
+          ],
+          [
+            5025.0,
+            5825.0
+          ],
+          [
+            3775.0,
+            7575.0
+          ]
+        ]
+      },
+      "voxelCount": 1086,
+      "volumeMm3": 0.13575,
+      "centroidVoxel": [
+        136.879,
+        110.32,
+        113.556
+      ],
+      "focusVoxel": [
+        137,
+        110,
+        87
+      ],
+      "focusUm": [
+        6850,
+        5500,
+        4350
+      ],
+      "boundsVoxel": [
+        [
+          130,
+          149
+        ],
+        [
+          101,
+          116
+        ],
+        [
+          76,
+          151
+        ]
+      ]
+    },
+    {
+      "id": 117,
+      "name": "optic chiasm",
+      "acronym": "och",
+      "classification": "fiber-tracts-subtree",
+      "mesh": {
+        "url": "/data/kim-v2/meshes/117.bin.gz",
+        "format": "allen-mesh-v1",
+        "compression": "gzip",
+        "bytes": 2392,
+        "uncompressedBytes": 8168,
+        "sha256": "7458fdcc5e26756f7847031e218523975a8e1b1795996e56eb55860a7b0aa702",
+        "uncompressedSha256": "10d2e4572cbe6da0922a1eb9d9f4d06a42a5d09dac91ecdf20136370ef2c7311",
+        "vertexCount": 228,
+        "triangleCount": 452,
+        "boundsUm": [
+          [
+            5375.0,
+            5575.0
+          ],
+          [
+            6775.0,
+            6975.0
+          ],
+          [
+            5225.0,
+            6125.0
+          ]
+        ]
+      },
+      "voxelCount": 96,
+      "volumeMm3": 0.012,
+      "centroidVoxel": [
+        109.75,
+        137.438,
+        113.5
+      ],
+      "focusVoxel": [
+        110,
+        137,
+        110
+      ],
+      "focusUm": [
+        5500,
+        6850,
+        5500
+      ],
+      "boundsVoxel": [
+        [
+          108,
+          111
+        ],
+        [
+          136,
+          139
+        ],
+        [
+          105,
+          122
+        ]
+      ]
+    },
+    {
+      "id": 125,
+      "name": "optic tract",
+      "acronym": "opt",
+      "classification": "fiber-tracts-subtree",
+      "mesh": {
+        "url": "/data/kim-v2/meshes/125.bin.gz",
+        "format": "allen-mesh-v1",
+        "compression": "gzip",
+        "bytes": 144632,
+        "uncompressedBytes": 469604,
+        "sha256": "2f304c929c4f1304b7c1832d329d44f1119c519a94eb39bf30e2d585d1a11498",
+        "uncompressedSha256": "30765dc6980a91dd2585a180a6a7dd7a3af0b125d1569bf0287d113aa6cf8373",
+        "vertexCount": 12943,
+        "triangleCount": 26190,
+        "boundsUm": [
+          [
+            5675.0,
+            8225.0
+          ],
+          [
+            2725.0,
+            7225.0
+          ],
+          [
+            2575.0,
+            8775.0
+          ]
+        ]
+      },
+      "voxelCount": 11182,
+      "volumeMm3": 1.39775,
+      "centroidVoxel": [
+        137.513,
+        116.593,
+        113.55
+      ],
+      "focusVoxel": [
+        138,
+        117,
+        76
+      ],
+      "focusUm": [
+        6900,
+        5850,
+        3800
+      ],
+      "boundsVoxel": [
+        [
+          114,
+          164
+        ],
+        [
+          55,
+          144
+        ],
+        [
+          52,
+          175
+        ]
+      ]
+    },
+    {
+      "id": 158,
+      "name": "posterior commissure",
+      "acronym": "pc",
+      "classification": "fiber-tracts-subtree",
+      "mesh": {
+        "url": "/data/kim-v2/meshes/158.bin.gz",
+        "format": "allen-mesh-v1",
+        "compression": "gzip",
+        "bytes": 11562,
+        "uncompressedBytes": 38840,
+        "sha256": "a6b79f202e4ef74174b8ca87d3f8d8c4438a810043e637542bb6200abd4f92c9",
+        "uncompressedSha256": "c3326e320a68722828d60e2ea29da98a4f8347c55a291930923e8630cb4af437",
+        "vertexCount": 1076,
+        "triangleCount": 2160,
+        "boundsUm": [
+          [
+            7675.0,
+            8475.0
+          ],
+          [
+            2825.0,
+            3575.0
+          ],
+          [
+            5025.0,
+            6325.0
+          ]
+        ]
+      },
+      "voxelCount": 560,
+      "volumeMm3": 0.07,
+      "centroidVoxel": [
+        161.618,
+        63.911,
+        113.5
+      ],
+      "focusVoxel": [
+        162,
+        64,
+        109
+      ],
+      "focusUm": [
+        8100,
+        3200,
+        5450
+      ],
+      "boundsVoxel": [
+        [
+          154,
+          169
+        ],
+        [
+          57,
+          71
+        ],
+        [
+          101,
+          126
+        ]
+      ]
+    },
+    {
+      "id": 190,
+      "name": "pyramidal tract",
+      "acronym": "py",
+      "classification": "fiber-tracts-subtree",
+      "mesh": {
+        "url": "/data/kim-v2/meshes/190.bin.gz",
+        "format": "allen-mesh-v1",
+        "compression": "gzip",
+        "bytes": 49531,
+        "uncompressedBytes": 167648,
+        "sha256": "f2a70dc108c073e52d022cf8a713345447aa3a1f0fea2f46ab1515beca59fb09",
+        "uncompressedSha256": "5e3e27f5b8317856fdcdf6483e4121c53ce277901e6bb6b0424204e12dc108cb",
+        "vertexCount": 4634,
+        "triangleCount": 9336,
+        "boundsUm": [
+          [
+            10075.0,
+            12875.0
+          ],
+          [
+            6825.0,
+            7525.0
+          ],
+          [
+            4875.0,
+            6475.0
+          ]
+        ]
+      },
+      "voxelCount": 3553,
+      "volumeMm3": 0.444125,
+      "centroidVoxel": [
+        230.222,
+        144.6,
+        113.498
+      ],
+      "focusVoxel": [
+        230,
+        145,
+        106
+      ],
+      "focusUm": [
+        11500,
+        7250,
+        5300
+      ],
+      "boundsVoxel": [
+        [
+          202,
+          257
+        ],
+        [
+          137,
+          150
+        ],
+        [
+          98,
+          129
+        ]
+      ]
+    },
+    {
+      "id": 198,
+      "name": "pyramidal decussation",
+      "acronym": "pyx",
+      "classification": "fiber-tracts-subtree",
+      "mesh": {
+        "url": "/data/kim-v2/meshes/198.bin.gz",
+        "format": "allen-mesh-v1",
+        "compression": "gzip",
+        "bytes": 9383,
+        "uncompressedBytes": 31064,
+        "sha256": "92aaac3bef67896bd08cd495841c882deda5434c818d4ca2104ad0b0b8c47416",
+        "uncompressedSha256": "4ed6455dc851183d41d9e4c3b0df38b476eb1a2bf0eed66f3f9125b64cfa95b9",
+        "vertexCount": 864,
+        "triangleCount": 1724,
+        "boundsUm": [
+          [
+            12875.0,
+            13175.0
+          ],
+          [
+            6625.0,
+            7375.0
+          ],
+          [
+            4875.0,
+            6475.0
+          ]
+        ]
+      },
+      "voxelCount": 596,
+      "volumeMm3": 0.0745,
+      "centroidVoxel": [
+        260.174,
+        140.983,
+        113.5
+      ],
+      "focusVoxel": [
+        260,
+        141,
+        109
+      ],
+      "focusUm": [
+        13000,
+        7050,
+        5450
+      ],
+      "boundsVoxel": [
+        [
+          258,
+          263
+        ],
+        [
+          133,
+          147
+        ],
+        [
+          98,
+          129
+        ]
+      ]
+    },
+    {
+      "id": 229,
+      "name": "sensory root of the trigeminal nerve",
+      "acronym": "s5",
+      "classification": "fiber-tracts-subtree",
+      "mesh": {
+        "url": "/data/kim-v2/meshes/229.bin.gz",
+        "format": "allen-mesh-v1",
+        "compression": "gzip",
+        "bytes": 47952,
+        "uncompressedBytes": 154376,
+        "sha256": "74ebe1abf34db0a103d2c675e9f0895b47869d247ed5777b2cabdd51306cfa0e",
+        "uncompressedSha256": "f17f31b8bf652efcae2fda9e753eb407fc3422e5fb3ccc3cd6a9adfe9fa590b0",
+        "vertexCount": 4296,
+        "triangleCount": 8568,
+        "boundsUm": [
+          [
+            9875.0,
+            10575.0
+          ],
+          [
+            4875.0,
+            7075.0
+          ],
+          [
+            2925.0,
+            8425.0
+          ]
+        ]
+      },
+      "voxelCount": 5075,
+      "volumeMm3": 0.634375,
+      "centroidVoxel": [
+        205.196,
+        118.704,
+        113.545
+      ],
+      "focusVoxel": [
+        205,
+        119,
+        66
+      ],
+      "focusUm": [
+        10250,
+        5950,
+        3300
+      ],
+      "boundsVoxel": [
+        [
+          198,
+          211
+        ],
+        [
+          98,
+          141
+        ],
+        [
+          59,
+          168
+        ]
+      ]
+    },
+    {
+      "id": 237,
+      "name": "solitary tract",
+      "acronym": "sol",
+      "classification": "fiber-tracts-subtree",
+      "mesh": {
+        "url": "/data/kim-v2/meshes/237.bin.gz",
+        "format": "allen-mesh-v1",
+        "compression": "gzip",
+        "bytes": 7813,
+        "uncompressedBytes": 27104,
+        "sha256": "e40d721edd2685bf9cbdc625ca5a1e0cc85fd2f992e2e2c74dd30476f6bbd147",
+        "uncompressedSha256": "133f7fa57fb4caf4a6a264b31f1a2a59515c676277893ee67615c53d3e44fb94",
+        "vertexCount": 758,
+        "triangleCount": 1500,
+        "boundsUm": [
+          [
+            11475.0,
+            13175.0
+          ],
+          [
+            5025.0,
+            5625.0
+          ],
+          [
+            4275.0,
+            7075.0
+          ]
+        ]
+      },
+      "voxelCount": 266,
+      "volumeMm3": 0.03325,
+      "centroidVoxel": [
+        247.237,
+        105.444,
+        113.699
+      ],
+      "focusVoxel": [
+        250,
+        104,
+        99
+      ],
+      "focusUm": [
+        12500,
+        5200,
+        4950
+      ],
+      "boundsVoxel": [
+        [
+          230,
+          263
+        ],
+        [
+          101,
+          112
+        ],
+        [
+          86,
+          141
+        ]
+      ]
+    },
+    {
+      "id": 293,
+      "name": "vestibulospinal tract",
+      "acronym": "vesp",
+      "classification": "fiber-tracts-subtree",
+      "mesh": {
+        "url": "/data/kim-v2/meshes/293.bin.gz",
+        "format": "allen-mesh-v1",
+        "compression": "gzip",
+        "bytes": 3791,
+        "uncompressedBytes": 13016,
+        "sha256": "9cbfd7a2a106306d4582bb75ae1d4e53c84ce829648802d99f88d47841984e07",
+        "uncompressedSha256": "03373733301bca5d5d446b8220a60eaf41f2cdcdc8a3b55317f95440fafa74a5",
+        "vertexCount": 364,
+        "triangleCount": 720,
+        "boundsUm": [
+          [
+            11175.0,
+            11275.0
+          ],
+          [
+            5325.0,
+            5625.0
+          ],
+          [
+            4175.0,
+            7175.0
+          ]
+        ]
+      },
+      "voxelCount": 188,
+      "volumeMm3": 0.0235,
+      "centroidVoxel": [
+        224.468,
+        108.606,
+        113.5
+      ],
+      "focusVoxel": [
+        224,
+        109,
+        94
+      ],
+      "focusUm": [
+        11200,
+        5450,
+        4700
+      ],
+      "boundsVoxel": [
+        [
+          224,
+          225
+        ],
+        [
+          107,
+          112
+        ],
+        [
+          84,
+          143
+        ]
+      ]
+    },
+    {
+      "id": 301,
+      "name": "stria terminalis",
+      "acronym": "st",
+      "classification": "fiber-tracts-subtree",
+      "mesh": {
+        "url": "/data/kim-v2/meshes/301.bin.gz",
+        "format": "allen-mesh-v1",
+        "compression": "gzip",
+        "bytes": 79768,
+        "uncompressedBytes": 267512,
+        "sha256": "1ad9db14ff520798d9c8b9eee598f137212ff762285713571d77a045a6bc178c",
+        "uncompressedSha256": "baddb1ee52ec392b13d5d7b7e07ca46d1fd6a14763aa7b95663a23db626fa175",
+        "vertexCount": 7440,
+        "triangleCount": 14852,
+        "boundsUm": [
+          [
+            5375.0,
+            7575.0
+          ],
+          [
+            2725.0,
+            6325.0
+          ],
+          [
+            2525.0,
+            8825.0
+          ]
+        ]
+      },
+      "voxelCount": 5450,
+      "volumeMm3": 0.68125,
+      "centroidVoxel": [
+        136.356,
+        84.146,
+        113.425
+      ],
+      "focusVoxel": [
+        143,
+        80,
+        58
+      ],
+      "focusUm": [
+        7150,
+        4000,
+        2900
+      ],
+      "boundsVoxel": [
+        [
+          108,
+          151
+        ],
+        [
+          55,
+          126
+        ],
+        [
+          51,
+          176
+        ]
+      ]
+    },
+    {
+      "id": 326,
+      "name": "superior cerebellar peduncle",
+      "acronym": "scp",
+      "classification": "fiber-tracts-subtree",
+      "mesh": {
+        "url": "/data/kim-v2/meshes/326.bin.gz",
+        "format": "allen-mesh-v1",
+        "compression": "gzip",
+        "bytes": 78226,
+        "uncompressedBytes": 258956,
+        "sha256": "10dc34d0ddb2b1fa0d67af4863da877e446a21a35d33a43a97294d7ac6ad1699",
+        "uncompressedSha256": "d60c1f8004e7123ce897ecaa43f7e3002679000ef662fd938415bc8a6af91f89",
+        "vertexCount": 7141,
+        "triangleCount": 14438,
+        "boundsUm": [
+          [
+            7275.0,
+            11475.0
+          ],
+          [
+            3775.0,
+            5275.0
+          ],
+          [
+            3675.0,
+            7675.0
+          ]
+        ]
+      },
+      "voxelCount": 4859,
+      "volumeMm3": 0.607375,
+      "centroidVoxel": [
+        199.572,
+        85.463,
+        113.53
+      ],
+      "focusVoxel": [
+        200,
+        85,
+        92
+      ],
+      "focusUm": [
+        10000,
+        4250,
+        4600
+      ],
+      "boundsVoxel": [
+        [
+          146,
+          229
+        ],
+        [
+          76,
+          105
+        ],
+        [
+          74,
+          153
+        ]
+      ]
+    },
+    {
+      "id": 336,
+      "name": "commissure of the superior colliculus",
+      "acronym": "csc",
+      "classification": "fiber-tracts-subtree",
+      "mesh": {
+        "url": "/data/kim-v2/meshes/336.bin.gz",
+        "format": "allen-mesh-v1",
+        "compression": "gzip",
+        "bytes": 5180,
+        "uncompressedBytes": 17792,
+        "sha256": "a136689777410059e1c4f9d29ef52a7e5d9a02bab05b20c17846587476088e8a",
+        "uncompressedSha256": "51ab84d66fcf5dcc540cda867e8d190675a1fe5ae832485d7cf5825627a52ac0",
+        "vertexCount": 498,
+        "triangleCount": 984,
+        "boundsUm": [
+          [
+            8275.0,
+            8675.0
+          ],
+          [
+            2325.0,
+            3325.0
+          ],
+          [
+            5125.0,
+            6225.0
+          ]
+        ]
+      },
+      "voxelCount": 176,
+      "volumeMm3": 0.022,
+      "centroidVoxel": [
+        168.699,
+        57.205,
+        113.472
+      ],
+      "focusVoxel": [
+        166,
+        58,
+        110
+      ],
+      "focusUm": [
+        8300,
+        2900,
+        5500
+      ],
+      "boundsVoxel": [
+        [
+          166,
+          173
+        ],
+        [
+          47,
+          66
+        ],
+        [
+          103,
+          124
+        ]
+      ]
+    },
+    {
+      "id": 341,
+      "name": "retromammillary decussation",
+      "acronym": "rmx",
+      "classification": "fiber-tracts-subtree",
+      "mesh": {
+        "url": "/data/kim-v2/meshes/341.bin.gz",
+        "format": "allen-mesh-v1",
+        "compression": "gzip",
+        "bytes": 3292,
+        "uncompressedBytes": 11120,
+        "sha256": "937306cf61d783b6d055c33f6ce7d0cd8c3565e41f1aad26be037913d144296a",
+        "uncompressedSha256": "398851e358489d2c82522759a415a3b15e8bc0c35d0a75d09c385d47c7bd503e",
+        "vertexCount": 310,
+        "triangleCount": 616,
+        "boundsUm": [
+          [
+            7975.0,
+            8275.0
+          ],
+          [
+            5175.0,
+            5525.0
+          ],
+          [
+            5325.0,
+            6025.0
+          ]
+        ]
+      },
+      "voxelCount": 196,
+      "volumeMm3": 0.0245,
+      "centroidVoxel": [
+        162.597,
+        106.745,
+        113.464
+      ],
+      "focusVoxel": [
+        163,
+        107,
+        111
+      ],
+      "focusUm": [
+        8150,
+        5350,
+        5550
+      ],
+      "boundsVoxel": [
+        [
+          160,
+          165
+        ],
+        [
+          104,
+          110
+        ],
+        [
+          107,
+          120
+        ]
+      ]
+    },
+    {
+      "id": 397,
+      "name": "ventral tegmental decussation",
+      "acronym": "vtgx",
+      "classification": "fiber-tracts-subtree",
+      "mesh": {
+        "url": "/data/kim-v2/meshes/397.bin.gz",
+        "format": "allen-mesh-v1",
+        "compression": "gzip",
+        "bytes": 4199,
+        "uncompressedBytes": 14456,
+        "sha256": "9c541a1127c8c672308a3e214e0e78008e3b0fcfd13524ad9e0bf374d3c5cd72",
+        "uncompressedSha256": "112e6d171281208ec27f39922ed3b143b0da1e3049a0a856afe8928dd748ee9a",
+        "vertexCount": 400,
+        "triangleCount": 804,
+        "boundsUm": [
+          [
+            8375.0,
+            8975.0
+          ],
+          [
+            4575.0,
+            5125.0
+          ],
+          [
+            5475.0,
+            5875.0
+          ]
+        ]
+      },
+      "voxelCount": 240,
+      "volumeMm3": 0.03,
+      "centroidVoxel": [
+        172.492,
+        96.442,
+        113.5
+      ],
+      "focusVoxel": [
+        172,
+        96,
+        112
+      ],
+      "focusUm": [
+        8600,
+        4800,
+        5600
+      ],
+      "boundsVoxel": [
+        [
+          168,
+          179
+        ],
+        [
+          92,
+          102
+        ],
+        [
+          110,
+          117
+        ]
+      ]
+    },
+    {
+      "id": 413,
+      "name": "vestibular root of the vestibulocochlear nerve",
+      "acronym": "8vn",
+      "classification": "fiber-tracts-subtree",
+      "mesh": {
+        "url": "/data/kim-v2/meshes/413.bin.gz",
+        "format": "allen-mesh-v1",
+        "compression": "gzip",
+        "bytes": 35756,
+        "uncompressedBytes": 114104,
+        "sha256": "538909f92061c69c08318a3c862223cb1a4a81f455b78c670e72a3a65d03f526",
+        "uncompressedSha256": "c32e9c12842f1a379dc4f50c66607723816c1adfe7d4b128bd3bc78a7bf4b740",
+        "vertexCount": 3164,
+        "triangleCount": 6344,
+        "boundsUm": [
+          [
+            10775.0,
+            11175.0
+          ],
+          [
+            4675.0,
+            6825.0
+          ],
+          [
+            3175.0,
+            8175.0
+          ]
+        ]
+      },
+      "voxelCount": 3121,
+      "volumeMm3": 0.390125,
+      "centroidVoxel": [
+        220.07,
+        110.624,
+        113.341
+      ],
+      "focusVoxel": [
+        221,
+        110,
+        69
+      ],
+      "focusUm": [
+        11050,
+        5500,
+        3450
+      ],
+      "boundsVoxel": [
+        [
+          216,
+          223
+        ],
+        [
+          94,
+          136
+        ],
+        [
+          64,
+          163
+        ]
+      ]
+    },
+    {
+      "id": 436,
+      "name": "fornix",
+      "acronym": "f",
+      "classification": "fiber-tracts-subtree",
+      "mesh": {
+        "url": "/data/kim-v2/meshes/436.bin.gz",
+        "format": "allen-mesh-v1",
+        "compression": "gzip",
+        "bytes": 43386,
+        "uncompressedBytes": 146900,
+        "sha256": "238a79372a6973dcd817dc3b7658ba1b98574661a51bbdc3ef1d235974e3e05d",
+        "uncompressedSha256": "9c5c9cb4418c3030a297e05a8be0be391016c4b01917e756f0001847c25b52fb",
+        "vertexCount": 4079,
+        "triangleCount": 8162,
+        "boundsUm": [
+          [
+            5275.0,
+            8225.0
+          ],
+          [
+            3025.0,
+            6475.0
+          ],
+          [
+            4625.0,
+            6725.0
+          ]
+        ]
+      },
+      "voxelCount": 2959,
+      "volumeMm3": 0.369875,
+      "centroidVoxel": [
+        120.887,
+        105.586,
+        113.548
+      ],
+      "focusVoxel": [
+        119,
+        108,
+        103
+      ],
+      "focusUm": [
+        5950,
+        5400,
+        5150
+      ],
+      "boundsVoxel": [
+        [
+          106,
+          164
+        ],
+        [
+          61,
+          129
+        ],
+        [
+          93,
+          134
+        ]
+      ]
+    },
+    {
+      "id": 443,
+      "name": "dorsal hippocampal commissure",
+      "acronym": "dhc",
+      "classification": "fiber-tracts-subtree",
+      "mesh": {
+        "url": "/data/kim-v2/meshes/443.bin.gz",
+        "format": "allen-mesh-v1",
+        "compression": "gzip",
+        "bytes": 107152,
+        "uncompressedBytes": 357284,
+        "sha256": "815ccb1114808916bd92c947723e32203c5b020cac4a90577b47494cd748dfc1",
+        "uncompressedSha256": "4f4cea79d74ffb05dd20e2d644fd2d53700b472d39cd7c204a54ace1b2346284",
+        "vertexCount": 9779,
+        "triangleCount": 19994,
+        "boundsUm": [
+          [
+            6175.0,
+            9975.0
+          ],
+          [
+            1175.0,
+            4275.0
+          ],
+          [
+            1875.0,
+            9475.0
+          ]
+        ]
+      },
+      "voxelCount": 7007,
+      "volumeMm3": 0.875875,
+      "centroidVoxel": [
+        182.764,
+        49.238,
+        113.429
+      ],
+      "focusVoxel": [
+        190,
+        48,
+        59
+      ],
+      "focusUm": [
+        9500,
+        2400,
+        2950
+      ],
+      "boundsVoxel": [
+        [
+          124,
+          199
+        ],
+        [
+          24,
+          85
+        ],
+        [
+          38,
+          189
+        ]
+      ]
+    },
+    {
+      "id": 449,
+      "name": "ventral hippocampal commissure",
+      "acronym": "vhc",
+      "classification": "fiber-tracts-subtree",
+      "mesh": {
+        "url": "/data/kim-v2/meshes/449.bin.gz",
+        "format": "allen-mesh-v1",
+        "compression": "gzip",
+        "bytes": 27914,
+        "uncompressedBytes": 93392,
+        "sha256": "8d89cf9c51bbd5fc2353c7d1899da21adfd6ba113e591e9fa53c869126845f9f",
+        "uncompressedSha256": "f396a7050522c67c645a477f314eb97d02ef12db7aba5887c61d9379b7a4f14d",
+        "vertexCount": 2590,
+        "triangleCount": 5192,
+        "boundsUm": [
+          [
+            5575.0,
+            6175.0
+          ],
+          [
+            2225.0,
+            3825.0
+          ],
+          [
+            4575.0,
+            6775.0
+          ]
+        ]
+      },
+      "voxelCount": 1829,
+      "volumeMm3": 0.228625,
+      "centroidVoxel": [
+        119.252,
+        60.066,
+        113.489
+      ],
+      "focusVoxel": [
+        119,
+        60,
+        105
+      ],
+      "focusUm": [
+        5950,
+        3000,
+        5250
+      ],
+      "boundsVoxel": [
+        [
+          112,
+          123
+        ],
+        [
+          45,
+          76
+        ],
+        [
+          92,
+          135
+        ]
+      ]
+    },
+    {
+      "id": 466,
+      "name": "alveus of the hippocampus",
+      "acronym": "alv",
+      "classification": "fiber-tracts-subtree",
+      "mesh": {
+        "url": "/data/kim-v2/meshes/466.bin.gz",
+        "format": "allen-mesh-v1",
+        "compression": "gzip",
+        "bytes": 416059,
+        "uncompressedBytes": 1327160,
+        "sha256": "279ccce2de23f47e181203bfa60427a5360bcd7246793c2f7923bf44619b0355",
+        "uncompressedSha256": "c8bbd6c211384a2a77168a9f0ebe30b5cb3173a9fce9c7ff89eef9a83b65471a",
+        "vertexCount": 35720,
+        "triangleCount": 74876,
+        "boundsUm": [
+          [
+            6375.0,
+            9575.0
+          ],
+          [
+            1325.0,
+            6025.0
+          ],
+          [
+            1425.0,
+            9925.0
+          ]
+        ]
+      },
+      "voxelCount": 15199,
+      "volumeMm3": 1.899875,
+      "centroidVoxel": [
+        167.348,
+        48.912,
+        113.516
+      ],
+      "focusVoxel": [
+        170,
+        38,
+        58
+      ],
+      "focusUm": [
+        8500,
+        1900,
+        2900
+      ],
+      "boundsVoxel": [
+        [
+          128,
+          191
+        ],
+        [
+          27,
+          120
+        ],
+        [
+          29,
+          198
+        ]
+      ]
+    },
+    {
+      "id": 482,
+      "name": "brachium of the inferior colliculus",
+      "acronym": "bic",
+      "classification": "fiber-tracts-subtree",
+      "mesh": {
+        "url": "/data/kim-v2/meshes/482.bin.gz",
+        "format": "allen-mesh-v1",
+        "compression": "gzip",
+        "bytes": 35298,
+        "uncompressedBytes": 116732,
+        "sha256": "d4d258e57269ad10f02f82e0f672977ce736708a34108cf235856b11ec777256",
+        "uncompressedSha256": "8db5759626c5b872f28993f713e2086272737a99f7e2963b9d2259f848908f5f",
+        "vertexCount": 3173,
+        "triangleCount": 6554,
+        "boundsUm": [
+          [
+            8675.0,
+            9875.0
+          ],
+          [
+            1975.0,
+            4025.0
+          ],
+          [
+            3325.0,
+            8025.0
+          ]
+        ]
+      },
+      "voxelCount": 1528,
+      "volumeMm3": 0.191,
+      "centroidVoxel": [
+        185.681,
+        61.908,
+        113.502
+      ],
+      "focusVoxel": [
+        186,
+        62,
+        69
+      ],
+      "focusUm": [
+        9300,
+        3100,
+        3450
+      ],
+      "boundsVoxel": [
+        [
+          174,
+          197
+        ],
+        [
+          40,
+          80
+        ],
+        [
+          67,
+          160
+        ]
+      ]
+    },
+    {
+      "id": 506,
+      "name": "dorsal acoustic stria",
+      "acronym": "das",
+      "classification": "fiber-tracts-subtree",
+      "mesh": {
+        "url": "/data/kim-v2/meshes/506.bin.gz",
+        "format": "allen-mesh-v1",
+        "compression": "gzip",
+        "bytes": 2284,
+        "uncompressedBytes": 7688,
+        "sha256": "8e8be144462ef46cb64ecafdcd4fce41a3db0a921da15d883e53e753e2135243",
+        "uncompressedSha256": "69ce5f96e5001418ac07809795630313fcc5c9794f9b8608b226bfc564a82c55",
+        "vertexCount": 216,
+        "triangleCount": 424,
+        "boundsUm": [
+          [
+            11475.0,
+            11675.0
+          ],
+          [
+            4525.0,
+            4775.0
+          ],
+          [
+            3675.0,
+            7675.0
+          ]
+        ]
+      },
+      "voxelCount": 70,
+      "volumeMm3": 0.00875,
+      "centroidVoxel": [
+        231.171,
+        93.114,
+        113.5
+      ],
+      "focusVoxel": [
+        231,
+        93,
+        78
+      ],
+      "focusUm": [
+        11550,
+        4650,
+        3900
+      ],
+      "boundsVoxel": [
+        [
+          230,
+          233
+        ],
+        [
+          91,
+          95
+        ],
+        [
+          74,
+          153
+        ]
+      ]
+    },
+    {
+      "id": 530,
+      "name": "dorsal fornix",
+      "acronym": "df",
+      "classification": "fiber-tracts-subtree",
+      "mesh": {
+        "url": "/data/kim-v2/meshes/530.bin.gz",
+        "format": "allen-mesh-v1",
+        "compression": "gzip",
+        "bytes": 31468,
+        "uncompressedBytes": 106016,
+        "sha256": "53a311e755329b8e168a37649cdbf6d58a2cb3cd66568478013811dcb5a467a3",
+        "uncompressedSha256": "10b006471ef54e32ff8e931cd1be4e1b7cb6962d16711c258f0099aa06b9aa07",
+        "vertexCount": 2902,
+        "triangleCount": 5932,
+        "boundsUm": [
+          [
+            5575.0,
+            7775.0
+          ],
+          [
+            1725.0,
+            3175.0
+          ],
+          [
+            4825.0,
+            6525.0
+          ]
+        ]
+      },
+      "voxelCount": 1430,
+      "volumeMm3": 0.17875,
+      "centroidVoxel": [
+        127.192,
+        48.69,
+        113.507
+      ],
+      "focusVoxel": [
+        126,
+        46,
+        109
+      ],
+      "focusUm": [
+        6300,
+        2300,
+        5450
+      ],
+      "boundsVoxel": [
+        [
+          112,
+          155
+        ],
+        [
+          35,
+          63
+        ],
+        [
+          97,
+          130
+        ]
+      ]
+    },
+    {
+      "id": 579,
+      "name": "external capsule",
+      "acronym": "ec",
+      "classification": "fiber-tracts-subtree",
+      "mesh": {
+        "url": "/data/kim-v2/meshes/579.bin.gz",
+        "format": "allen-mesh-v1",
+        "compression": "gzip",
+        "bytes": 912472,
+        "uncompressedBytes": 2909096,
+        "sha256": "e7e31e52de953069d4e603edad2e7f1542125d1d744f9bd17054afcb52805ae2",
+        "uncompressedSha256": "9209f201e42528159225e11a378351e0501d41fe5782e5483e5949489bc4f255",
+        "vertexCount": 78896,
+        "triangleCount": 163528,
+        "boundsUm": [
+          [
+            4075.0,
+            9575.0
+          ],
+          [
+            1275.0,
+            6525.0
+          ],
+          [
+            1375.0,
+            10025.0
+          ]
+        ]
+      },
+      "voxelCount": 44616,
+      "volumeMm3": 5.577,
+      "centroidVoxel": [
+        135.256,
+        65.251,
+        113.505
+      ],
+      "focusVoxel": [
+        133,
+        62,
+        48
+      ],
+      "focusUm": [
+        6650,
+        3100,
+        2400
+      ],
+      "boundsVoxel": [
+        [
+          82,
+          191
+        ],
+        [
+          26,
+          130
+        ],
+        [
+          28,
+          200
+        ]
+      ]
+    },
+    {
+      "id": 595,
+      "name": "fasciculus retroflexus",
+      "acronym": "fr",
+      "classification": "fiber-tracts-subtree",
+      "mesh": {
+        "url": "/data/kim-v2/meshes/595.bin.gz",
+        "format": "allen-mesh-v1",
+        "compression": "gzip",
+        "bytes": 27630,
+        "uncompressedBytes": 93224,
+        "sha256": "8ac4523c8d9cdc2b5f48f3d66bf8df9dcc247c9dbe21cf4259b84b6bb47d40a5",
+        "uncompressedSha256": "f92c8bb7cbbfa5bfee2fbbf6f2b81996419092c258f97ebbc519acfad1bb64a1",
+        "vertexCount": 2592,
+        "triangleCount": 5176,
+        "boundsUm": [
+          [
+            6675.0,
+            8475.0
+          ],
+          [
+            3025.0,
+            5175.0
+          ],
+          [
+            4975.0,
+            6425.0
+          ]
+        ]
+      },
+      "voxelCount": 1682,
+      "volumeMm3": 0.21025,
+      "centroidVoxel": [
+        151.53,
+        80.792,
+        113.524
+      ],
+      "focusVoxel": [
+        152,
+        81,
+        106
+      ],
+      "focusUm": [
+        7600,
+        4050,
+        5300
+      ],
+      "boundsVoxel": [
+        [
+          134,
+          169
+        ],
+        [
+          61,
+          103
+        ],
+        [
+          100,
+          128
+        ]
+      ]
+    },
+    {
+      "id": 603,
+      "name": "fimbria of the hippocampus",
+      "acronym": "fi",
+      "classification": "fiber-tracts-subtree",
+      "mesh": {
+        "url": "/data/kim-v2/meshes/603.bin.gz",
+        "format": "allen-mesh-v1",
+        "compression": "gzip",
+        "bytes": 136228,
+        "uncompressedBytes": 440000,
+        "sha256": "4182944c9ae3399926e84926a02e5c7074a4af38bcd68dbe87f7758d1260620b",
+        "uncompressedSha256": "05eb7c1debfe4f2b74d835cae11c3b35a73a0e09fae9adc1208d5af6b6365cc6",
+        "vertexCount": 12182,
+        "triangleCount": 24484,
+        "boundsUm": [
+          [
+            5675.0,
+            7675.0
+          ],
+          [
+            2275.0,
+            4825.0
+          ],
+          [
+            2025.0,
+            9325.0
+          ]
+        ]
+      },
+      "voxelCount": 10609,
+      "volumeMm3": 1.326125,
+      "centroidVoxel": [
+        134.906,
+        63.626,
+        113.512
+      ],
+      "focusVoxel": [
+        134,
+        63,
+        72
+      ],
+      "focusUm": [
+        6700,
+        3150,
+        3600
+      ],
+      "boundsVoxel": [
+        [
+          114,
+          153
+        ],
+        [
+          46,
+          96
+        ],
+        [
+          41,
+          186
+        ]
+      ]
+    },
+    {
+      "id": 611,
+      "name": "habenular commissure",
+      "acronym": "hbc",
+      "classification": "fiber-tracts-subtree",
+      "mesh": {
+        "url": "/data/kim-v2/meshes/611.bin.gz",
+        "format": "allen-mesh-v1",
+        "compression": "gzip",
+        "bytes": 7090,
+        "uncompressedBytes": 24248,
+        "sha256": "fd4f8b631595740d7dd7732a87fd507253ebaf1c4f74259e828684ea7edf6cef",
+        "uncompressedSha256": "9afc41bc21e561e8a0265366e8880ad324df53b4b451d6294ff6f6704e1d758b",
+        "vertexCount": 672,
+        "triangleCount": 1348,
+        "boundsUm": [
+          [
+            7175.0,
+            7775.0
+          ],
+          [
+            2525.0,
+            2925.0
+          ],
+          [
+            5175.0,
+            6175.0
+          ]
+        ]
+      },
+      "voxelCount": 371,
+      "volumeMm3": 0.046375,
+      "centroidVoxel": [
+        149.693,
+        53.806,
+        113.523
+      ],
+      "focusVoxel": [
+        150,
+        54,
+        108
+      ],
+      "focusUm": [
+        7500,
+        2700,
+        5400
+      ],
+      "boundsVoxel": [
+        [
+          144,
+          155
+        ],
+        [
+          51,
+          58
+        ],
+        [
+          104,
+          123
+        ]
+      ]
+    },
+    {
+      "id": 658,
+      "name": "lateral lemniscus",
+      "acronym": "ll",
+      "classification": "fiber-tracts-subtree",
+      "mesh": {
+        "url": "/data/kim-v2/meshes/658.bin.gz",
+        "format": "allen-mesh-v1",
+        "compression": "gzip",
+        "bytes": 52688,
+        "uncompressedBytes": 169232,
+        "sha256": "7bb3f12ead32225692c5b6601cc1c0d99ce5320850c661b221f91800cc7b24cc",
+        "uncompressedSha256": "d030859142de8873cd1d671d2e37d913b24471a6d91890059008057ac123a903",
+        "vertexCount": 4698,
+        "triangleCount": 9404,
+        "boundsUm": [
+          [
+            9275.0,
+            9875.0
+          ],
+          [
+            4425.0,
+            6675.0
+          ],
+          [
+            3725.0,
+            7675.0
+          ]
+        ]
+      },
+      "voxelCount": 4024,
+      "volumeMm3": 0.503,
+      "centroidVoxel": [
+        191.337,
+        112.164,
+        113.544
+      ],
+      "focusVoxel": [
+        191,
+        112,
+        83
+      ],
+      "focusUm": [
+        9550,
+        5600,
+        4150
+      ],
+      "boundsVoxel": [
+        [
+          186,
+          197
+        ],
+        [
+          89,
+          133
+        ],
+        [
+          75,
+          153
+        ]
+      ]
+    },
+    {
+      "id": 665,
+      "name": "lateral olfactory tract",
+      "acronym": "lo",
+      "classification": "fiber-tracts-subtree",
+      "mesh": {
+        "url": "/data/kim-v2/meshes/665.bin.gz",
+        "format": "allen-mesh-v1",
+        "compression": "gzip",
+        "bytes": 200782,
+        "uncompressedBytes": 661256,
+        "sha256": "6b859fa1873cc5403784fb3035605e2038eb8c7fbe980cd1d70d803acc4e440a",
+        "uncompressedSha256": "d2da4ee54ea16662d6ae219b8e3ae865dfe91e7fa292b8abccde42c37b1362d2",
+        "vertexCount": 17856,
+        "triangleCount": 37248,
+        "boundsUm": [
+          [
+            975.0,
+            5175.0
+          ],
+          [
+            3175.0,
+            7075.0
+          ],
+          [
+            2375.0,
+            8975.0
+          ]
+        ]
+      },
+      "voxelCount": 8803,
+      "volumeMm3": 1.100375,
+      "centroidVoxel": [
+        54.797,
+        106.455,
+        113.514
+      ],
+      "focusVoxel": [
+        55,
+        106,
+        78
+      ],
+      "focusUm": [
+        2750,
+        5300,
+        3900
+      ],
+      "boundsVoxel": [
+        [
+          20,
+          103
+        ],
+        [
+          64,
+          141
+        ],
+        [
+          48,
+          179
+        ]
+      ]
+    },
+    {
+      "id": 681,
+      "name": "mammillotegmental tract",
+      "acronym": "mtg",
+      "classification": "fiber-tracts-subtree",
+      "mesh": {
+        "url": "/data/kim-v2/meshes/681.bin.gz",
+        "format": "allen-mesh-v1",
+        "compression": "gzip",
+        "bytes": 3215,
+        "uncompressedBytes": 11072,
+        "sha256": "81dc0bd2b79bf9cde9054e6fa3e1e96867b057c337a0e875913c68aa977d4ec3",
+        "uncompressedSha256": "f0b7f32bff86dd99ccc076003b04628fed2bbea250f749dc0e5cbc69f97ca049",
+        "vertexCount": 314,
+        "triangleCount": 608,
+        "boundsUm": [
+          [
+            8175.0,
+            8575.0
+          ],
+          [
+            4425.0,
+            5275.0
+          ],
+          [
+            5525.0,
+            5825.0
+          ]
+        ]
+      },
+      "voxelCount": 92,
+      "volumeMm3": 0.0115,
+      "centroidVoxel": [
+        166.533,
+        97.37,
+        113.446
+      ],
+      "focusVoxel": [
+        166,
+        98,
+        111
+      ],
+      "focusUm": [
+        8300,
+        4900,
+        5550
+      ],
+      "boundsVoxel": [
+        [
+          164,
+          171
+        ],
+        [
+          89,
+          105
+        ],
+        [
+          111,
+          116
+        ]
+      ]
+    },
+    {
+      "id": 690,
+      "name": "mammilothalmic tract",
+      "acronym": "mt",
+      "classification": "fiber-tracts-subtree",
+      "mesh": {
+        "url": "/data/kim-v2/meshes/690.bin.gz",
+        "format": "allen-mesh-v1",
+        "compression": "gzip",
+        "bytes": 23828,
+        "uncompressedBytes": 81128,
+        "sha256": "480eb3591ebeee29df136ed46b0ddb5ed810687fb4a461a7d7719f153441bc1a",
+        "uncompressedSha256": "a5c10883db5a284dcfb6ce55ac73b99c0ef5444f44ffaa791f44a04c0f4ea6bf",
+        "vertexCount": 2244,
+        "triangleCount": 4516,
+        "boundsUm": [
+          [
+            6275.0,
+            8075.0
+          ],
+          [
+            4675.0,
+            6225.0
+          ],
+          [
+            4975.0,
+            6375.0
+          ]
+        ]
+      },
+      "voxelCount": 1479,
+      "volumeMm3": 0.184875,
+      "centroidVoxel": [
+        142.9,
+        107.207,
+        113.483
+      ],
+      "focusVoxel": [
+        143,
+        107,
+        103
+      ],
+      "focusUm": [
+        7150,
+        5350,
+        5150
+      ],
+      "boundsVoxel": [
+        [
+          126,
+          161
+        ],
+        [
+          94,
+          124
+        ],
+        [
+          100,
+          127
+        ]
+      ]
+    },
+    {
+      "id": 697,
+      "name": "medial lemniscus",
+      "acronym": "ml",
+      "classification": "fiber-tracts-subtree",
+      "mesh": {
+        "url": "/data/kim-v2/meshes/697.bin.gz",
+        "format": "allen-mesh-v1",
+        "compression": "gzip",
+        "bytes": 138561,
+        "uncompressedBytes": 465320,
+        "sha256": "e1b563ba0be2f5bec215604720d93b7fffc147249fcb10ff1de8014fa937fe31",
+        "uncompressedSha256": "48571a575cacbdc4b7978903ec88d8ebec82859557dd3bcffc10e2128651fae1",
+        "vertexCount": 12876,
+        "triangleCount": 25900,
+        "boundsUm": [
+          [
+            7075.0,
+            12475.0
+          ],
+          [
+            3975.0,
+            7475.0
+          ],
+          [
+            3275.0,
+            8075.0
+          ]
+        ]
+      },
+      "voxelCount": 10237,
+      "volumeMm3": 1.279625,
+      "centroidVoxel": [
+        183.321,
+        113.588,
+        113.515
+      ],
+      "focusVoxel": [
+        183,
+        114,
+        99
+      ],
+      "focusUm": [
+        9150,
+        5700,
+        4950
+      ],
+      "boundsVoxel": [
+        [
+          142,
+          249
+        ],
+        [
+          80,
+          149
+        ],
+        [
+          66,
+          161
+        ]
+      ]
+    },
+    {
+      "id": 705,
+      "name": "mesencephalic trigeminal tract",
+      "acronym": "me5",
+      "classification": "fiber-tracts-subtree",
+      "mesh": {
+        "url": "/data/kim-v2/meshes/705.bin.gz",
+        "format": "allen-mesh-v1",
+        "compression": "gzip",
+        "bytes": 9043,
+        "uncompressedBytes": 30152,
+        "sha256": "1d1459005eb58185fbb447e1bba30e5eeacc2d0b6e0339bd274b4ef9aee31d06",
+        "uncompressedSha256": "0affd8a24d179f3957176b490f2d77c37b354750fe3b06d967a0effd2817a2be",
+        "vertexCount": 832,
+        "triangleCount": 1680,
+        "boundsUm": [
+          [
+            10375.0,
+            10775.0
+          ],
+          [
+            3775.0,
+            4675.0
+          ],
+          [
+            4525.0,
+            6825.0
+          ]
+        ]
+      },
+      "voxelCount": 376,
+      "volumeMm3": 0.047,
+      "centroidVoxel": [
+        210.846,
+        83.822,
+        113.391
+      ],
+      "focusVoxel": [
+        210,
+        84,
+        93
+      ],
+      "focusUm": [
+        10500,
+        4200,
+        4650
+      ],
+      "boundsVoxel": [
+        [
+          208,
+          215
+        ],
+        [
+          76,
+          93
+        ],
+        [
+          91,
+          136
+        ]
+      ]
+    },
+    {
+      "id": 744,
+      "name": "cerebellar commissure",
+      "acronym": "cbc",
+      "classification": "fiber-tracts-subtree",
+      "mesh": {
+        "url": "/data/kim-v2/meshes/744.bin.gz",
+        "format": "allen-mesh-v1",
+        "compression": "gzip",
+        "bytes": 6892,
+        "uncompressedBytes": 23312,
+        "sha256": "83fe4829940c30a2fbddc92337edd383ac198499414bec2f80cec5c701e49ba0",
+        "uncompressedSha256": "abb65762c3b6c9cf16c87a081db1e13bc2d5c886d55a1cca60dcd6fa884e60bd",
+        "vertexCount": 646,
+        "triangleCount": 1296,
+        "boundsUm": [
+          [
+            11575.0,
+            11875.0
+          ],
+          [
+            3325.0,
+            3825.0
+          ],
+          [
+            5175.0,
+            6175.0
+          ]
+        ]
+      },
+      "voxelCount": 467,
+      "volumeMm3": 0.058375,
+      "centroidVoxel": [
+        233.762,
+        72.37,
+        113.561
+      ],
+      "focusVoxel": [
+        234,
+        72,
+        108
+      ],
+      "focusUm": [
+        11700,
+        3600,
+        5400
+      ],
+      "boundsVoxel": [
+        [
+          232,
+          237
+        ],
+        [
+          67,
+          76
+        ],
+        [
+          104,
+          123
+        ]
+      ]
+    },
+    {
+      "id": 753,
+      "name": "principal mammillary tract",
+      "acronym": "pm",
+      "classification": "fiber-tracts-subtree",
+      "mesh": {
+        "url": "/data/kim-v2/meshes/753.bin.gz",
+        "format": "allen-mesh-v1",
+        "compression": "gzip",
+        "bytes": 1352,
+        "uncompressedBytes": 4664,
+        "sha256": "ff88a4ffcf2d7c0c313fa504470bbcf39dc5bf94670fdf8a7ac58747b29c6865",
+        "uncompressedSha256": "e2b0c67e4a2358acd975ae0a6933b0e4b2fb7ebf502ceb26a0bb6c84d000c967",
+        "vertexCount": 132,
+        "triangleCount": 256,
+        "boundsUm": [
+          [
+            8075.0,
+            8375.0
+          ],
+          [
+            5825.0,
+            6025.0
+          ],
+          [
+            5325.0,
+            6025.0
+          ]
+        ]
+      },
+      "voxelCount": 36,
+      "volumeMm3": 0.0045,
+      "centroidVoxel": [
+        163.833,
+        118.833,
+        113.5
+      ],
+      "focusVoxel": [
+        164,
+        119,
+        108
+      ],
+      "focusUm": [
+        8200,
+        5950,
+        5400
+      ],
+      "boundsVoxel": [
+        [
+          162,
+          167
+        ],
+        [
+          117,
+          120
+        ],
+        [
+          107,
+          120
+        ]
+      ]
+    },
+    {
+      "id": 776,
+      "name": "corpus callosum",
+      "acronym": "cc",
+      "classification": "fiber-tracts-subtree",
+      "mesh": {
+        "url": "/data/kim-v2/meshes/776.bin.gz",
+        "format": "allen-mesh-v1",
+        "compression": "gzip",
+        "bytes": 214943,
+        "uncompressedBytes": 689504,
+        "sha256": "d99174704069da3666b447d35ad683621315e47a7ba03901ea861f77b35ef622",
+        "uncompressedSha256": "40e410d47dbb7ca257b61ea1e240387c2c681623cb41da339f0cac1d932f1eb7",
+        "vertexCount": 19018,
+        "triangleCount": 38440,
+        "boundsUm": [
+          [
+            4675.0,
+            7975.0
+          ],
+          [
+            1225.0,
+            3525.0
+          ],
+          [
+            3075.0,
+            8275.0
+          ]
+        ]
+      },
+      "voxelCount": 17565,
+      "volumeMm3": 2.195625,
+      "centroidVoxel": [
+        125.591,
+        42.384,
+        113.507
+      ],
+      "focusVoxel": [
+        125,
+        42,
+        99
+      ],
+      "focusUm": [
+        6250,
+        2100,
+        4950
+      ],
+      "boundsVoxel": [
+        [
+          94,
+          159
+        ],
+        [
+          25,
+          70
+        ],
+        [
+          62,
+          165
+        ]
+      ]
+    },
+    {
+      "id": 794,
+      "name": "spinal trigeminal tract",
+      "acronym": "sp5",
+      "classification": "fiber-tracts-subtree",
+      "mesh": {
+        "url": "/data/kim-v2/meshes/794.bin.gz",
+        "format": "allen-mesh-v1",
+        "compression": "gzip",
+        "bytes": 167525,
+        "uncompressedBytes": 546968,
+        "sha256": "b7943c87eddd57532831006d7eef1ba22fc5312f3594ea5aadf06f41dbec9c6b",
+        "uncompressedSha256": "070343805b635c75265a95153ff825d6d26106001a19f266e6c0d5980cf52e8a",
+        "vertexCount": 15100,
+        "triangleCount": 30480,
+        "boundsUm": [
+          [
+            10575.0,
+            13175.0
+          ],
+          [
+            4875.0,
+            6875.0
+          ],
+          [
+            3125.0,
+            8275.0
+          ]
+        ]
+      },
+      "voxelCount": 12302,
+      "volumeMm3": 1.53775,
+      "centroidVoxel": [
+        234.841,
+        116.754,
+        113.522
+      ],
+      "focusVoxel": [
+        234,
+        117,
+        69
+      ],
+      "focusUm": [
+        11700,
+        5850,
+        3450
+      ],
+      "boundsVoxel": [
+        [
+          212,
+          263
+        ],
+        [
+          98,
+          137
+        ],
+        [
+          63,
+          165
+        ]
+      ]
+    },
+    {
+      "id": 798,
+      "name": "facial nerve",
+      "acronym": "7n",
+      "classification": "fiber-tracts-subtree",
+      "mesh": {
+        "url": "/data/kim-v2/meshes/798.bin.gz",
+        "format": "allen-mesh-v1",
+        "compression": "gzip",
+        "bytes": 36323,
+        "uncompressedBytes": 117692,
+        "sha256": "d7d43da5a9725a6db0416b2bf24602b41786dc18acc1504cfe250b6073770b60",
+        "uncompressedSha256": "569fc3ed4b865692f4099a5d3150ed514379d3bb9876b095fff5bf0aad252689",
+        "vertexCount": 3265,
+        "triangleCount": 6542,
+        "boundsUm": [
+          [
+            10275.0,
+            10875.0
+          ],
+          [
+            4975.0,
+            7025.0
+          ],
+          [
+            3175.0,
+            8175.0
+          ]
+        ]
+      },
+      "voxelCount": 2489,
+      "volumeMm3": 0.311125,
+      "centroidVoxel": [
+        211.513,
+        117.229,
+        113.569
+      ],
+      "focusVoxel": [
+        212,
+        117,
+        87
+      ],
+      "focusUm": [
+        10600,
+        5850,
+        4350
+      ],
+      "boundsVoxel": [
+        [
+          206,
+          217
+        ],
+        [
+          100,
+          140
+        ],
+        [
+          64,
+          163
+        ]
+      ]
+    },
+    {
+      "id": 802,
+      "name": "stria medullaris",
+      "acronym": "sm",
+      "classification": "fiber-tracts-subtree",
+      "mesh": {
+        "url": "/data/kim-v2/meshes/802.bin.gz",
+        "format": "allen-mesh-v1",
+        "compression": "gzip",
+        "bytes": 42509,
+        "uncompressedBytes": 140192,
+        "sha256": "2f9e9925855eabce81128d05f93e53a377034d48fd3e8dcfacaa4e4a1f8708ac",
+        "uncompressedSha256": "a9b0f262ba5fa080899197c3c5aff4b86a20071db69da48131cf48455f974016",
+        "vertexCount": 3894,
+        "triangleCount": 7788,
+        "boundsUm": [
+          [
+            5575.0,
+            7075.0
+          ],
+          [
+            2525.0,
+            5425.0
+          ],
+          [
+            4525.0,
+            6825.0
+          ]
+        ]
+      },
+      "voxelCount": 2799,
+      "volumeMm3": 0.349875,
+      "centroidVoxel": [
+        122.833,
+        76.763,
+        113.469
+      ],
+      "focusVoxel": [
+        122,
+        76,
+        102
+      ],
+      "focusUm": [
+        6100,
+        3800,
+        5100
+      ],
+      "boundsVoxel": [
+        [
+          112,
+          141
+        ],
+        [
+          51,
+          108
+        ],
+        [
+          91,
+          136
+        ]
+      ]
+    },
+    {
+      "id": 812,
+      "name": "decussation of the superior cerebellar peduncle",
+      "acronym": "xscp",
+      "classification": "fiber-tracts-subtree",
+      "mesh": {
+        "url": "/data/kim-v2/meshes/812.bin.gz",
+        "format": "allen-mesh-v1",
+        "compression": "gzip",
+        "bytes": 29438,
+        "uncompressedBytes": 96296,
+        "sha256": "2cb16da444186eed9243f88f4fd9f849150d032b92c8b94dee74a21045a4a37f",
+        "uncompressedSha256": "0ab400634b6e2b41cb2e853b89598798b9122d5bd4321c3ce91ce385db0cded4",
+        "vertexCount": 2668,
+        "triangleCount": 5356,
+        "boundsUm": [
+          [
+            9175.0,
+            9975.0
+          ],
+          [
+            4025.0,
+            4825.0
+          ],
+          [
+            4325.0,
+            7025.0
+          ]
+        ]
+      },
+      "voxelCount": 3074,
+      "volumeMm3": 0.38425,
+      "centroidVoxel": [
+        191.525,
+        87.541,
+        113.497
+      ],
+      "focusVoxel": [
+        192,
+        88,
+        105
+      ],
+      "focusUm": [
+        9600,
+        4400,
+        5250
+      ],
+      "boundsVoxel": [
+        [
+          184,
+          199
+        ],
+        [
+          81,
+          96
+        ],
+        [
+          87,
+          140
+        ]
+      ]
+    },
+    {
+      "id": 850,
+      "name": "uncinate fasciculus of the cerebellum",
+      "acronym": "un",
+      "classification": "fiber-tracts-subtree",
+      "mesh": {
+        "url": "/data/kim-v2/meshes/850.bin.gz",
+        "format": "allen-mesh-v1",
+        "compression": "gzip",
+        "bytes": 10860,
+        "uncompressedBytes": 35108,
+        "sha256": "b5bb574c2018a05788328547a6059ac2a90022255b07341df5faa6c1dbebbef0",
+        "uncompressedSha256": "324a00a6ec60a27bee7e9fdba1d54b0ed94b72f2eac2e6931f62f4631b5d0694",
+        "vertexCount": 963,
+        "triangleCount": 1962,
+        "boundsUm": [
+          [
+            10675.0,
+            10975.0
+          ],
+          [
+            3725.0,
+            4575.0
+          ],
+          [
+            3625.0,
+            7725.0
+          ]
+        ]
+      },
+      "voxelCount": 392,
+      "volumeMm3": 0.049,
+      "centroidVoxel": [
+        215.656,
+        82.367,
+        113.849
+      ],
+      "focusVoxel": [
+        216,
+        82,
+        81
+      ],
+      "focusUm": [
+        10800,
+        4100,
+        4050
+      ],
+      "boundsVoxel": [
+        [
+          214,
+          219
+        ],
+        [
+          75,
+          91
+        ],
+        [
+          73,
+          154
+        ]
+      ]
+    },
+    {
+      "id": 851,
+      "name": "Optic layer of the superior colliculus",
+      "acronym": "Op",
+      "classification": "superior-colliculus-white-layer-exception",
+      "mesh": {
+        "url": "/data/kim-v2/meshes/851.bin.gz",
+        "format": "allen-mesh-v1",
+        "compression": "gzip",
+        "bytes": 128667,
+        "uncompressedBytes": 412220,
+        "sha256": "2807326f763d619b3d52f222b6703dd09fe198290e40e33a162111c524ef4286",
+        "uncompressedSha256": "f793a2248c06785b4f561cd233f78f7b4238a25f6550b07610005875c5e0497e",
+        "vertexCount": 11273,
+        "triangleCount": 23078,
+        "boundsUm": [
+          [
+            8175.0,
+            10275.0
+          ],
+          [
+            1325.0,
+            3225.0
+          ],
+          [
+            3425.0,
+            7925.0
+          ]
+        ]
+      },
+      "voxelCount": 6601,
+      "volumeMm3": 0.825125,
+      "centroidVoxel": [
+        181.274,
+        37.163,
+        113.475
+      ],
+      "focusVoxel": [
+        180,
+        36,
+        96
+      ],
+      "focusUm": [
+        9000,
+        1800,
+        4800
+      ],
+      "boundsVoxel": [
+        [
+          164,
+          205
+        ],
+        [
+          27,
+          64
+        ],
+        [
+          69,
+          158
+        ]
+      ]
+    },
+    {
+      "id": 863,
+      "name": "rubrospinal tract",
+      "acronym": "rs",
+      "classification": "fiber-tracts-subtree",
+      "mesh": {
+        "url": "/data/kim-v2/meshes/863.bin.gz",
+        "format": "allen-mesh-v1",
+        "compression": "gzip",
+        "bytes": 22062,
+        "uncompressedBytes": 75296,
+        "sha256": "9b77c93b987474dc22733981a109bb0e65ef3d74d6a4e572e78b05eb01343ece",
+        "uncompressedSha256": "8fa884b1f5978f0be04eb720d2c3858b3b126866d692a95f63aec19ee2ff6ee8",
+        "vertexCount": 2102,
+        "triangleCount": 4172,
+        "boundsUm": [
+          [
+            8875.0,
+            12575.0
+          ],
+          [
+            4675.0,
+            6925.0
+          ],
+          [
+            3525.0,
+            7825.0
+          ]
+        ]
+      },
+      "voxelCount": 1193,
+      "volumeMm3": 0.149125,
+      "centroidVoxel": [
+        200.438,
+        109.299,
+        113.451
+      ],
+      "focusVoxel": [
+        193,
+        109,
+        83
+      ],
+      "focusUm": [
+        9650,
+        5450,
+        4150
+      ],
+      "boundsVoxel": [
+        [
+          178,
+          251
+        ],
+        [
+          94,
+          138
+        ],
+        [
+          71,
+          156
+        ]
+      ]
+    },
+    {
+      "id": 877,
+      "name": "tectospinal tract",
+      "acronym": "ts",
+      "classification": "fiber-tracts-subtree",
+      "mesh": {
+        "url": "/data/kim-v2/meshes/877.bin.gz",
+        "format": "allen-mesh-v1",
+        "compression": "gzip",
+        "bytes": 30047,
+        "uncompressedBytes": 98840,
+        "sha256": "0a47bf0f211cbbfde5da70ea6c09a20046812cac567030914b8ada027f10824e",
+        "uncompressedSha256": "c2fd1f78f3626b5f5438de57a744a4c6a1e76a518b189b6eb6ff6d09dd42dbc8",
+        "vertexCount": 2724,
+        "triangleCount": 5512,
+        "boundsUm": [
+          [
+            9175.0,
+            10075.0
+          ],
+          [
+            4425.0,
+            5775.0
+          ],
+          [
+            5075.0,
+            6275.0
+          ]
+        ]
+      },
+      "voxelCount": 1761,
+      "volumeMm3": 0.220125,
+      "centroidVoxel": [
+        193.475,
+        102.481,
+        113.498
+      ],
+      "focusVoxel": [
+        193,
+        102,
+        104
+      ],
+      "focusUm": [
+        9650,
+        5100,
+        5200
+      ],
+      "boundsVoxel": [
+        [
+          184,
+          201
+        ],
+        [
+          89,
+          115
+        ],
+        [
+          102,
+          125
+        ]
+      ]
+    },
+    {
+      "id": 900,
+      "name": "anterior commissure, anterior part",
+      "acronym": "aca",
+      "classification": "fiber-tracts-subtree",
+      "mesh": {
+        "url": "/data/kim-v2/meshes/900.bin.gz",
+        "format": "allen-mesh-v1",
+        "compression": "gzip",
+        "bytes": 45293,
+        "uncompressedBytes": 150596,
+        "sha256": "b90e4c0174b1beab0a11463c157a10690e3acf6de7b358a801dade2796d965d5",
+        "uncompressedSha256": "3a8dd5a728887d27456057824309f2196375bf42bf225a2e4915bf567b092032",
+        "vertexCount": 4183,
+        "triangleCount": 8366,
+        "boundsUm": [
+          [
+            3275.0,
+            5575.0
+          ],
+          [
+            4825.0,
+            5725.0
+          ],
+          [
+            4125.0,
+            7225.0
+          ]
+        ]
+      },
+      "voxelCount": 4361,
+      "volumeMm3": 0.545125,
+      "centroidVoxel": [
+        90.316,
+        106.932,
+        113.501
+      ],
+      "focusVoxel": [
+        90,
+        107,
+        94
+      ],
+      "focusUm": [
+        4500,
+        5350,
+        4700
+      ],
+      "boundsVoxel": [
+        [
+          66,
+          111
+        ],
+        [
+          97,
+          114
+        ],
+        [
+          83,
+          144
+        ]
+      ]
+    },
+    {
+      "id": 908,
+      "name": "anterior commissure, posterior limb",
+      "acronym": "acp",
+      "classification": "fiber-tracts-subtree",
+      "mesh": {
+        "url": "/data/kim-v2/meshes/908.bin.gz",
+        "format": "allen-mesh-v1",
+        "compression": "gzip",
+        "bytes": 40634,
+        "uncompressedBytes": 130520,
+        "sha256": "b6e16bdc657630ed316d5fee9ae4bf6c9139e9f0cf33c8c0e3dda5d1decd0a16",
+        "uncompressedSha256": "756afd33b419e09fc6e63bd07b46c918edd2ef3d67aa802d13242bfff0642e3c",
+        "vertexCount": 3616,
+        "triangleCount": 7260,
+        "boundsUm": [
+          [
+            4975.0,
+            5975.0
+          ],
+          [
+            4925.0,
+            6075.0
+          ],
+          [
+            2525.0,
+            8825.0
+          ]
+        ]
+      },
+      "voxelCount": 2429,
+      "volumeMm3": 0.303625,
+      "centroidVoxel": [
+        108.142,
+        110.971,
+        113.553
+      ],
+      "focusVoxel": [
+        108,
+        111,
+        82
+      ],
+      "focusUm": [
+        5400,
+        5550,
+        4100
+      ],
+      "boundsVoxel": [
+        [
+          100,
+          119
+        ],
+        [
+          99,
+          121
+        ],
+        [
+          51,
+          176
+        ]
+      ]
+    },
+    {
+      "id": 916,
+      "name": "brachium of the superior colliculus",
+      "acronym": "bsc",
+      "classification": "fiber-tracts-subtree",
+      "mesh": {
+        "url": "/data/kim-v2/meshes/916.bin.gz",
+        "format": "allen-mesh-v1",
+        "compression": "gzip",
+        "bytes": 82446,
+        "uncompressedBytes": 264704,
+        "sha256": "15191a48cad8081b0aa3975f5624178b341807bf5c3dff11d5ee5be52629c026",
+        "uncompressedSha256": "38eace6421cf2dfe44cffa2b5df854ff0c270e4bd63c4450a11ac6033911c01c",
+        "vertexCount": 7266,
+        "triangleCount": 14792,
+        "boundsUm": [
+          [
+            7475.0,
+            8875.0
+          ],
+          [
+            1975.0,
+            4525.0
+          ],
+          [
+            2925.0,
+            8425.0
+          ]
+        ]
+      },
+      "voxelCount": 4466,
+      "volumeMm3": 0.55825,
+      "centroidVoxel": [
+        163.313,
+        55.457,
+        113.492
+      ],
+      "focusVoxel": [
+        163,
+        55,
+        80
+      ],
+      "focusUm": [
+        8150,
+        2750,
+        4000
+      ],
+      "boundsVoxel": [
+        [
+          150,
+          177
+        ],
+        [
+          40,
+          90
+        ],
+        [
+          59,
+          168
+        ]
+      ]
+    },
+    {
+      "id": 924,
+      "name": "cerebral peduncle",
+      "acronym": "cp",
+      "classification": "fiber-tracts-subtree",
+      "mesh": {
+        "url": "/data/kim-v2/meshes/924.bin.gz",
+        "format": "allen-mesh-v1",
+        "compression": "gzip",
+        "bytes": 164568,
+        "uncompressedBytes": 529400,
+        "sha256": "9afcc844228967f8b0c4d05fea26a0c68e99b82fc9dbe151a73f53ca93c25dec",
+        "uncompressedSha256": "7db96468192e479b60213ff96e646a1b845de233d55d95e447dfd23effe07c46",
+        "vertexCount": 14624,
+        "triangleCount": 29492,
+        "boundsUm": [
+          [
+            7175.0,
+            9475.0
+          ],
+          [
+            4075.0,
+            6575.0
+          ],
+          [
+            2825.0,
+            8525.0
+          ]
+        ]
+      },
+      "voxelCount": 16876,
+      "volumeMm3": 2.1095,
+      "centroidVoxel": [
+        162.313,
+        108.822,
+        113.495
+      ],
+      "focusVoxel": [
+        162,
+        111,
+        76
+      ],
+      "focusUm": [
+        8100,
+        5550,
+        3800
+      ],
+      "boundsVoxel": [
+        [
+          144,
+          189
+        ],
+        [
+          82,
+          131
+        ],
+        [
+          57,
+          170
+        ]
+      ]
+    },
+    {
+      "id": 933,
+      "name": "vestibulocochlear nerve",
+      "acronym": "8n",
+      "classification": "fiber-tracts-subtree",
+      "mesh": {
+        "url": "/data/kim-v2/meshes/933.bin.gz",
+        "format": "allen-mesh-v1",
+        "compression": "gzip",
+        "bytes": 42871,
+        "uncompressedBytes": 140432,
+        "sha256": "7d983f912957fdec6b9bed173aa284bb52513a05e2afddc74843a5533ee3ca60",
+        "uncompressedSha256": "cbe29bbe86bc7e5908ee7fb4d0a6b59832408c9d6cd68206ccf4d8a0a12aa75f",
+        "vertexCount": 3890,
+        "triangleCount": 7812,
+        "boundsUm": [
+          [
+            10275.0,
+            11475.0
+          ],
+          [
+            5075.0,
+            6775.0
+          ],
+          [
+            2775.0,
+            8575.0
+          ]
+        ]
+      },
+      "voxelCount": 3459,
+      "volumeMm3": 0.432375,
+      "centroidVoxel": [
+        216.119,
+        122.226,
+        113.523
+      ],
+      "focusVoxel": [
+        216,
+        122,
+        62
+      ],
+      "focusUm": [
+        10800,
+        6100,
+        3100
+      ],
+      "boundsVoxel": [
+        [
+          206,
+          229
+        ],
+        [
+          102,
+          135
+        ],
+        [
+          56,
+          171
+        ]
+      ]
+    },
+    {
+      "id": 940,
+      "name": "cingulum",
+      "acronym": "cg",
+      "classification": "fiber-tracts-subtree",
+      "mesh": {
+        "url": "/data/kim-v2/meshes/940.bin.gz",
+        "format": "allen-mesh-v1",
+        "compression": "gzip",
+        "bytes": 263298,
+        "uncompressedBytes": 853760,
+        "sha256": "d482576d4a79111e20e1c0202752c42c1397be3bcbc4e8d0569b6958430acbca",
+        "uncompressedSha256": "4bd34e84f4f49ab2320bb0acea5d5345e9c58fed9b27f36a8a34de0d3830761d",
+        "vertexCount": 23214,
+        "triangleCount": 47932,
+        "boundsUm": [
+          [
+            3775.0,
+            9175.0
+          ],
+          [
+            1025.0,
+            4325.0
+          ],
+          [
+            3075.0,
+            8275.0
+          ]
+        ]
+      },
+      "voxelCount": 12689,
+      "volumeMm3": 1.586125,
+      "centroidVoxel": [
+        124.854,
+        39.685,
+        113.507
+      ],
+      "focusVoxel": [
+        124,
+        37,
+        90
+      ],
+      "focusUm": [
+        6200,
+        1850,
+        4500
+      ],
+      "boundsVoxel": [
+        [
+          76,
+          183
+        ],
+        [
+          21,
+          86
+        ],
+        [
+          62,
+          165
+        ]
+      ]
+    },
+    {
+      "id": 941,
+      "name": "vestibulomesencephalic tract",
+      "acronym": "veme",
+      "classification": "fiber-tracts-subtree",
+      "mesh": {
+        "url": "/data/kim-v2/meshes/941.bin.gz",
+        "format": "allen-mesh-v1",
+        "compression": "gzip",
+        "bytes": 8103,
+        "uncompressedBytes": 27080,
+        "sha256": "9fb8afec63e5af0913fe261e9795530e1a5db2bd1c0d37176329066b7dd89dc5",
+        "uncompressedSha256": "3b2a56461aa1959324c193653a71e1d7020a179cf47335cf4bb0000b3ce27c47",
+        "vertexCount": 744,
+        "triangleCount": 1512,
+        "boundsUm": [
+          [
+            10975.0,
+            11175.0
+          ],
+          [
+            5075.0,
+            5625.0
+          ],
+          [
+            4175.0,
+            7175.0
+          ]
+        ]
+      },
+      "voxelCount": 360,
+      "volumeMm3": 0.045,
+      "centroidVoxel": [
+        221.272,
+        108.183,
+        113.5
+      ],
+      "focusVoxel": [
+        221,
+        108,
+        94
+      ],
+      "focusUm": [
+        11050,
+        5400,
+        4700
+      ],
+      "boundsVoxel": [
+        [
+          220,
+          223
+        ],
+        [
+          102,
+          112
+        ],
+        [
+          84,
+          143
+        ]
+      ]
+    },
+    {
+      "id": 949,
+      "name": "vomeronasal nerve",
+      "acronym": "vn",
+      "classification": "fiber-tracts-subtree",
+      "mesh": {
+        "url": "/data/kim-v2/meshes/949.bin.gz",
+        "format": "allen-mesh-v1",
+        "compression": "gzip",
+        "bytes": 1225,
+        "uncompressedBytes": 4088,
+        "sha256": "a61b230a4da7ee1e86de1fe48f2b47cd7a530c9214dd1069eed57f7882b68fa1",
+        "uncompressedSha256": "b9d3bd969f238813e4c990b0f54fcf01768008cf681e47ead63caa453347df45",
+        "vertexCount": 116,
+        "triangleCount": 224,
+        "boundsUm": [
+          [
+            1775.0,
+            1875.0
+          ],
+          [
+            3125.0,
+            3275.0
+          ],
+          [
+            4425.0,
+            6925.0
+          ]
+        ]
+      },
+      "voxelCount": 38,
+      "volumeMm3": 0.00475,
+      "centroidVoxel": [
+        36.789,
+        63.947,
+        113.5
+      ],
+      "focusVoxel": [
+        37,
+        64,
+        92
+      ],
+      "focusUm": [
+        1850,
+        3200,
+        4600
+      ],
+      "boundsVoxel": [
+        [
+          36,
+          37
+        ],
+        [
+          63,
+          65
+        ],
+        [
+          89,
+          138
+        ]
+      ]
+    },
+    {
+      "id": 956,
+      "name": "forceps minor of the corpus callosum",
+      "acronym": "fmi",
+      "classification": "fiber-tracts-subtree",
+      "mesh": {
+        "url": "/data/kim-v2/meshes/956.bin.gz",
+        "format": "allen-mesh-v1",
+        "compression": "gzip",
+        "bytes": 98078,
+        "uncompressedBytes": 318188,
+        "sha256": "f19388ae3538fa261c0608a7b66e404e4f39582541278233f2811aef4dfbf8b7",
+        "uncompressedSha256": "643e40e0ebf28c52097f680ff323bc5de2faf4eac8008651b6fb962cad5505b4",
+        "vertexCount": 8829,
+        "triangleCount": 17686,
+        "boundsUm": [
+          [
+            3275.0,
+            4175.0
+          ],
+          [
+            2575.0,
+            4825.0
+          ],
+          [
+            3375.0,
+            7975.0
+          ]
+        ]
+      },
+      "voxelCount": 13061,
+      "volumeMm3": 1.632625,
+      "centroidVoxel": [
+        73.762,
+        70.306,
+        113.513
+      ],
+      "focusVoxel": [
+        74,
+        70,
+        87
+      ],
+      "focusUm": [
+        3700,
+        3500,
+        4350
+      ],
+      "boundsVoxel": [
+        [
+          66,
+          83
+        ],
+        [
+          52,
+          96
+        ],
+        [
+          68,
+          159
+        ]
+      ]
+    },
+    {
+      "id": 971,
+      "name": "forceps major of the corpus callosum",
+      "acronym": "fmj",
+      "classification": "fiber-tracts-subtree",
+      "mesh": {
+        "url": "/data/kim-v2/meshes/971.bin.gz",
+        "format": "allen-mesh-v1",
+        "compression": "gzip",
+        "bytes": 19746,
+        "uncompressedBytes": 62288,
+        "sha256": "e9efa122f968c928fee7541edf8a88f719835c90c0e7b3f16794f178e7ae6cca",
+        "uncompressedSha256": "b58136eadc8319936ca1b6d9884825c9d52422dbad94e63e7d10c299963c05b1",
+        "vertexCount": 1710,
+        "triangleCount": 3480,
+        "boundsUm": [
+          [
+            8075.0,
+            8375.0
+          ],
+          [
+            1125.0,
+            1775.0
+          ],
+          [
+            2825.0,
+            8525.0
+          ]
+        ]
+      },
+      "voxelCount": 796,
+      "volumeMm3": 0.0995,
+      "centroidVoxel": [
+        163.894,
+        27.637,
+        113.373
+      ],
+      "focusVoxel": [
+        164,
+        27,
+        82
+      ],
+      "focusUm": [
+        8200,
+        1350,
+        4100
+      ],
+      "boundsVoxel": [
+        [
+          162,
+          167
+        ],
+        [
+          23,
+          35
+        ],
+        [
+          57,
+          170
+        ]
+      ]
+    },
+    {
+      "id": 986,
+      "name": "splenium of the corpus callosum",
+      "acronym": "scc",
+      "classification": "fiber-tracts-subtree",
+      "mesh": {
+        "url": "/data/kim-v2/meshes/986.bin.gz",
+        "format": "allen-mesh-v1",
+        "compression": "gzip",
+        "bytes": 9329,
+        "uncompressedBytes": 30152,
+        "sha256": "c87534cedd14789322868f35992ddc58c0cc4e36cc343506e5e50f769a6b0702",
+        "uncompressedSha256": "8b4d22f42cf8e18c51a8c44ed45ea755fc0ceca9833878cbf2b9922a77ad44cd",
+        "vertexCount": 848,
+        "triangleCount": 1664,
+        "boundsUm": [
+          [
+            7975.0,
+            8075.0
+          ],
+          [
+            1175.0,
+            1725.0
+          ],
+          [
+            3025.0,
+            8325.0
+          ]
+        ]
+      },
+      "voxelCount": 440,
+      "volumeMm3": 0.055,
+      "centroidVoxel": [
+        160.5,
+        28.2,
+        113.5
+      ],
+      "focusVoxel": [
+        160,
+        28,
+        87
+      ],
+      "focusUm": [
+        8000,
+        1400,
+        4350
+      ],
+      "boundsVoxel": [
+        [
+          160,
+          161
+        ],
+        [
+          24,
+          34
+        ],
+        [
+          61,
+          166
+        ]
+      ]
+    },
+    {
+      "id": 1016,
+      "name": "olfactory nerve layer",
+      "acronym": "ON",
+      "classification": "fiber-tracts-subtree",
+      "mesh": {
+        "url": "/data/kim-v2/meshes/1016.bin.gz",
+        "format": "allen-mesh-v1",
+        "compression": "gzip",
+        "bytes": 140616,
+        "uncompressedBytes": 443420,
+        "sha256": "42c6f51d52fb0f824fda98d8ba9ca9b76d9f6e9ba13d2f44ce15f9cd40614a58",
+        "uncompressedSha256": "02cdfc81129e097d86abbf74360aa398270dacd17a41482a83d741852c11df25",
+        "vertexCount": 12261,
+        "triangleCount": 24690,
+        "boundsUm": [
+          [
+            975.0,
+            2275.0
+          ],
+          [
+            2675.0,
+            6525.0
+          ],
+          [
+            3525.0,
+            7825.0
+          ]
+        ]
+      },
+      "voxelCount": 15974,
+      "volumeMm3": 1.99675,
+      "centroidVoxel": [
+        29.567,
+        102.639,
+        113.494
+      ],
+      "focusVoxel": [
+        28,
+        105,
+        109
+      ],
+      "focusUm": [
+        1400,
+        5250,
+        5450
+      ],
+      "boundsVoxel": [
+        [
+          20,
+          45
+        ],
+        [
+          54,
+          130
+        ],
+        [
+          71,
+          156
+        ]
+      ]
+    },
+    {
+      "id": 1060,
+      "name": "dorsal tegmental decussation",
+      "acronym": "dtgx",
+      "classification": "fiber-tracts-subtree",
+      "mesh": {
+        "url": "/data/kim-v2/meshes/1060.bin.gz",
+        "format": "allen-mesh-v1",
+        "compression": "gzip",
+        "bytes": 4435,
+        "uncompressedBytes": 15320,
+        "sha256": "7ed35871ac575f07d80f8e96ed97a000115ecae1bb27067719206959d0adb322",
+        "uncompressedSha256": "a80c92bc575a924abc6f186db00da7462a1f9517eb756b7f11d80c1adda71868",
+        "vertexCount": 424,
+        "triangleCount": 852,
+        "boundsUm": [
+          [
+            8875.0,
+            8975.0
+          ],
+          [
+            3875.0,
+            4625.0
+          ],
+          [
+            5275.0,
+            6075.0
+          ]
+        ]
+      },
+      "voxelCount": 206,
+      "volumeMm3": 0.02575,
+      "centroidVoxel": [
+        178.485,
+        85.087,
+        113.5
+      ],
+      "focusVoxel": [
+        178,
+        85,
+        110
+      ],
+      "focusUm": [
+        8900,
+        4250,
+        5500
+      ],
+      "boundsVoxel": [
+        [
+          178,
+          179
+        ],
+        [
+          78,
+          92
+        ],
+        [
+          106,
+          121
+        ]
+      ]
+    },
+    {
+      "id": 1092,
+      "name": "External medullary lamina",
+      "acronym": "eml",
+      "classification": "fiber-tracts-subtree",
+      "mesh": {
+        "url": "/data/kim-v2/meshes/1092.bin.gz",
+        "format": "allen-mesh-v1",
+        "compression": "gzip",
+        "bytes": 24243,
+        "uncompressedBytes": 78056,
+        "sha256": "a60c675b7514ad0c1a7b571f406de05903186c0b8927ef95bb1c8affbc6e4263",
+        "uncompressedSha256": "3931629071d734aa895113bb4f4ef7c434085d4321d23ee7a093ef4d42f35d0b",
+        "vertexCount": 2132,
+        "triangleCount": 4372,
+        "boundsUm": [
+          [
+            7075.0,
+            7675.0
+          ],
+          [
+            3125.0,
+            4675.0
+          ],
+          [
+            3125.0,
+            8225.0
+          ]
+        ]
+      },
+      "voxelCount": 1205,
+      "volumeMm3": 0.150625,
+      "centroidVoxel": [
+        147.518,
+        74.927,
+        113.471
+      ],
+      "focusVoxel": [
+        148,
+        75,
+        67
+      ],
+      "focusUm": [
+        7400,
+        3750,
+        3350
+      ],
+      "boundsVoxel": [
+        [
+          142,
+          153
+        ],
+        [
+          63,
+          93
+        ],
+        [
+          63,
+          164
+        ]
+      ]
+    },
+    {
+      "id": 1108,
+      "name": "genu of the corpus callosum",
+      "acronym": "gcc",
+      "classification": "fiber-tracts-subtree",
+      "mesh": {
+        "url": "/data/kim-v2/meshes/1108.bin.gz",
+        "format": "allen-mesh-v1",
+        "compression": "gzip",
+        "bytes": 46676,
+        "uncompressedBytes": 150536,
+        "sha256": "88658c0082ca5a8716854cb1ce4d4489e4d17631b3b7c7ebe50fc7364bd12352",
+        "uncompressedSha256": "8c4284fbfb7af7917b22933738fff4130115a826b5e61e8cb36c48630b320070",
+        "vertexCount": 4164,
+        "triangleCount": 8380,
+        "boundsUm": [
+          [
+            4175.0,
+            4675.0
+          ],
+          [
+            2675.0,
+            3975.0
+          ],
+          [
+            3625.0,
+            7725.0
+          ]
+        ]
+      },
+      "voxelCount": 4863,
+      "volumeMm3": 0.607875,
+      "centroidVoxel": [
+        88.145,
+        64.81,
+        113.505
+      ],
+      "focusVoxel": [
+        88,
+        65,
+        98
+      ],
+      "focusUm": [
+        4400,
+        3250,
+        4900
+      ],
+      "boundsVoxel": [
+        [
+          84,
+          93
+        ],
+        [
+          54,
+          79
+        ],
+        [
+          73,
+          154
+        ]
+      ]
+    },
+    {
+      "id": 1116,
+      "name": "genu of the facial nerve",
+      "acronym": "g7",
+      "classification": "fiber-tracts-subtree",
+      "mesh": {
+        "url": "/data/kim-v2/meshes/1116.bin.gz",
+        "format": "allen-mesh-v1",
+        "compression": "gzip",
+        "bytes": 9065,
+        "uncompressedBytes": 30584,
+        "sha256": "03fca53da6c496438b5ad80a31bddabd12961415833c51677ee69597a87aa1ed",
+        "uncompressedSha256": "a3961efe49b4f4d4a028e137ad10f7a9a333e3b0784c513f445fc89dd652ec24",
+        "vertexCount": 852,
+        "triangleCount": 1696,
+        "boundsUm": [
+          [
+            10875.0,
+            11275.0
+          ],
+          [
+            5025.0,
+            5625.0
+          ],
+          [
+            4725.0,
+            6625.0
+          ]
+        ]
+      },
+      "voxelCount": 626,
+      "volumeMm3": 0.07825,
+      "centroidVoxel": [
+        221.559,
+        106.62,
+        113.5
+      ],
+      "focusVoxel": [
+        222,
+        107,
+        100
+      ],
+      "focusUm": [
+        11100,
+        5350,
+        5000
+      ],
+      "boundsVoxel": [
+        [
+          218,
+          225
+        ],
+        [
+          101,
+          112
+        ],
+        [
+          95,
+          132
+        ]
+      ]
+    },
+    {
+      "id": 1123,
+      "name": "inferior cerebellar peduncle",
+      "acronym": "icp",
+      "classification": "fiber-tracts-subtree",
+      "mesh": {
+        "url": "/data/kim-v2/meshes/1123.bin.gz",
+        "format": "allen-mesh-v1",
+        "compression": "gzip",
+        "bytes": 142131,
+        "uncompressedBytes": 459068,
+        "sha256": "debf9bc36b7f3a6914240265555e54cd559acf2af1f333e3838eba38928ac146",
+        "uncompressedSha256": "4a2b9f5de20cae3b092b8341c6676c9c2a9724712bd9b49272527ef94d072f2d",
+        "vertexCount": 12565,
+        "triangleCount": 25690,
+        "boundsUm": [
+          [
+            11175.0,
+            12875.0
+          ],
+          [
+            4375.0,
+            7125.0
+          ],
+          [
+            3025.0,
+            8325.0
+          ]
+        ]
+      },
+      "voxelCount": 8831,
+      "volumeMm3": 1.103875,
+      "centroidVoxel": [
+        238.37,
+        112.164,
+        113.529
+      ],
+      "focusVoxel": [
+        238,
+        110,
+        68
+      ],
+      "focusUm": [
+        11900,
+        5500,
+        3400
+      ],
+      "boundsVoxel": [
+        [
+          224,
+          257
+        ],
+        [
+          88,
+          142
+        ],
+        [
+          61,
+          166
+        ]
+      ]
+    },
+    {
+      "id": 2040,
+      "name": "supraoptic decussation",
+      "acronym": "sox",
+      "classification": "fiber-tracts-subtree",
+      "mesh": {
+        "url": "/data/kim-v2/meshes/2040.bin.gz",
+        "format": "allen-mesh-v1",
+        "compression": "gzip",
+        "bytes": 51244,
+        "uncompressedBytes": 169016,
+        "sha256": "8a3afb1f151500a3ef7986c253b22d0d572ce0191375ac0bbecd5282a6950e46",
+        "uncompressedSha256": "b97c8e4c8f582f6760c3095279d5e00d846983b88de3b89036c860f38af40c78",
+        "vertexCount": 4584,
+        "triangleCount": 9500,
+        "boundsUm": [
+          [
+            6175.0,
+            8075.0
+          ],
+          [
+            4525.0,
+            7225.0
+          ],
+          [
+            3075.0,
+            8275.0
+          ]
+        ]
+      },
+      "voxelCount": 1751,
+      "volumeMm3": 0.218875,
+      "centroidVoxel": [
+        137.832,
+        127.804,
+        113.437
+      ],
+      "focusVoxel": [
+        138,
+        129,
+        85
+      ],
+      "focusUm": [
+        6900,
+        6450,
+        4250
+      ],
+      "boundsVoxel": [
+        [
+          124,
+          161
+        ],
+        [
+          91,
+          144
+        ],
+        [
+          62,
+          165
+        ]
+      ]
+    },
+    {
+      "id": 2109,
+      "name": "superior thalamic radiation",
+      "acronym": "str",
+      "classification": "fiber-tracts-subtree",
+      "mesh": {
+        "url": "/data/kim-v2/meshes/2109.bin.gz",
+        "format": "allen-mesh-v1",
+        "compression": "gzip",
+        "bytes": 12162,
+        "uncompressedBytes": 40808,
+        "sha256": "d8ca6a40bc74e496b0a8f1f8eaeed45bbd37c2fcd78b0ad13caaadd0890075bc",
+        "uncompressedSha256": "c0eb5320a3b5e8799e2ae670bc52286b7ac5c524614e9d5efa72106988f3b5ff",
+        "vertexCount": 1092,
+        "triangleCount": 2308,
+        "boundsUm": [
+          [
+            7675.0,
+            8175.0
+          ],
+          [
+            3325.0,
+            4175.0
+          ],
+          [
+            3225.0,
+            8125.0
+          ]
+        ]
+      },
+      "voxelCount": 421,
+      "volumeMm3": 0.052625,
+      "centroidVoxel": [
+        157.147,
+        74.442,
+        114.033
+      ],
+      "focusVoxel": [
+        157,
+        74,
+        68
+      ],
+      "focusUm": [
+        7850,
+        3700,
+        3400
+      ],
+      "boundsVoxel": [
+        [
+          154,
+          163
+        ],
+        [
+          67,
+          83
+        ],
+        [
+          65,
+          162
+        ]
+      ]
+    },
+    {
+      "id": 2167,
+      "name": "transverse fibers of the pons",
+      "acronym": "tfp",
+      "classification": "fiber-tracts-subtree",
+      "mesh": {
+        "url": "/data/kim-v2/meshes/2167.bin.gz",
+        "format": "allen-mesh-v1",
+        "compression": "gzip",
+        "bytes": 47638,
+        "uncompressedBytes": 158240,
+        "sha256": "0adaa056c5224663acae9f909fb321dd4dee7e0ab244da236f2c19ee889ecad8",
+        "uncompressedSha256": "71543f60ccf12ceb2829b7d7da75feccf12f823876f95c23036e84cfddd3be42",
+        "vertexCount": 4386,
+        "triangleCount": 8800,
+        "boundsUm": [
+          [
+            8775.0,
+            10075.0
+          ],
+          [
+            5625.0,
+            7125.0
+          ],
+          [
+            4325.0,
+            7025.0
+          ]
+        ]
+      },
+      "voxelCount": 3416,
+      "volumeMm3": 0.427,
+      "centroidVoxel": [
+        184.099,
+        127.828,
+        113.525
+      ],
+      "focusVoxel": [
+        182,
+        128,
+        110
+      ],
+      "focusUm": [
+        9100,
+        6400,
+        5500
+      ],
+      "boundsVoxel": [
+        [
+          176,
+          201
+        ],
+        [
+          113,
+          142
+        ],
+        [
+          87,
+          140
+        ]
+      ]
+    },
+    {
+      "id": 2169,
+      "name": "longitudinal fasciculus of the pons",
+      "acronym": "lfp",
+      "classification": "fiber-tracts-subtree",
+      "mesh": {
+        "url": "/data/kim-v2/meshes/2169.bin.gz",
+        "format": "allen-mesh-v1",
+        "compression": "gzip",
+        "bytes": 23870,
+        "uncompressedBytes": 79352,
+        "sha256": "50e0f604f3be78006d77973450005e64c87132f2e3a6cbc33f666f714fd4968f",
+        "uncompressedSha256": "f3f2bebf0d05554c20af4b5d57984c8e3f6ce483e8751ebce9ba1a4016112138",
+        "vertexCount": 2196,
+        "triangleCount": 4416,
+        "boundsUm": [
+          [
+            9375.0,
+            10075.0
+          ],
+          [
+            6025.0,
+            6975.0
+          ],
+          [
+            4625.0,
+            6725.0
+          ]
+        ]
+      },
+      "voxelCount": 1368,
+      "volumeMm3": 0.171,
+      "centroidVoxel": [
+        193.694,
+        130.549,
+        113.501
+      ],
+      "focusVoxel": [
+        194,
+        131,
+        102
+      ],
+      "focusUm": [
+        9700,
+        6550,
+        5100
+      ],
+      "boundsVoxel": [
+        [
+          188,
+          201
+        ],
+        [
+          121,
+          139
+        ],
+        [
+          93,
+          134
+        ]
+      ]
+    },
+    {
+      "id": 2219,
+      "name": "superior medullary velum",
+      "acronym": "SMV",
+      "classification": "superior-medullary-velum-exception",
+      "mesh": {
+        "url": "/data/kim-v2/meshes/2219.bin.gz",
+        "format": "allen-mesh-v1",
+        "compression": "gzip",
+        "bytes": 12153,
+        "uncompressedBytes": 40952,
+        "sha256": "2b4d959b17a7286a420cf5084cf249546a804e2763036c60397f56f589d3d489",
+        "uncompressedSha256": "03561f54ccd7c5d38ed9e6dcd559724aad2a4c94d7cf061edd3321fc475c59b7",
+        "vertexCount": 1136,
+        "triangleCount": 2276,
+        "boundsUm": [
+          [
+            10675.0,
+            11375.0
+          ],
+          [
+            3775.0,
+            4225.0
+          ],
+          [
+            4825.0,
+            6525.0
+          ]
+        ]
+      },
+      "voxelCount": 341,
+      "volumeMm3": 0.042625,
+      "centroidVoxel": [
+        221.326,
+        81.977,
+        113.528
+      ],
+      "focusVoxel": [
+        221,
+        83,
+        106
+      ],
+      "focusUm": [
+        11050,
+        4150,
+        5300
+      ],
+      "boundsVoxel": [
+        [
+          214,
+          227
+        ],
+        [
+          76,
+          84
+        ],
+        [
+          97,
+          130
+        ]
+      ]
+    },
+    {
+      "id": 2222,
+      "name": "olivocochlear bundle",
+      "acronym": "ocb",
+      "classification": "fiber-tracts-subtree",
+      "mesh": {
+        "url": "/data/kim-v2/meshes/2222.bin.gz",
+        "format": "allen-mesh-v1",
+        "compression": "gzip",
+        "bytes": 2413,
+        "uncompressedBytes": 8384,
+        "sha256": "608d8806a756bdac59a4850509a57652295b80b0dd8da6e17fa02ee891491943",
+        "uncompressedSha256": "cc158fb78663b1d9e33afab43005f30fa53736ad87583960e19a1a0ec1dcd792",
+        "vertexCount": 234,
+        "triangleCount": 464,
+        "boundsUm": [
+          [
+            10675.0,
+            10975.0
+          ],
+          [
+            5025.0,
+            5125.0
+          ],
+          [
+            5125.0,
+            6225.0
+          ]
+        ]
+      },
+      "voxelCount": 82,
+      "volumeMm3": 0.01025,
+      "centroidVoxel": [
+        216.22,
+        101.683,
+        113.5
+      ],
+      "focusVoxel": [
+        216,
+        102,
+        109
+      ],
+      "focusUm": [
+        10800,
+        5100,
+        5450
+      ],
+      "boundsVoxel": [
+        [
+          214,
+          219
+        ],
+        [
+          101,
+          102
+        ],
+        [
+          103,
+          124
+        ]
+      ]
+    },
+    {
+      "id": 2275,
+      "name": "cerebellar white matter",
+      "acronym": "cbw",
+      "classification": "fiber-tracts-subtree",
+      "mesh": {
+        "url": "/data/kim-v2/meshes/2275.bin.gz",
+        "format": "allen-mesh-v1",
+        "compression": "gzip",
+        "bytes": 104771,
+        "uncompressedBytes": 335360,
+        "sha256": "5409530a025c5f80fc9970cef80b283592ebad74b1cfd0c521a3d748a76e2f33",
+        "uncompressedSha256": "d20271a7f1bc33b763738ee40f3d111c07f7133969f25fe792e2a428f87dbbc8",
+        "vertexCount": 9106,
+        "triangleCount": 18840,
+        "boundsUm": [
+          [
+            12575.0,
+            13175.0
+          ],
+          [
+            2125.0,
+            4575.0
+          ],
+          [
+            3075.0,
+            8275.0
+          ]
+        ]
+      },
+      "voxelCount": 3997,
+      "volumeMm3": 0.499625,
+      "centroidVoxel": [
+        255.872,
+        71.837,
+        113.486
+      ],
+      "focusVoxel": [
+        256,
+        71,
+        95
+      ],
+      "focusUm": [
+        12800,
+        3550,
+        4750
+      ],
+      "boundsVoxel": [
+        [
+          252,
+          263
+        ],
+        [
+          43,
+          91
+        ],
+        [
+          62,
+          165
+        ]
+      ]
+    },
+    {
+      "id": 2279,
+      "name": "dorsal lateral olfactory tract",
+      "acronym": "dlo",
+      "classification": "fiber-tracts-subtree",
+      "mesh": {
+        "url": "/data/kim-v2/meshes/2279.bin.gz",
+        "format": "allen-mesh-v1",
+        "compression": "gzip",
+        "bytes": 19536,
+        "uncompressedBytes": 64124,
+        "sha256": "f054bfec9d85937df92cc24f3d4bab36c6086d963cdf4d66e9a0601df931298b",
+        "uncompressedSha256": "a3fab2c79fff55ea71e240b93cd7e0702451b1a084034c64cb9530c6df5f03e8",
+        "vertexCount": 1733,
+        "triangleCount": 3610,
+        "boundsUm": [
+          [
+            1675.0,
+            2275.0
+          ],
+          [
+            3325.0,
+            4075.0
+          ],
+          [
+            4175.0,
+            7175.0
+          ]
+        ]
+      },
+      "voxelCount": 746,
+      "volumeMm3": 0.09325,
+      "centroidVoxel": [
+        38.63,
+        76.182,
+        113.575
+      ],
+      "focusVoxel": [
+        38,
+        77,
+        90
+      ],
+      "focusUm": [
+        1900,
+        3850,
+        4500
+      ],
+      "boundsVoxel": [
+        [
+          34,
+          45
+        ],
+        [
+          67,
+          81
+        ],
+        [
+          84,
+          143
+        ]
+      ]
+    },
+    {
+      "id": 2317,
+      "name": "anterior commissure, intrabulbar part",
+      "acronym": "aci",
+      "classification": "fiber-tracts-subtree",
+      "mesh": {
+        "url": "/data/kim-v2/meshes/2317.bin.gz",
+        "format": "allen-mesh-v1",
+        "compression": "gzip",
+        "bytes": 97806,
+        "uncompressedBytes": 324620,
+        "sha256": "ed5e43467e918afcbf2636e5f3e8e7fc4fabda22e7973c778bf96654f81d8f64",
+        "uncompressedSha256": "cf4b6cf41f3a105bc0c789d3bbf02a74feb477b0666983c8f5841e4ecf0126b1",
+        "vertexCount": 8937,
+        "triangleCount": 18114,
+        "boundsUm": [
+          [
+            975.0,
+            3575.0
+          ],
+          [
+            3375.0,
+            5675.0
+          ],
+          [
+            4275.0,
+            7075.0
+          ]
+        ]
+      },
+      "voxelCount": 7295,
+      "volumeMm3": 0.911875,
+      "centroidVoxel": [
+        45.623,
+        95.233,
+        113.547
+      ],
+      "focusVoxel": [
+        46,
+        95,
+        93
+      ],
+      "focusUm": [
+        2300,
+        4750,
+        4650
+      ],
+      "boundsVoxel": [
+        [
+          20,
+          71
+        ],
+        [
+          68,
+          113
+        ],
+        [
+          86,
+          141
+        ]
+      ]
+    }
   ]
 }

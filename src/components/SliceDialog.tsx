@@ -21,6 +21,7 @@ type Props = {
   onPosition: (p: Position) => void;
   probeName: string;
   sourceLabel?: string;
+  partitionControl?: React.ReactNode;
   apBregmaUm?: number;
   mlMidlineUm?: number;
   detailed?: boolean;
@@ -81,6 +82,7 @@ export function SliceDialog(props: Props) {
               </button>
             ))}
           </div>
+          {props.partitionControl}
           {props.detailed && (
             <SlicePresentationControl
               mapView={!!props.mapView}

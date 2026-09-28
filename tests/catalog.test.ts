@@ -68,7 +68,7 @@ test("all 65 adult region descriptions resolve to the same Allen IDs as the pack
 });
 
 test("circuit nodes and directed edges all resolve to selectable adult structures and citations", () => {
-  assert.equal(brainCircuits.length, 4);
+  assert.equal(brainCircuits.length, 7);
   assert.equal(
     new Set(brainCircuits.map((circuit) => circuit.id)).size,
     brainCircuits.length,

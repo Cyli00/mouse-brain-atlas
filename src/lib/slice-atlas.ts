@@ -1,6 +1,7 @@
 import {
   getBinary,
   type AtlasData,
+  type MeshInfo,
   type Position,
   type Structure,
 } from "./atlas";
@@ -30,6 +31,11 @@ export async function loadKimAnnotation(
     storageOrder: string;
     annotation: { url: string };
     ontology: { url: string };
+    whiteMatterRegions?: {
+      id: number;
+      mesh?: { url: string };
+      focusVoxel?: Position;
+    }[];
   };
   if (
     manifest.space !== "allen-ccf-v3" ||
@@ -58,6 +64,15 @@ export async function loadKimAnnotation(
   ]);
   if (buffer.byteLength !== base.annotation.byteLength)
     throw new Error("Kim 分区数据长度不正确");
+  // PF white-matter meshes keep their raw Kim IDs and are keyed by them;
+  // they are never merged with or substituted for Allen meshes.
+  const meshes: Record<string, MeshInfo> = {};
+  for (const region of manifest.whiteMatterRegions ?? [])
+    if (region.mesh?.url && region.focusVoxel)
+      meshes[String(region.id)] = {
+        url: region.mesh.url,
+        centroid: region.focusVoxel,
+      };
   const structures = new Map<number, Structure>(
     ontology.map((s) => [
       s.id,
@@ -74,7 +89,7 @@ export async function loadKimAnnotation(
     ...base,
     annotation: new Uint32Array(buffer),
     structures,
-    meshes: {},
+    meshes,
     manifest,
   };
 }

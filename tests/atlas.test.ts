@@ -1,4 +1,5 @@
 import assert from "node:assert/strict";
+import { segmentSlice } from "../src/lib/slice-segmentation";
 import { readFile } from "node:fs/promises";
 import { createHash } from "node:crypto";
 import { gunzipSync, gzipSync } from "node:zlib";
@@ -663,5 +664,25 @@ test("official mesh extents align with independently counted annotation extents 
           `${region.acronym} axis ${axis} extent differs by ${differenceUm} µm`,
         );
       }
+  }
+});
+
+
+test("adult Allen fine sections retain cortical layers and every visible label", () => {
+  const present = new Set(atlas.annotation);
+  present.delete(0);
+  assert.equal(present.size, 670);
+  for (const acronym of ["VISp1", "VISp2/3", "VISp4", "VISp5", "VISp6a", "VISp6b"]) {
+    const layer = [...atlas.structures.values()].find(s => s.acronym === acronym);
+    assert.ok(layer && present.has(layer.id), `${acronym} is a real labeled cortical layer`);
+  }
+  for (const plane of ["coronal", "sagittal", "horizontal"] as PlaneName[]) {
+    const section = segmentSlice(atlas, plane, [159, 57, 53][PLANES[plane].axis]);
+    assert.ok(section.regions.length > 20);
+    assert.deepEqual(new Set(section.regions.map(r => r.id)), new Set([...section.labels].filter(Boolean)));
+    for (const region of section.regions) {
+      assert.equal(section.labels[Math.floor(region.v) * section.width + Math.floor(region.u)], region.id);
+      assert.equal(region.acronym, atlas.structures.get(region.id)?.acronym);
+    }
   }
 });

@@ -74,11 +74,13 @@ test("Kim loading shares only geometry and template, keeps its own labels, rejec
     assert.deepEqual(kim.dimensions, base.dimensions);
     assert.notEqual(kim.annotation, base.annotation);
     assert.notEqual(kim.structures, base.structures);
-    assert.deepEqual(
-      kim.meshes,
-      {},
-      "Allen meshes must not be claimed as FP meshes",
-    );
+    // PF white matter keeps raw Kim IDs in meshes; nothing is merged with Allen meshes.
+    assert.ok(Object.keys(kim.meshes).length > 0);
+    for (const [key, mesh] of Object.entries(kim.meshes)) {
+      assert.ok(Number(key) > 0);
+      assert.match(mesh.url, /^\/data\/kim-v2\/meshes\/\d+\.bin\.gz$/);
+      assert.ok(!base.meshes[key], `Kim mesh ${key} must not reuse an Allen key`);
+    }
     // A named hippocampal point checks AP/DV order independently of the loader.
     assert.match(
       structureAt(kim, [159, 57, 53])?.name ?? "",

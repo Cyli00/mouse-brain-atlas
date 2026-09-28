@@ -9,8 +9,6 @@ import {
 import {
   Check,
   ArrowUpRight,
-  ArrowLeft,
-  Crosshair,
   Search,
   X,
 } from "lucide-react";
@@ -51,7 +49,6 @@ export function RegionBrowser({
   const circuitTabRef = useRef<HTMLButtonElement>(null);
   const composing = useRef(false);
   const activeMode = embryonic ? "regions" : mode;
-  const selectedRegion = regions.find((region) => region.id === selected);
   const [query, setQuery] = useState("");
   const [searchTerm, setSearchTerm] = useState("");
   const [category, setCategory] = useState("全部");
@@ -59,6 +56,9 @@ export function RegionBrowser({
     () => [...new Set(regions.map((region) => region.category))],
     [regions],
   );
+  useEffect(() => {
+    if (category !== "全部" && !categories.includes(category)) setCategory("全部");
+  }, [categories, category]);
   const normalizedQuery = searchTerm.trim().toLowerCase();
   const overview = !normalizedQuery && category === "全部";
   const searchMatches = useMemo(
@@ -145,12 +145,6 @@ export function RegionBrowser({
 
   return (
     <div className="region-browser">
-      <div className="sidebar-heading">
-        <h2>{activeMode === "circuits" ? "经典环路" : "脑区导览"}</h2>
-        <span>
-          {activeMode === "circuits" ? brainCircuits.length : regions.length}
-        </span>
-      </div>
       {!embryonic && (
         <div className="explore-switch" role="tablist" aria-label="探索方式">
           {(["regions", "circuits"] as const).map((tab) => (
@@ -218,60 +212,24 @@ export function RegionBrowser({
               </button>
             )}
           </div>
-          <label className="category-select" hidden={overview}>
-            <span>脑区分类</span>
-            <select
-              aria-label="筛选脑区分类"
-              value={category}
-              onChange={(event) => changeCategory(event.target.value)}
-            >
-              <option value="全部">全部分类</option>
-              {categories.map((name) => (
-                <option key={name} value={name}>
-                  {name}
-                </option>
-              ))}
-            </select>
-          </label>
-          <div
-            id={`${id}-results`}
-            className="results-count"
-            role="status"
-            aria-live="polite"
-            aria-atomic="true"
-            hidden={overview}
-          >
-            <span>
-              {filtered.length} / {regions.length} 个脑区
-            </span>
-            <span>{category === "全部" ? "全部分类" : category}</span>
-          </div>
+          {!overview && (
+            <div className="catalog-filter-row">
+              <select
+                className="category-select"
+                aria-label="筛选脑区分类"
+                value={category}
+                onChange={(event) => changeCategory(event.target.value)}
+              >
+                <option value="全部">全部分类</option>
+                {categories.map((name) => <option key={name} value={name}>{name}</option>)}
+              </select>
+              <span className="catalog-result-total" aria-hidden="true">{filtered.length} 项</span>
+            </div>
+          )}
+          <span id={`${id}-results`} className="sr-only" role="status" aria-live="polite" aria-atomic="true">
+            {filtered.length} 个结构{category !== "全部" ? `，${category}` : ""}
+          </span>
         </div>
-        {selectedRegion && !overview && (
-          <div className="catalog-selection">
-            <span>
-              已选 <strong>{selectedRegion.name}</strong>{" "}
-              <small>{selectedRegion.acronym}</small>
-            </span>
-            <button
-              type="button"
-              className="catalog-focus"
-              aria-label={`重新定位${selectedRegion.name}`}
-              onClick={() => onSelect(selected)}
-            >
-              <Crosshair size={14} aria-hidden="true" />
-              定位
-            </button>
-          </div>
-        )}
-        {selectedRegion && !selectedVisible && filtered.length > 0 && (
-          <div className="catalog-status">
-            <span>已选脑区不在当前结果中。</span>
-            <button type="button" onClick={() => clearSearch(true)}>
-              显示全部脑区
-            </button>
-          </div>
-        )}
         <div ref={listRef} className="region-list" aria-label="脑区搜索结果">
           {overview ? (
             <div className="guide-category-grid">
@@ -282,40 +240,17 @@ export function RegionBrowser({
                   className="guide-category-card"
                   onClick={() => changeCategory(group.name)}
                 >
-                  <span className="guide-card-top">
-                    <span className="guide-color-set" aria-hidden="true">
-                      {group.regions.slice(0, 3).map((r) => (
-                        <i key={r.id} style={{ backgroundColor: r.color }} />
-                      ))}
-                    </span>
-                    <ArrowUpRight size={17} />
-                  </span>
+                  <span className="guide-category-color" style={{ backgroundColor: group.regions[0].color }} aria-hidden="true" />
                   <strong>{group.name}</strong>
-                  <span className="guide-card-preview">
-                    {group.regions
-                      .slice(0, 2)
-                      .map((r) => r.name)
-                      .join(" · ")}
-                  </span>
-                  <small>{group.regions.length} 个脑区</small>
+                  <small>{group.regions.length}</small>
                 </button>
               ))}
             </div>
           ) : (
             <>
-              {category !== "全部" && (
-                <button
-                  type="button"
-                  className="catalog-back"
-                  onClick={() => changeCategory("全部")}
-                >
-                  <ArrowLeft size={14} />
-                  全部解剖分区
-                </button>
-              )}
               {groups.map((group) => (
                 <section className="region-group" key={group.name}>
-                  <h3 className="guide-group-heading">
+                  <h3 className="guide-group-heading" hidden={category !== "全部"}>
                     {group.name}
                     <span>{group.regions.length}</span>
                   </h3>
@@ -329,36 +264,17 @@ export function RegionBrowser({
                         type="button"
                         className={`guide-region-card${selected === region.id ? " selected" : ""}`}
                         aria-pressed={selected === region.id}
+                        aria-label={`${region.name} ${region.acronym}，定位并查看解说`}
                         onClick={() => onSelect(region.id)}
                       >
-                        <span className="guide-region-top">
-                          <span
-                            className="guide-region-symbol"
-                            style={
-                              {
-                                "--region-color": region.color,
-                              } as React.CSSProperties
-                            }
-                          >
-                            {region.acronym}
-                          </span>
-                          {selected === region.id ? (
-                            <Check size={16} />
-                          ) : (
-                            <ArrowUpRight size={16} />
-                          )}
+                        <span className="guide-region-copy">
+                          <strong>{region.name}</strong>
+                          <span className="guide-region-english">{region.englishName}</span>
                         </span>
-                        <strong>{region.name}</strong>
-                        <span className="guide-region-english">
-                          {region.englishName}
+                        <span className="guide-region-symbol" style={{ "--region-color": region.color } as React.CSSProperties}>
+                          {region.acronym}
                         </span>
-                        <span className="guide-region-summary">
-                          {region.summary}
-                        </span>
-                        <span className="guide-region-action">
-                          定位并查看解说
-                          <ArrowUpRight size={13} />
-                        </span>
+                        {selected === region.id ? <Check size={15} aria-label="已选" /> : <ArrowUpRight size={15} aria-hidden="true" />}
                       </button>
                     ))}
                   </div>

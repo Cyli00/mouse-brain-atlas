@@ -1,3 +1,8 @@
+import { embryoPartitions, type EmbryoPartitionLevel } from "../lib/embryo-partitions";
+import { EmbryoPartitionControl } from "./EmbryoPartitionControl";
+import { sameCircuitTarget, type CircuitTarget } from "../lib/circuit-interaction";
+import { getWhiteMatterRegions } from "../data/white-matter";
+import { isWhiteMatterStructure } from "../lib/white-matter";
 import { RegionBrowser } from "./RegionBrowser";
 import { SliceDialog } from "./SliceDialog";
 import {
@@ -62,7 +67,7 @@ export function AtlasWorkspace({
   config: AtlasConfig;
   stageNavigation?: React.ReactNode;
 }) {
-  const brainRegions = config.regions;
+  const baseRegions = config.regions;
   const initialParam = Number(
     new URLSearchParams(location.search).get("region"),
   );
@@ -75,7 +80,7 @@ export function AtlasWorkspace({
     ? initialCircuit.nodeIds.includes(initialParam)
       ? initialParam
       : initialCircuit.nodeIds[0]
-    : brainRegions.some((r) => r.id === initialParam)
+    : (!config.embryonic && initialParam < 0 && new URLSearchParams(location.search).get("slices") === "paxinos-kim") || baseRegions.some((r) => r.id === initialParam)
       ? initialParam
       : config.initialId;
   const [data, setData] = useState<AtlasData | null>(null),
@@ -100,28 +105,69 @@ export function AtlasWorkspace({
   const activeCircuit = !config.embryonic
     ? brainCircuits.find((c) => c.id === circuitId)
     : undefined;
+  const [circuitPinned, setCircuitPinned] = useState<CircuitTarget | null>(null);
+  const [circuitPreview, setCircuitPreview] = useState<CircuitTarget | null>(null);
+  const [circuitFlow, setCircuitFlow] = useState(true);
+  const circuitTarget = circuitPreview ?? circuitPinned;
+  const clearCircuitTarget = () => { setCircuitPinned(null); setCircuitPreview(null); };
+  const selectCircuitTarget = (target: CircuitTarget) => {
+    setCircuitPinned((old) => sameCircuitTarget(old, target) ? null : target);
+    if (target.kind === "node") focus(target.id, true, false);
+  };
   const [mobilePane, setMobilePane] = useState<
     "catalog" | "viewer" | "details"
   >("viewer");
-  const [viewMode, setViewMode] = useState<"3d" | "slices" | "compare">(() => {
-    const value = new URLSearchParams(location.search).get("view");
-    return value === "slices" || value === "compare" ? value : "3d";
-  });
   const [inspectorView, setInspectorView] = useState<"catalog" | "details">(
-    "catalog",
+    initialCircuit ? "details" : "catalog",
   );
   const [focusMode, setFocusMode] = useState(false);
   const [expandedPlane, setExpandedPlane] = useState<PlaneName | null>(null);
   const slices = useSliceAtlas(data, !config.embryonic);
-  const [mapView, setMapView] = useState(true);
-  const detailedSlices = !config.embryonic && slices.source === "paxinos-kim";
+  const [mapView, setMapView] = useState(() =>
+    new URLSearchParams(location.search).get("presentation") !== "tissue",
+  );
+  const [embryoLevel, setEmbryoLevel] = useState<EmbryoPartitionLevel>(() =>
+    new URLSearchParams(location.search).get("detail") === "major" ? "major" : "fine",
+  );
+  const embryoPartitionData = useMemo(
+    () => config.embryonic && data
+      ? embryoPartitions(data, new Set(baseRegions.map((r) => r.id)))
+      : null,
+    [config.embryonic, data, baseRegions],
+  );
+  const displayedSliceData = config.embryonic && embryoPartitionData
+    ? embryoPartitionData[embryoLevel]
+    : slices.data;
+  const whiteMatterData = !config.embryonic && slices.source === "paxinos-kim" ? slices.data : null;
+  const whiteRegions = useMemo(() => whiteMatterData ? getWhiteMatterRegions(whiteMatterData) : [], [whiteMatterData]);
+  const brainRegions = useMemo(() => [...baseRegions, ...whiteRegions], [baseRegions, whiteRegions]);
+  const whiteSelected = selected < 0;
+  const restoreWhitePosition = useRef(initialId < 0);
+  useEffect(() => {
+    if (!whiteSelected || !whiteMatterData) return;
+    if (!whiteRegions.some((r) => r.id === selected)) {
+      setSelected(config.initialId);
+      return;
+    }
+    if (restoreWhitePosition.current) {
+      const target = whiteMatterData.meshes[String(-selected)]?.centroid;
+      if (target) setPosition(target);
+      restoreWhitePosition.current = false;
+    }
+  }, [whiteMatterData, whiteRegions, whiteSelected, selected, config.initialId]);
+  const allenLabelCount = useMemo(() => {
+    if (config.embryonic || !data) return 0;
+    const ids = new Set(data.annotation);
+    ids.delete(0);
+    return ids.size;
+  }, [config.embryonic, data]);
   const sliceSourceLabel = config.embryonic
-    ? config.badge
+    ? `Allen 发育图谱 · ${config.id} · ${embryoLevel === "fine" ? "精细分区" : "主要区室"}`
     : slices.source === "allen"
       ? "Allen Institute · CCFv3"
       : KIM_SOURCE_LABEL;
-  const sliceStructure = slices.data
-    ? structureAt(slices.data, position)
+  const sliceStructure = displayedSliceData
+    ? structureAt(displayedSliceData, position)
     : undefined;
   const sliceProbeName = sliceStructure
     ? `${sliceStructure.acronym} · ${sliceStructure.name}`
@@ -139,7 +185,7 @@ export function AtlasWorkspace({
     if (panel === "region" && detailContent.current)
       detailContent.current.scrollTop = 0;
   }, [selected, panel]);
-  const region = brainRegions.find((r) => r.id === selected)!;
+  const region = brainRegions.find((r) => r.id === selected) ?? baseRegions.find((r) => r.id === config.initialId)!;
   useEffect(() => {
     const ctrl = new AbortController();
     setError("");
@@ -179,16 +225,22 @@ export function AtlasWorkspace({
     if (!config.embryonic && slices.source === "paxinos-kim")
       url.searchParams.set("slices", slices.source);
     else url.searchParams.delete("slices");
-    if (viewMode === "3d") url.searchParams.delete("view");
-    else url.searchParams.set("view", viewMode);
+    if (config.embryonic && embryoLevel === "major")
+      url.searchParams.set("detail", "major");
+    else url.searchParams.delete("detail");
+    if (!mapView)
+      url.searchParams.set("presentation", "tissue");
+    else url.searchParams.delete("presentation");
+    url.searchParams.delete("view");
     history.replaceState(null, "", url);
-  }, [region, activeCircuit, slices.source, viewMode]);
-  const currentStructure = data ? structureAt(data, position) : undefined;
+  }, [region, selected, activeCircuit, slices.source, embryoLevel, mapView]);
+  const whiteProbe = whiteMatterData && isWhiteMatterStructure(sliceStructure) ? sliceStructure : undefined;
+  const currentStructure = whiteProbe ?? (data ? structureAt(data, position) : undefined);
   const catalogIds = useMemo(
     () => new Set(brainRegions.map((r) => r.id)),
     [brainRegions],
   );
-  const probeId = nearestCatalogRegion(
+  const probeId = whiteProbe ? -whiteProbe.id : nearestCatalogRegion(
     currentStructure?.structure_id_path,
     catalogIds,
   );
@@ -243,7 +295,7 @@ export function AtlasWorkspace({
   const focus = (id: number, keepCircuit = false, navigate = true) => {
     setSelected(id);
     if (!keepCircuit) setPanel("region");
-    const target = data?.meshes[String(id)]?.centroid;
+    const target = id < 0 ? whiteMatterData?.meshes[String(-id)]?.centroid : data?.meshes[String(id)]?.centroid;
     if (target && data) setPosition(clampPosition(target, data.dimensions));
     if (navigate) showMobilePane("viewer");
   };
@@ -252,6 +304,7 @@ export function AtlasWorkspace({
     if (!circuit) return;
     if (!activeCircuit) regionDisplay.current = { opacity, showPlanes };
     setExploreMode("circuits");
+    clearCircuitTarget();
     setCircuitId(id);
     focus(circuit.nodeIds[0], true, navigate);
     setPanel("circuit");
@@ -267,6 +320,7 @@ export function AtlasWorkspace({
       if (activeCircuit) setPanel("circuit");
       else openCircuit(brainCircuits[0].id, false);
     } else {
+      clearCircuitTarget();
       setCircuitId(null);
       setExploreMode("regions");
       setPanel("region");
@@ -280,6 +334,11 @@ export function AtlasWorkspace({
     setSelected(probeId);
     setPanel("region");
     showMobilePane("details");
+  };
+  const focusDetails = () => requestAnimationFrame(() => detailContent.current?.focus({ preventScroll: true }));
+  const readPanel = (next: "region" | "methods" | "circuit") => {
+    setPanel(next);
+    focusDetails();
   };
   const restoreDisplay = () => {
     const settings = displayDefaults(!!activeCircuit);
@@ -375,35 +434,12 @@ export function AtlasWorkspace({
         id="main"
         className="workspace"
         data-mobile-pane={mobilePane}
-        data-view={viewMode}
         data-focus={focusMode}
         data-inspector={inspectorView}
       >
         <div className="visual-column">
           <div className="workspace-toolbar">
-            <div
-              className="workspace-view-switch"
-              role="group"
-              aria-label="工作视图"
-            >
-              {(
-                [
-                  ["3d", "三维探索", Box],
-                  ["slices", "正交切片", ScanLine],
-                  ["compare", "联动对照", Layers3],
-                ] as const
-              ).map(([value, label, Icon]) => (
-                <button
-                  key={value}
-                  type="button"
-                  aria-pressed={viewMode === value}
-                  onClick={() => setViewMode(value)}
-                >
-                  <Icon size={16} />
-                  {label}
-                </button>
-              ))}
-            </div>
+            <span className="workspace-view-label"><Layers3 size={16} />联动对照</span>
             <button
               className="workspace-focus-toggle"
               type="button"
@@ -417,7 +453,6 @@ export function AtlasWorkspace({
           <section
             className="viewer-panel"
             aria-label="三维图谱"
-            hidden={viewMode === "slices"}
           >
             <div className="viewer-heading">
               <div className="selected-name">
@@ -426,17 +461,17 @@ export function AtlasWorkspace({
                   style={{ backgroundColor: region.color }}
                 />
                 <div className="selected-copy">
-                  <strong>{region.name}</strong>
-                  <span>{region.englishName}</span>
+                  <strong>{whiteSelected && !whiteMatterData ? "正在载入 PF 白质…" : region.name}</strong>
+                  <span>{whiteSelected && !whiteMatterData ? "PF / Kim v2" : region.englishName}</span>
                 </div>
-                <span className="selected-acronym">{region.acronym}</span>
+                <span className="selected-acronym">{whiteSelected && !whiteMatterData ? Math.abs(selected) : region.acronym}</span>
               </div>
               <button
                 className="text-button"
                 disabled={!data}
                 onClick={() => {
                   focus(selected, !!activeCircuit);
-                  setViewMode("slices");
+                  document.getElementById("linked-slices")?.scrollIntoView({ block: "start", behavior: "instant" });
                 }}
               >
                 <Crosshair size={15} />
@@ -455,8 +490,16 @@ export function AtlasWorkspace({
                 contrast={contrast}
                 onPosition={move}
                 circuit={activeCircuit}
+                circuitTarget={circuitTarget}
+                circuitFlow={circuitFlow}
+                onCircuitPreview={setCircuitPreview}
+                onCircuitSelect={selectCircuitTarget}
+                onCircuitClear={clearCircuitTarget}
                 regions={brainRegions}
-                datasetLabel={config.badge}
+                datasetLabel={whiteSelected ? "PF · Kim v2 白质" : config.badge}
+                whiteMatterData={whiteMatterData}
+                sliceData={config.embryonic ? displayedSliceData : whiteMatterData}
+
               />
             ) : (
               <div className="viewer-loading" role={error ? "alert" : "status"}>
@@ -521,9 +564,9 @@ export function AtlasWorkspace({
             </div>
           </section>
           <section
+            id="linked-slices"
             className="slices-section"
             aria-label="三向切片"
-            hidden={viewMode === "3d"}
           >
             <div className="section-heading">
               <h2>
@@ -537,56 +580,63 @@ export function AtlasWorkspace({
                   onChange={(e) => setOverlay(e.target.checked)}
                   disabled={!slices.data}
                 />
-                {detailedSlices ? "边界与名称" : "脑区标注"}
+                边界与名称
               </label>
             </div>
-            {!config.embryonic && (
-              <div className="slice-source-bar">
+            <div className="slice-source-bar">
+              {config.embryonic ? (
+                <EmbryoPartitionControl
+                  level={embryoLevel}
+                  onLevel={setEmbryoLevel}
+                  disabled={!data}
+                />
+              ) : (
                 <label className="slice-source-field">
                   <span>切片图谱</span>
                   <select
                     aria-label="切片图谱"
                     value={slices.source}
-                    onChange={(e) =>
+                    onChange={(e) => {
+                      if (whiteSelected) setSelected(config.initialId);
                       slices.setSource(
                         e.target.value === "paxinos-kim"
                           ? "paxinos-kim"
                           : "allen",
-                      )
-                    }
+                      );
+                    }}
                   >
                     <option value="allen">Allen Institute · CCFv3</option>
                     <option value="paxinos-kim">{KIM_SOURCE_LABEL}</option>
                   </select>
                 </label>
-                {detailedSlices && (
-                  <SlicePresentationControl
-                    mapView={mapView}
-                    onMapView={setMapView}
-                  />
-                )}
-                <span className="slice-coordinate-note">
-                  AP · Bregma 近似参考 / ML · 正中线
-                </span>
-              </div>
-            )}
+              )}
+              <SlicePresentationControl
+                mapView={mapView}
+                onMapView={setMapView}
+              />
+              <span className="slice-coordinate-note">
+                {config.embryonic
+                  ? `Allen 发育图谱 · ${config.id}`
+                  : "AP · Bregma 近似参考 / ML · 正中线"}
+              </span>
+            </div>
             <div className="slice-grid">
-              {slices.data
+              {displayedSliceData
                 ? PLANE_ORDER.map((name) => (
                     <SliceView
                       key={name}
-                      data={slices.data!}
+                      data={displayedSliceData!}
                       name={name}
                       position={position}
-                      selected={slices.source === "allen" ? selected : 0}
+                      selected={slices.source === "allen" ? selected : whiteSelected ? -selected : 0}
                       overlay={overlay}
                       contrast={contrast}
                       onPosition={move}
                       onExpand={() => setExpandedPlane(name)}
                       apBregmaUm={config.apBregmaUm}
                       mlMidlineUm={config.mlMidlineUm}
-                      detailed={detailedSlices}
-                      mapView={detailedSlices && mapView}
+                      detailed
+                      mapView={mapView}
                     />
                   ))
                 : PLANE_ORDER.map((name) => (
@@ -599,11 +649,22 @@ export function AtlasWorkspace({
                     </div>
                   ))}
             </div>
+            {!config.embryonic && slices.source === "allen" && data && (
+              <div className="slice-source-detail">
+                <p>Allen CCFv3 · {allenLabelCount} 个原始分区标签，含皮层分层。导览与三维表面展示 {baseRegions.length} 个精选脑区。</p>
+              </div>
+            )}
+            {config.embryonic && (
+              <div className="slice-source-detail embryo-partition-note">
+                <p>{embryoPartitionData ? `${embryoLevel === "fine" ? embryoPartitionData.fineCount : embryoPartitionData.majorCount} 个${embryoLevel === "fine" ? "原始分区标签" : "区室及保留标签"}` : "正在载入发育分区…"} · 三维显示主要区室，细分边界见切片。</p>
+                <p>{config.id === "E18.5" ? "E18.5 原始标注较粗，不代表脑区减少。" : "分区按发育本体命名，不能直接等同于成年核团。"}单侧标注；40 μm 为重采样间距。</p>
+              </div>
+            )}
             {slices.source === "paxinos-kim" && (
               <div className="slice-source-detail">
                 <p>
                   Kim v2 · 2024 修订，源自 FP 第 3 / 4 版分区，非第 5
-                  版原图。三维与左侧目录仍为 Allen。
+                  版原图。白质表面由同一 PF 标签体积重建；脑区表面与环路仍使用 Allen。
                 </p>
                 <p className="slice-source-probe" aria-live="polite">
                   {slices.error ? (
@@ -615,7 +676,8 @@ export function AtlasWorkspace({
                     </>
                   ) : slices.data ? (
                     <>
-                      FP 交点：<strong>{sliceProbeName}</strong>
+                      PF 交点：<strong>{sliceProbeName}</strong>{whiteProbe && <span className="category-tag">白质 / 纤维束</span>}
+                      {whiteProbe && <button className="text-button" onClick={inspectProbe}>查看白质解说</button>}
                     </>
                   ) : (
                     <span role="status">正在读取 Paxinos–Franklin 分区…</span>
@@ -625,7 +687,7 @@ export function AtlasWorkspace({
             )}
             <div className="slice-contrast">
               <span>
-                {detailedSlices && mapView
+                {mapView
                   ? "标签体积重切 · 放大可缩放并查全部分区"
                   : `${config.templateLabel} · 点击切片移动交叉线`}
               </span>
@@ -639,7 +701,7 @@ export function AtlasWorkspace({
                   value={contrast}
                   onChange={(e) => setContrast(Number(e.target.value))}
                   aria-label="切片灰度窗宽"
-                  disabled={!slices.data || (detailedSlices && mapView)}
+                  disabled={!slices.data || mapView}
                 />
               </label>
             </div>
@@ -703,12 +765,14 @@ export function AtlasWorkspace({
             </div>
             <div className="current-structure">
               <span>
-                {config.embryonic ? "交点所在区域" : "Allen 交点所在区域"}
+                {whiteProbe ? "PF 交点白质结构" : config.embryonic ? "交点所在区域" : "Allen 交点所在区域"}
               </span>
               <strong>
-                {probeRegion
-                  ? `${probeRegion.name} · ${currentStructure?.acronym}`
-                  : probeName}
+                {config.embryonic || slices.source === "allen"
+                  ? sliceProbeName
+                  : probeRegion
+                    ? `${probeRegion.name} · ${currentStructure?.acronym}`
+                    : probeName}
               </strong>
             </div>
             <button
@@ -771,99 +835,83 @@ export function AtlasWorkspace({
               onSelect={(id) => {
                 focus(id);
                 setInspectorView("details");
+                if (matchMedia("(min-width: 1051px)").matches) focusDetails();
               }}
               onCircuitSelect={(id) => {
                 openCircuit(id);
                 setInspectorView("details");
+                if (matchMedia("(min-width: 1051px)").matches) focusDetails();
               }}
               searchInputRef={search}
             />
+            {!config.embryonic && slices.source === "allen" && (
+              <button className="catalog-source-action" onClick={() => slices.setSource("paxinos-kim")}>浏览 PF 白质结构 <ArrowRight size={14} /></button>
+            )}
+            {!config.embryonic && slices.source === "paxinos-kim" && !whiteMatterData && (
+              <div className="catalog-load-state" role={slices.error ? "alert" : "status"}>
+                {slices.error ? <>PF 白质未载入 <button onClick={slices.retry}>重试</button></> : "正在载入 PF 白质…"}
+              </div>
+            )}
           </section>
           <section
             className="detail-panel"
             aria-label="脑区信息"
             hidden={inspectorView !== "details"}
           >
-            <div className="detail-tabs">
-              {activeCircuit && (
-                <button
-                  aria-pressed={panel === "circuit"}
-                  onClick={() => setPanel("circuit")}
-                >
-                  环路解说
-                </button>
-              )}
-              <button
-                aria-pressed={panel === "region"}
-                onClick={() => setPanel("region")}
-              >
-                <BookOpen size={15} />
-                脑区解说
-              </button>
-              <button
-                aria-pressed={panel === "methods"}
-                onClick={() => setPanel("methods")}
-              >
-                <Database size={15} />
-                数据与方法
-              </button>
-            </div>
-            <div ref={detailContent} className="detail-content">
+            {panel === "methods" ? (
+              <button className="detail-back-button" onClick={() => readPanel(activeCircuit ? "circuit" : "region")}>← 返回解说</button>
+            ) : activeCircuit ? (
+              <div className="detail-tabs">
+                <button aria-pressed={panel === "circuit"} onClick={() => setPanel("circuit")}>环路</button>
+                <button aria-pressed={panel === "region"} onClick={() => setPanel("region")}>所选结构</button>
+              </div>
+            ) : null}
+            <div ref={detailContent} className="detail-content" tabIndex={-1}>
               {panel === "circuit" && activeCircuit ? (
                 <CircuitPanel
                   circuit={activeCircuit}
                   regions={brainRegions}
                   selected={selected}
-                  onFocus={(id) => focus(id, true)}
+                  target={circuitTarget}
+                  pinned={circuitPinned}
+                  flow={circuitFlow}
+                  onPreview={setCircuitPreview}
+                  onSelect={selectCircuitTarget}
+                  onClear={clearCircuitTarget}
+                  onFlow={setCircuitFlow}
+                  onShowModel={() => {
+                    showMobilePane("viewer");
+                    document.querySelector(".viewer-panel")?.scrollIntoView({ block: "start", behavior: "instant" });
+                  }}
                 />
+              ) : panel === "region" && whiteSelected && !whiteMatterData ? (
+                <p role={slices.error ? "alert" : "status"}>{slices.error ? `PF 白质解说未载入：${slices.error}` : "正在载入 PF 白质解说…"}</p>
               ) : panel === "region" ? (
-                <>
-                  <div className="detail-kicker">
-                    <span
-                      style={{
-                        borderLeft: `3px solid ${region.color}`,
-                        paddingLeft: 8,
-                      }}
-                    >
-                      {region.acronym}
-                    </span>
-                    <span>ALLEN ID {region.id}</span>
+                <article className="region-article" key={region.id}>
+                  <div className="region-article-meta">
+                    <span className="region-dot" style={{ backgroundColor: region.color }} />
+                    <span>{region.category}</span>
+                    <span className="region-article-acronym">{region.acronym}</span>
                   </div>
                   <h2>{region.name}</h2>
                   <p className="english-name">{region.englishName}</p>
-                  <span className="category-tag">{region.category}</span>
                   <p className="region-summary">{region.summary}</p>
-                  <div className="function-note">
-                    <span className="eyebrow">
-                      {config.embryonic ? "发育解剖" : "功能与解剖"}
-                    </span>
+                  <section className="region-function" aria-label={config.embryonic ? "发育解剖" : "主要功能"}>
+                    <h3>{config.embryonic ? "发育解剖" : "主要功能"}</h3>
                     <p>{region.function}</p>
-                  </div>
-                  <h3 className="detail-section-heading">如何理解这些证据</h3>
-                  <p className="evidence-text">{region.evidence}</p>
-                  <div className="references-heading">
-                    <h3>文献支持</h3>
-                    <span>{region.references.length} 篇参考资料</span>
-                  </div>
-                  <ol className="references">
-                    {region.references.map((r, i) => (
-                      <Reference key={r.url} reference={r} index={i} />
-                    ))}
-                  </ol>
-                  <a
-                    className="allen-region-link"
-                    href={
-                      config.embryonic
-                        ? config.annotationUrl
-                        : `https://atlas.brain-map.org/atlas?atlas=1&structure=${region.id}`
-                    }
-                    target="_blank"
-                    rel="noreferrer"
-                  >
-                    在 Allen 图谱中查看
-                    <ArrowUpRight size={14} />
-                  </a>
-                </>
+                  </section>
+                  <details className="evidence-disclosure">
+                    <summary>证据与文献 <span>{region.references.length}</span></summary>
+                    <p className="evidence-text">{region.evidence}</p>
+                    <ol className="references">
+                      {region.references.map((r, i) => <Reference key={r.url} reference={r} index={i} />)}
+                    </ol>
+                    <div className="region-source-meta">
+                      <span>{whiteSelected ? "PF / Kim" : "Allen"} ID {Math.abs(region.id)}</span>
+                      <a href={whiteSelected ? KIM_SOURCE_URL : config.embryonic ? config.annotationUrl : `https://atlas.brain-map.org/atlas?atlas=1&structure=${region.id}`} target="_blank" rel="noreferrer">原始图谱 <ArrowUpRight size={13} /></a>
+                    </div>
+                  </details>
+                </article>
               ) : (
                 <>
                   <div className="detail-kicker">
@@ -924,7 +972,7 @@ export function AtlasWorkspace({
                         第 3 版，并纳入第 4 版更新；它不是第 5
                         版书籍的数字复刻。源数据的 20 μm
                         网格由形状插值得到，本页按最近邻采样至 50
-                        μm，不增加解剖精度。两套图谱独立解释脑区编号，不自动对应解说或三维高亮。
+                        μm，不增加解剖精度。白质目录、切片与三维表面均来自 Kim 标签，独立保存编号。白质表面只表示标注范围，不表示单根轴突、连接方向或纤维追踪结果。
                       </p>
                       <div className="method-links">
                         <a
@@ -1005,6 +1053,7 @@ export function AtlasWorkspace({
                   </div>
                 </>
               )}
+              {panel !== "methods" && <button className="detail-methods-link" onClick={() => readPanel("methods")}><Database size={14} />数据来源与方法 <ArrowRight size={14} /></button>}
             </div>
           </section>
         </aside>
@@ -1012,19 +1061,26 @@ export function AtlasWorkspace({
       <SliceDialog
         plane={expandedPlane}
         onPlane={setExpandedPlane}
-        data={slices.data}
+        data={displayedSliceData}
         position={position}
-        selected={slices.source === "allen" ? selected : 0}
+        selected={slices.source === "allen" ? selected : whiteSelected ? -selected : 0}
         overlay={overlay}
         onOverlay={setOverlay}
         contrast={contrast}
         onPosition={move}
         probeName={sliceProbeName}
         sourceLabel={sliceSourceLabel}
+        partitionControl={config.embryonic ? (
+          <EmbryoPartitionControl
+            level={embryoLevel}
+            onLevel={setEmbryoLevel}
+            disabled={!data}
+          />
+        ) : undefined}
         apBregmaUm={config.apBregmaUm}
         mlMidlineUm={config.mlMidlineUm}
-        detailed={detailedSlices}
-        mapView={detailedSlices && mapView}
+        detailed
+        mapView={mapView}
         onMapView={setMapView}
       />
       <footer className="page-footer">

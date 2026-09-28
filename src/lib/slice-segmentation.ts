@@ -6,6 +6,7 @@ import {
   type PlaneName,
   type Position,
 } from "./atlas";
+import { isWhiteMatterStructure, WHITE_MATTER_COLOR } from "./white-matter";
 
 export type SliceComponent = {
   id: number;
@@ -18,12 +19,14 @@ export type SliceRegion = SliceComponent & {
   acronym: string;
   name: string;
   color: string;
+  whiteMatter: boolean;
 };
 export type SliceSegmentation = {
   width: number;
   height: number;
   labels: Uint32Array;
   boundaryPath: string;
+  whiteMatterPath: string;
   components: SliceComponent[];
   regions: SliceRegion[];
 };
@@ -47,30 +50,41 @@ export function segmentSlice(
         ];
   const at = (u: number, v: number) =>
     u < 0 || v < 0 || u >= width || v >= height ? 0 : labels[v * width + u];
-  const edges: string[] = [];
   // Draw each interface once, merging collinear voxel edges without moving anatomical boundaries.
-  for (let v = 0; v <= height; v++) {
-    let start = -1;
-    for (let u = 0; u <= width; u++) {
-      const edge = u < width && at(u, v - 1) !== at(u, v);
-      if (edge && start < 0) start = u;
-      if (!edge && start >= 0) {
-        edges.push(`M${start},${v}H${u}`);
-        start = -1;
-      }
-    }
-  }
-  for (let u = 0; u <= width; u++) {
-    let start = -1;
+  const traceBoundary = (split: (a: number, b: number) => boolean) => {
+    const edges: string[] = [];
     for (let v = 0; v <= height; v++) {
-      const edge = v < height && at(u - 1, v) !== at(u, v);
-      if (edge && start < 0) start = v;
-      if (!edge && start >= 0) {
-        edges.push(`M${u},${start}V${v}`);
-        start = -1;
+      let start = -1;
+      for (let u = 0; u <= width; u++) {
+        const edge = u < width && split(at(u, v - 1), at(u, v));
+        if (edge && start < 0) start = u;
+        if (!edge && start >= 0) {
+          edges.push(`M${start},${v}H${u}`);
+          start = -1;
+        }
       }
     }
-  }
+    for (let u = 0; u <= width; u++) {
+      let start = -1;
+      for (let v = 0; v <= height; v++) {
+        const edge = v < height && split(at(u - 1, v), at(u, v));
+        if (edge && start < 0) start = v;
+        if (!edge && start >= 0) {
+          edges.push(`M${u},${start}V${v}`);
+          start = -1;
+        }
+      }
+    }
+    return edges.join("");
+  };
+  const boundaryPath = traceBoundary((a, b) => a !== b);
+  // White matter tracts get a second outline of every white/non-white interface.
+  const whiteIds = new Set<number>();
+  for (const [id, structure] of data.structures)
+    if (isWhiteMatterStructure(structure)) whiteIds.add(id);
+  const whiteMatterPath = whiteIds.size
+    ? traceBoundary((a, b) => whiteIds.has(a) !== whiteIds.has(b))
+    : "";
   // Distance to the nearest label edge gives an interior anchor even for crescents or rings.
   const distance = new Uint16Array(labels.length);
   for (let v = 0; v < height; v++)
@@ -155,13 +169,15 @@ export function segmentSlice(
         acronym: structure?.acronym ?? `ID ${component.id}`,
         name: structure?.name ?? "源数据未提供名称",
         color: `#${structure?.color_hex_triplet ?? "879fa1"}`,
+        whiteMatter: whiteIds.has(component.id),
       });
   }
   return {
     width,
     height,
     labels,
-    boundaryPath: edges.join(""),
+    boundaryPath,
+    whiteMatterPath,
     components,
     regions: [...grouped.values()].sort((a, b) =>
       a.acronym.localeCompare(b.acronym, "en"),
@@ -176,7 +192,9 @@ export function segmentationImage(
   const pixels = new Uint8ClampedArray(segmentation.labels.length * 4);
   const colors = new Map<number, number[]>();
   for (const region of segmentation.regions) {
-    const hex = data.structures.get(region.id)?.color_hex_triplet ?? "879fa1";
+    const hex = region.whiteMatter
+      ? WHITE_MATTER_COLOR.slice(1)
+      : (data.structures.get(region.id)?.color_hex_triplet ?? "879fa1");
     colors.set(
       region.id,
       [0, 2, 4].map(
@@ -204,7 +222,9 @@ export function layoutSliceLabels(
     .sort((a, b) => b.area - a.area || a.key - b.key)
     .flatMap((c) => {
       const region = byId.get(c.id)!;
-      const width = Math.max(16, region.acronym.length * 6.5 + 4),
+      // The marker prefix identifies tracts without relying on color alone.
+      const text = region.whiteMatter ? `\u25aa ${region.acronym}` : region.acronym;
+      const width = Math.max(16, text.length * 6.5 + 4),
         height = 15;
       const x = c.u * scale,
         y = c.v * scale;
@@ -225,6 +245,16 @@ export function layoutSliceLabels(
       )
         return [];
       placed.push(box);
-      return [{ ...c, acronym: region.acronym, name: region.name, x, y }];
+      return [
+        {
+          ...c,
+          acronym: region.acronym,
+          name: region.name,
+          whiteMatter: region.whiteMatter,
+          text,
+          x,
+          y,
+        },
+      ];
     });
 }

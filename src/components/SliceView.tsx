@@ -27,7 +27,10 @@ import {
   segmentSlice,
   segmentationImage,
   layoutSliceLabels,
+  type SliceRegion,
 } from "../lib/slice-segmentation";
+import { WHITE_MATTER_LABEL } from "../lib/white-matter";
+import "./white-matter.css";
 export function SliceView({
   data,
   name,
@@ -89,6 +92,52 @@ export function SliceView({
     [segmentation, overlay, displayedSize.width, displayedSize.height],
   );
   const bitmapSelection = overlay ? selected : 0;
+  const whiteRegions = useMemo(
+    () => segmentation?.regions.filter((r) => r.whiteMatter) ?? [],
+    [segmentation],
+  );
+  const greyRegions = useMemo(
+    () => segmentation?.regions.filter((r) => !r.whiteMatter) ?? [],
+    [segmentation],
+  );
+  const showWhiteMatterLegend = detailed && whiteRegions.length > 0;
+  const locateRegion = (region: SliceRegion) => {
+    onPosition(
+      planePosition(
+        name,
+        currentPosition.current,
+        Math.floor(region.u),
+        Math.floor(region.v),
+      ),
+    );
+    const viewport = stage.current,
+      surface = canvas.current?.parentElement;
+    if (zoom > 1 && viewport && surface)
+      viewport.scrollTo({
+        left:
+          surface.offsetLeft +
+          (region.u / width) * displayedSize.width -
+          viewport.clientWidth / 2,
+        top:
+          surface.offsetTop +
+          (region.v / height) * displayedSize.height -
+          viewport.clientHeight / 2,
+        behavior: "instant",
+      });
+  };
+  const renderRegion = (region: SliceRegion) => (
+    <button
+      type="button"
+      key={region.id}
+      className={region.whiteMatter ? "slice-region-white" : undefined}
+      onClick={() => locateRegion(region)}
+    >
+      <strong>
+        {region.whiteMatter ? `\u25aa ${region.acronym}` : region.acronym}
+      </strong>
+      <span>{region.name}</span>
+    </button>
+  );
   const axis = ANATOMICAL_AXES[p.axis];
   const increasing =
     p.axis === 0 && apBregmaUm !== undefined ? "向前" : axis.increasing;
@@ -297,6 +346,13 @@ export function SliceView({
                   d={segmentation.boundaryPath}
                   vectorEffect="non-scaling-stroke"
                 />
+                {detailed && segmentation.whiteMatterPath && (
+                  <path
+                    className="slice-white-matter-boundary"
+                    d={segmentation.whiteMatterPath}
+                    vectorEffect="non-scaling-stroke"
+                  />
+                )}
                 {p.u === 2 && mlMidlineUm !== undefined && (
                   <line
                     className="slice-midline"
@@ -315,9 +371,9 @@ export function SliceView({
                   y={label.y}
                   textAnchor="middle"
                   dominantBaseline="central"
-                  className="slice-region-label"
+                  className={`slice-region-label${label.whiteMatter ? " slice-white-matter-label" : ""}`}
                 >
-                  {label.acronym}
+                  {label.text}
                 </text>
               ))}
             </svg>
@@ -389,6 +445,15 @@ export function SliceView({
       >
         方向键定位 · Page Up / Down 换层 · Shift × 5 · Enter 居中
       </p>
+      {showWhiteMatterLegend && (
+        <p className="slice-white-matter-legend">
+          <span className="slice-white-matter-swatch" aria-hidden="true" />
+          <span>
+            <strong aria-hidden="true">▪ </strong>前缀缩写与暖棕边界 =
+            {WHITE_MATTER_LABEL}；其余为脑区与其他结构
+          </span>
+        </p>
+      )}
       {expanded && segmentation && (
         <details className="slice-region-directory">
           <summary>
@@ -397,40 +462,31 @@ export function SliceView({
           <div className="slice-region-list">
             {segmentation.regions.length === 0 ? (
               <p>本切面没有标注分区。</p>
+            ) : detailed ? (
+              <>
+                {whiteRegions.length > 0 && (
+                  <section
+                    className="slice-region-group"
+                    aria-label={WHITE_MATTER_LABEL}
+                  >
+                    <h4>
+                      {WHITE_MATTER_LABEL} · {whiteRegions.length} 个
+                    </h4>
+                    {whiteRegions.map(renderRegion)}
+                  </section>
+                )}
+                {greyRegions.length > 0 && (
+                  <section
+                    className="slice-region-group"
+                    aria-label="脑区与其他结构"
+                  >
+                    <h4>脑区与其他结构 · {greyRegions.length} 个</h4>
+                    {greyRegions.map(renderRegion)}
+                  </section>
+                )}
+              </>
             ) : (
-              segmentation.regions.map((region) => (
-                <button
-                  type="button"
-                  key={region.id}
-                  onClick={() => {
-                    onPosition(
-                      planePosition(
-                        name,
-                        currentPosition.current,
-                        Math.floor(region.u),
-                        Math.floor(region.v),
-                      ),
-                    );
-                    const viewport = stage.current,
-                      surface = canvas.current?.parentElement;
-                    if (zoom > 1 && viewport && surface)
-                      viewport.scrollTo({
-                        left:
-                          surface.offsetLeft +
-                          (region.u / width) * displayedSize.width -
-                          viewport.clientWidth / 2,
-                        top:
-                          surface.offsetTop +
-                          (region.v / height) * displayedSize.height -
-                          viewport.clientHeight / 2,
-                        behavior: "instant",
-                      });
-                  }}
-                >
-                  <strong>{region.acronym}</strong>
-                  <span>{region.name}</span>
-                </button>
-              ))
+              segmentation.regions.map(renderRegion)
             )}
           </div>
         </details>

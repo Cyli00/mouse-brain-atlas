@@ -17,14 +17,11 @@ export function Reference({
           {reference.title}
           <ArrowUpRight size={13} />
         </a>
-        <p>
-          {reference.authors} · {reference.year}
-          <br />
-          <em>{reference.journal}</em>
-        </p>
+        <span className="reference-citation">{reference.year} · {reference.journal}</span>
         <details>
-          <summary>查看研究证据</summary>
+          <summary>本页文献解读</summary>
           <p>{reference.finding}</p>
+          <p className="reference-authors">{reference.authors}</p>
         </details>
       </div>
     </li>

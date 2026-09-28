@@ -1,0 +1,71 @@
+/* PF 切片白质标识。颜色 #80613d 必须与 src/lib/white-matter.ts 的
+   WHITE_MATTER_COLOR 保持一致；白质同时依赖 ▪ 前缀与边界线形，不只靠颜色。 */
+
+.slice-white-matter-boundary {
+  fill: none;
+  stroke: #80613d;
+  stroke-width: 1.4;
+  opacity: 0.95;
+}
+
+.slice-white-matter-label {
+  font-weight: 600;
+}
+
+.slice-white-matter-legend {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0;
+  padding: 4px 24px 8px;
+  font-size: 12px;
+  color: var(--muted);
+}
+
+.slice-white-matter-swatch {
+  flex-shrink: 0;
+  width: 16px;
+  height: 11px;
+  border-radius: 3px;
+  background: #80613d;
+  border: 1px solid #5e4930;
+}
+
+.slice-region-group > h4 {
+  margin: 0;
+  padding: 8px 8px 2px;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--muted);
+}
+
+.slice-region-group + .slice-region-group > h4 {
+  border-top: 1px solid var(--border);
+  margin-top: 6px;
+  padding-top: 10px;
+}
+
+.slice-region-list .slice-region-white {
+  box-shadow: inset 3px 0 0 #80613d;
+}
+
+.slice-region-list .slice-region-white strong {
+  color: #5e4930;
+}
+
+@media (forced-colors: active) {
+  .slice-white-matter-boundary {
+    stroke: CanvasText;
+    opacity: 1;
+  }
+  .slice-white-matter-swatch {
+    background: CanvasText;
+    border-color: CanvasText;
+  }
+  .slice-region-list .slice-region-white {
+    box-shadow: inset 3px 0 0 CanvasText;
+  }
+  .slice-region-list .slice-region-white strong {
+    color: CanvasText;
+  }
+}
