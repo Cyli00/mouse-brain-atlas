@@ -1,3 +1,4 @@
+import type { PlaneDisplay } from "../lib/scene-plane";
 import { embryoPartitions, type EmbryoPartitionLevel } from "../lib/embryo-partitions";
 import { EmbryoPartitionControl } from "./EmbryoPartitionControl";
 import { sameCircuitTarget, type CircuitTarget } from "../lib/circuit-interaction";
@@ -97,7 +98,7 @@ export function AtlasWorkspace({
   const [position, setPosition] = useState<Position>([0, 0, 0]),
     [selected, setSelected] = useState(initialId),
     [overlay, setOverlay] = useState(true),
-    [showPlanes, setShowPlanes] = useState(false),
+    [planeDisplay, setPlaneDisplay] = useState<PlaneDisplay>("off"),
     [opacity, setOpacity] = useState(initialCircuit?.id ? 0.12 : 0.1),
     [contrast, setContrast] = useState(config.contrast),
     [panel, setPanel] = useState<"region" | "methods" | "circuit">(
@@ -315,13 +316,13 @@ export function AtlasWorkspace({
   const openCircuit = (id: string, navigate = true) => {
     const circuit = brainCircuits.find((c) => c.id === id);
     if (!circuit) return;
-    if (!activeCircuit) regionDisplay.current = { opacity, showPlanes };
+    if (!activeCircuit) regionDisplay.current = { opacity, planeDisplay };
     setExploreMode("circuits");
     clearCircuitTarget();
     setCircuitId(id);
     focus(circuit.nodeIds[0], true, navigate);
     setPanel("circuit");
-    setShowPlanes(false);
+    setPlaneDisplay("off");
     setOpacity(0.12);
   };
   const changeMode = (mode: "regions" | "circuits") => {
@@ -338,7 +339,7 @@ export function AtlasWorkspace({
       setExploreMode("regions");
       setPanel("region");
       setOpacity(regionDisplay.current.opacity);
-      setShowPlanes(regionDisplay.current.showPlanes);
+      setPlaneDisplay(regionDisplay.current.planeDisplay);
     }
   };
   const inspectProbe = () => {
@@ -356,7 +357,7 @@ export function AtlasWorkspace({
   const restoreDisplay = () => {
     const settings = displayDefaults(!!activeCircuit);
     setOpacity(settings.opacity);
-    setShowPlanes(settings.showPlanes);
+    setPlaneDisplay(settings.planeDisplay);
     setOverlay(true);
     setContrast(config.contrast);
     setIsolateRegion(false);
@@ -513,7 +514,7 @@ export function AtlasWorkspace({
                 selected={selected}
                 color={region.color}
                 opacity={opacity}
-                showPlanes={showPlanes}
+                planeDisplay={planeDisplay}
                 overlay={overlay}
                 contrast={contrast}
                 onPosition={move}
@@ -571,15 +572,16 @@ export function AtlasWorkspace({
                   <button aria-pressed={isolateRegion} onClick={() => setIsolateRegion(true)}>只看选区</button>
                 </div>
               )}
-              <label className="check-field">
-                <input
-                  type="checkbox"
-                  checked={showPlanes}
-                  onChange={(e) => setShowPlanes(e.target.checked)}
-                  disabled={!data}
-                />
+              <label className="scene-plane-field">
                 <Layers3 size={15} />
-                <span>显示切面</span>
+                <span>切面</span>
+                <select aria-label="三维切面显示" value={planeDisplay} disabled={!data}
+                  onChange={(event) => setPlaneDisplay(event.target.value as PlaneDisplay)}>
+                  <option value="off">不显示切面</option>
+                  <option value="transparent">显示切面（透明）</option>
+                  <option value="tissue">显示切面（组织图）</option>
+                  <option value="regions">显示切面（分区图）</option>
+                </select>
               </label>
               <div className="opacity-field">
                 <label htmlFor="opacity">外壳</label>
@@ -751,7 +753,7 @@ export function AtlasWorkspace({
                   value={contrast}
                   onChange={(e) => setContrast(Number(e.target.value))}
                   aria-label="切片灰度窗宽"
-                  disabled={!slices.data || mapView}
+                  disabled={!slices.data || (mapView && planeDisplay !== "tissue")}
                 />
               </label>
             </div>

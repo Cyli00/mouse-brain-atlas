@@ -173,3 +173,10 @@
   .circuit-list strong { font-size: 16px; line-height: 1.6; }
   .circuit-list > button > span { font-size: 13px; line-height: 1.8; }
 }
+
+@media (max-width: 700px) {
+  .scene-plane-field { grid-column: 1 / -1; }
+  .scene-plane-field select { flex: 1; width: 100%; min-height: 44px; font-size: 16px; }
+  .viewer-controls .opacity-field { grid-column: 1; grid-template-columns: auto minmax(0, 1fr) 32px; gap: 8px; }
+  .viewer-controls .reset-button { grid-row: auto; }
+}

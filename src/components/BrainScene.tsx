@@ -1,3 +1,4 @@
+import { scenePlaneImage, type PlaneDisplay } from "../lib/scene-plane";
 import type { BrainCircuit } from "../data/circuits";
 import type { BrainRegion } from "../data/regions";
 import { circuitEmphasis, CONNECTION_COLORS, sameCircuitTarget, type CircuitTarget } from "../lib/circuit-interaction";
@@ -16,7 +17,6 @@ import {
   toWorld,
   fromWorld,
   voxelIndex,
-  makeSlice,
   type AtlasData,
   type PlaneName,
   type Position,
@@ -35,7 +35,7 @@ type Props = {
   selected: number;
   color: string;
   opacity: number;
-  showPlanes: boolean;
+  planeDisplay: PlaneDisplay;
   overlay: boolean;
   contrast: number;
   onPosition: (p: Position) => void;
@@ -492,27 +492,31 @@ export function BrainScene(props: Props) {
         for (const name of PLANE_ORDER) sliceKeys[name] = "";
         previousPlaneData = planeData;
       }
-      const planeSelected = planeData === p.whiteMatterData
-        ? (p.selected < 0 ? -p.selected : 0)
-        : p.selected;
+      const planesVisible = p.planeDisplay !== "off" || shiftHeld;
+      const planeMode = p.planeDisplay === "off" ? "transparent" : p.planeDisplay;
+      const texturedPlanes = planesVisible && planeMode !== "transparent";
       const world = toWorld(p.position, p.data.dimensions, p.data.spacing),
         d = p.data.dimensions,
         s = p.data.spacing / 1000;
       marker.position.set(...world);
-      marker.visible = p.showPlanes || shiftHeld;
+      marker.visible = planesVisible;
       atlasMeshes.forEach((mesh, id) => {
         mesh.visible = !p.circuit && !p.isolateRegion && p.selected > 0 &&
           !(region && region.userData.regionId === id);
         const material = mesh.material as THREE.MeshStandardMaterial;
-        material.transparent = !!p.vasculature;
-        material.opacity = p.vasculature ? 0.025 : 1;
-        material.depthWrite = !p.vasculature;
+        const transparent = !!p.vasculature || texturedPlanes;
+        if (material.transparent !== transparent) {
+          material.transparent = transparent;
+          material.needsUpdate = true;
+        }
+        material.opacity = p.vasculature ? 0.025 : texturedPlanes ? 0.08 : 1;
+        material.depthWrite = !p.vasculature && !texturedPlanes;
       });
       if (region) {
         const material = region.material as THREE.MeshPhysicalMaterial;
         material.color.set(p.color);
-        material.opacity = p.circuit?.id ? 0.42 : p.vasculature ? 0.1 : 0.94;
-        material.depthWrite = !p.circuit && !p.vasculature;
+        material.opacity = p.vasculature || texturedPlanes ? 0.1 : p.circuit?.id ? 0.42 : 0.94;
+        material.depthWrite = !p.circuit && !p.vasculature && !texturedPlanes;
       }
       if (root)
         (root.material as THREE.MeshPhysicalMaterial).opacity = p.opacity;
@@ -520,26 +524,19 @@ export function BrainScene(props: Props) {
         const mesh = planes[name],
           plane = PLANES[name],
           material = mesh.material as THREE.MeshBasicMaterial;
-        mesh.visible = p.showPlanes || shiftHeld;
-        outlines[name].visible = p.showPlanes || shiftHeld;
-        const sliceKey = `${p.position[plane.axis]}:${p.overlay ? planeSelected : 0}:${p.overlay}:${p.contrast}`;
-        if ((p.showPlanes || shiftHeld) && sliceKeys[name] !== sliceKey) {
-          const image = makeSlice(
-            planeData,
-            name,
-            p.position,
-            planeSelected,
-            p.overlay,
-            p.contrast,
-          );
-          const strides = [1, d[0], d[0] * d[1]];
-          const base = p.position[plane.axis] * strides[plane.axis];
-          for (let v = 0; v < image.height; v++)
-            for (let u = 0; u < image.width; u++) {
-              const index = base + u * strides[plane.u] + v * strides[plane.v];
-              if (!planeData.annotation[index])
-                image.data[(v * image.width + u) * 4 + 3] = 0;
-            }
+        mesh.visible = planesVisible;
+        outlines[name].visible = planesVisible;
+        material.opacity = planeMode === "transparent" ? 0.08 : 0.92;
+        material.color.set(planeMode === "transparent" ? plane.color : "#ffffff");
+        if (planeMode === "transparent" && material.map) {
+          material.map.dispose();
+          material.map = null;
+          material.needsUpdate = true;
+          sliceKeys[name] = "";
+        }
+        const sliceKey = `${planeMode}:${p.position[plane.axis]}:${planeMode === "tissue" ? p.contrast : ""}`;
+        if (planesVisible && planeMode !== "transparent" && sliceKeys[name] !== sliceKey) {
+          const image = scenePlaneImage(planeData, name, p.position, planeMode, p.contrast);
           let tex = material.map as THREE.DataTexture | null;
           if (tex) {
             tex.image.data = image.data;
@@ -1090,7 +1087,7 @@ export function BrainScene(props: Props) {
       props.selected,
       props.color,
       props.opacity,
-      props.showPlanes,
+      props.planeDisplay,
       props.overlay,
       props.contrast,
       props.circuit,

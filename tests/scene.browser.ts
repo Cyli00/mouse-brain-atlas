@@ -385,3 +385,65 @@ test("Control pans on macOS event paths without opening the orientation menu; Me
     assert.deepEqual(errors, []);
   } finally { await browser.close(); }
 });
+
+test("3D plane modes show transparent, tissue and partition planes without changing the shared position", async () => {
+  const browser = await chromium.launch({ channel: process.env.BROWSER_CHANNEL });
+  const context = await browser.newContext({ viewport: { width: 1512, height: 1000 }, reducedMotion: "reduce" });
+  const page = await context.newPage();
+  const screenshots = await mkdtemp(join(tmpdir(), "brain-plane-modes-"));
+  const errors: string[] = [];
+  page.on("pageerror", (error) => errors.push(error.message));
+  const base = process.env.ATLAS_TEST_URL ?? "http://127.0.0.1:5187";
+  try {
+    for (const [route, prefix] of [["/", "allen"], ["/?slices=paxinos-kim", "pf"], ["/embryo?stage=E13.5", "embryo"]]) {
+      await page.goto(base + route); await ready(page);
+      await expect(page.locator(".slice-grid .slice-card")).toHaveCount(3, { timeout: 30000 });
+      const select = page.getByRole("combobox", { name: "三维切面显示" });
+      await expect(select).toHaveValue("off");
+      assert.deepEqual(await select.locator("option").allTextContents(), ["不显示切面", "显示切面（透明）", "显示切面（组织图）", "显示切面（分区图）"]);
+      const coordinates = await page.locator(".axis-legend").innerText();
+      const url = page.url();
+      const canvas = page.locator(".three-host canvas");
+      await canvas.focus();
+      const initial = await canvas.screenshot({ path: join(screenshots, `${prefix}-initial.png`) });
+      const frames: Buffer[] = [initial];
+      for (const mode of ["transparent", "tissue", "regions"]) {
+        await select.selectOption(mode);
+        await expect(page.locator('.slice-presentation-control button').first()).toHaveAttribute("aria-pressed", "true");
+        if (mode === "tissue") await expect(page.getByRole("slider", { name: "切片灰度窗宽" })).toBeEnabled();
+        await canvas.focus();
+        const frame = await canvas.screenshot();
+        assert.ok(frames.every((previous) => !frame.equals(previous)), `${prefix} ${mode} must render a distinct plane style`);
+        frames.push(frame);
+        assert.equal(await page.locator(".axis-legend").innerText(), coordinates);
+        assert.equal(page.url(), url);
+        await page.screenshot({ path: join(screenshots, `${prefix}-${mode}.png`) });
+        await page.keyboard.down("Shift");
+        await expect(page.locator(".slice-gizmo")).toBeVisible();
+        await page.keyboard.up("Shift");
+        await expect(select).toHaveValue(mode);
+        assert.ok((await canvas.screenshot()).equals(frame), "Shift must restore the selected plane style");
+      }
+      await select.selectOption("off");
+      await canvas.focus();
+      assert.ok((await canvas.screenshot({ path: join(screenshots, `${prefix}-restored.png`) })).equals(initial), "turning planes off must restore the same model and camera");
+      await select.selectOption("tissue");
+      await page.getByRole("button", { name: "恢复显示", exact: true }).click();
+      await expect(select).toHaveValue("off");
+    }
+    await page.goto(base); await ready(page);
+    const select = page.getByRole("combobox", { name: "三维切面显示" });
+    await select.selectOption("regions");
+    await page.getByRole("tab", { name: "经典环路" }).click();
+    await expect(select).toHaveValue("off");
+    await page.getByRole("tab", { name: "解剖分区" }).click();
+    await expect(select).toHaveValue("regions");
+    await page.setViewportSize({ width: 320, height: 900 });
+    await page.getByRole("button", { name: "观察视图", exact: true }).click();
+    await select.selectOption("tissue");
+    await page.locator(".viewer-controls").screenshot({ path: join(screenshots, "mobile-controls.png") });
+    assert.ok(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth));
+    assert.deepEqual(errors, []);
+    console.log(`Plane mode screenshots: ${screenshots}`);
+  } finally { await browser.close(); }
+});

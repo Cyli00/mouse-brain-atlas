@@ -227,3 +227,8 @@ button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible
 .scene-orientation-plane { display: flex; align-items: center; gap: 8px; margin-bottom: 4px; color: var(--muted); font-size: 12px; }
 .scene-orientation-sides { display: flex; gap: 6px; }
 .scene-orientation-sides button { justify-content: center; border: 1px solid var(--border); font-size: 13px; }
+
+.scene-plane-field { display: flex; align-items: center; gap: 8px; min-width: 0; font-size: 13px; color: var(--ink); }
+.scene-plane-field > span, .scene-plane-field > svg { flex-shrink: 0; }
+.scene-plane-field select { min-width: 0; max-width: 100%; padding: 7px 9px; border: 1px solid var(--border); border-radius: var(--radius-control); background: var(--surface); color: var(--ink); font: inherit; cursor: pointer; }
+.scene-plane-field select:disabled { opacity: .5; cursor: not-allowed; }
