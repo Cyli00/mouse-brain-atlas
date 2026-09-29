@@ -899,31 +899,6 @@ select.category-select {
   font: 12px var(--font-mono);
   color: var(--muted);
 }
-.view-switch {
-  display: flex;
-  gap: 2px;
-  padding: 3px;
-  position: absolute;
-  top: 14px;
-  right: 14px;
-  border: 1px solid #d6e0e1;
-  background: #fffffff0;
-  border-radius: 8px;
-}
-.view-switch button {
-  font-size: 12px;
-  padding: 7px 9px;
-  border-radius: 5px;
-  color: var(--muted);
-}
-.view-switch button:hover {
-  background: #eef3f0;
-}
-.view-switch button[aria-pressed="true"] {
-  background: var(--selected);
-  color: var(--primary);
-  font-weight: 500;
-}
 .scene-actions {
   display: flex;
   flex-direction: column;
@@ -2277,9 +2252,6 @@ body:has(.slice-dialog[open]) {
   .slice-heading h3 {
     font-size: 12px;
   }
-  .view-switch button {
-    padding: 7px;
-  }
   .opacity-field input {
     width: 65px;
   }
@@ -2577,17 +2549,6 @@ body:has(.slice-dialog[open]) {
   }
   .scene-caption .eyebrow {
     font-size: 12px;
-  }
-  .view-switch {
-    top: 12px;
-    right: 12px;
-    left: 12px;
-    justify-content: space-between;
-  }
-  .view-switch button {
-    font-size: 12px;
-    padding: 7px 10px;
-    flex: 1;
   }
   .scene-help {
     right: 13px;

@@ -13,6 +13,7 @@
     "test": "node --import tsx --test tests/*.test.ts",
     "test:coordinates:browser": "node --import tsx --test tests/coordinate-input.browser.ts",
     "test:scene:browser": "node --import tsx --test tests/scene.browser.ts",
+    "test:mobile:browser": "node --import tsx --test tests/mobile.browser.ts",
     "test:theme:browser": "node --import tsx --test tests/theme.browser.ts",
     "test:vasculature:browser": "node --import tsx --test tests/vasculature.browser.ts"
   },

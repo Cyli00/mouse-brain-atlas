@@ -56,10 +56,6 @@
 .scene-caption .eyebrow { color: var(--lavender-ink); font-size: 10px; letter-spacing: 2px; }
 .scene-caption > span:last-child { font-size: 11px; }
 .scene-caption .scene-coverage { color: var(--muted); font: 11px/1.6 var(--font-body); }
-.view-switch { top: 17px; right: 20px; border-color: var(--border); border-radius: 24px; padding: 4px; background: #fcfbf9ed; }
-.view-switch button { padding: 7px 10px; border-radius: 20px; }
-.view-switch button[aria-pressed="true"] { color: var(--surface); background: var(--ink); }
-.view-switch button:hover { background: var(--lavender); color: var(--ink); }
 .scene-actions { left: 20px; right: 20px; bottom: 42px; gap: 6px; }
 .scene-actions button { border-color: var(--border); background: var(--surface); border-radius: 50%; width: 38px; height: 38px; box-shadow: none; }
 .scene-actions button:hover { background: var(--lavender); color: var(--ink); }
@@ -69,7 +65,7 @@
 .scene-actions .scene-details-button:hover { background: var(--primary); color: var(--surface); }
 .scene-instruction { left: 20px; right: 20px; bottom: 12px; text-align: center; color: var(--muted); background: transparent; font-size: 11px; pointer-events: none; }
 .axis-legend { left: 22px; bottom: 93px; opacity: 0.9; }
-.scene-help { top: 77px; right: 22px; bottom: auto; }
+.scene-help { top: 20px; right: 22px; bottom: auto; }
 .scene-help summary { color: var(--muted); background: var(--surface); border-color: var(--border); }
 .scene-help-content { color: var(--ink); background: var(--surface); border-color: var(--border); }
 .viewer-controls { padding: 12px 20px; gap: 18px; min-height: 62px; border-color: var(--border); background: var(--surface); }
@@ -159,12 +155,10 @@ button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible
   .viewer-heading { min-height: 66px; padding: 12px 14px; }
   .selected-copy strong { font-size: 14px; }
   .selected-copy > span { max-width: 195px; font-size: 11px; }
-  .scene-caption { left: 14px; top: 63px; }
+  .scene-caption { left: 14px; top: 20px; }
   .scene-caption .eyebrow { font-size: 9px; }
   .scene-caption > span:last-child { font-size: 10px; }
-  .view-switch { left: 14px; right: 14px; top: 13px; justify-content: space-between; }
-  .view-switch button { flex: 1; }
-  .scene-help { top: 69px; right: 14px; }
+  .scene-help { top: 20px; right: 14px; }
   .scene-actions { left: 12px; right: 12px; bottom: 45px; gap: 4px; }
   .scene-actions button { width: 34px; height: 36px; }
   .scene-actions .scene-details-button { padding: 0 10px; height: 36px; }
@@ -205,3 +199,31 @@ button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible
 .vascular-source a { color: var(--primary); text-decoration: underline; }
 .vascular-note, .vascular-error { margin-top: 8px; }
 @media (max-width: 700px) { .vascular-controls { padding: 12px; } .vascular-control-row { gap: 10px 16px; } .vascular-source { margin-left: 0; } }
+
+.axis-legend { display: flex; flex-wrap: wrap; max-width: calc(100% - 40px); color: var(--ink); pointer-events: none; }
+.axis-legend-title { color: var(--muted); }
+.axis-legend b { font-weight: 600; }
+.slice-gizmo { position: absolute; inset: 0; width: 100%; height: 100%; overflow: hidden; pointer-events: none; }
+.slice-gizmo g { pointer-events: auto; cursor: grab; touch-action: none; outline: none; }
+.slice-gizmo circle { fill: var(--surface); stroke: currentColor; stroke-width: 2; }
+.slice-gizmo text { fill: var(--ink); font: 12px var(--font-mono); pointer-events: none; user-select: none; }
+.slice-gizmo-arrow { fill: none; stroke: currentColor; stroke-width: 3; pointer-events: stroke; }
+.slice-gizmo g:hover circle, .slice-gizmo g:focus-visible circle { stroke-width: 4; }
+.slice-gizmo g.dragging { cursor: grabbing; }
+.slice-gizmo g.dragging circle { fill: var(--lavender); }
+
+@media (max-width: 700px) {
+  .brain-scene:has(.scene-region-card) .axis-legend { bottom: 365px; }
+}
+
+.scene-orientation { position: fixed; inset: auto; margin: 0; width: 220px; max-width: calc(100vw - 24px); max-height: calc(100dvh - 24px); overflow-y: auto; padding: 12px; border: 1px solid var(--border); border-radius: 12px; background: var(--surface); color: var(--ink); box-shadow: 0 8px 28px #29334b24; }
+.scene-orientation strong { font-size: 14px; }
+.scene-orientation p { margin: 4px 0 10px; color: var(--muted); font-size: 11px; }
+.scene-orientation button { display: flex; align-items: center; gap: 10px; width: 100%; min-height: 38px; padding: 8px; border: 0; border-radius: 6px; background: transparent; color: var(--ink); text-align: left; cursor: pointer; }
+.scene-orientation button:hover, .scene-orientation button:focus-visible { background: var(--lavender); }
+.scene-orientation button:active { background: var(--border); }
+
+.scene-orientation-group + .scene-orientation-group { margin-top: 10px; }
+.scene-orientation-plane { display: flex; align-items: center; gap: 8px; margin-bottom: 4px; color: var(--muted); font-size: 12px; }
+.scene-orientation-sides { display: flex; gap: 6px; }
+.scene-orientation-sides button { justify-content: center; border: 1px solid var(--border); font-size: 13px; }

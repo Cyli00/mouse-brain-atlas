@@ -62,7 +62,7 @@ export function CircuitPanel({ circuit, regions, selected, target, pinned, flow,
         })}
       </div>
       <div className="circuit-kind-legend" aria-label="投射类型">{[...new Set(circuit.edges.map((edge) => edge.kind))].map((kind) => <span key={kind}><i style={{ backgroundColor: CONNECTION_COLORS[kind] }} />{CONNECTION_LABELS[kind]}</span>)}</div>
-      <p className="circuit-map-help">悬停预览 · 点击保持强调 · Esc 清除</p>
+      <p className="circuit-map-help"><span className="desktop-copy">悬停预览 · 点击保持强调 · Esc 清除</span><span className="mobile-copy">点按节点查看关系 · “显示全环路”取消强调</span></p>
       <div className="circuit-selection-note" aria-live="polite">
         {activeEdge ? <><strong>{byId.get(activeEdge.from)?.acronym} → {byId.get(activeEdge.to)?.acronym} · {CONNECTION_LABELS[activeEdge.kind]}</strong><p>{activeEdge.label}</p></> : activeNode ? <><strong>{activeNode.name} · {emphasis.edges.size} 条直接联系</strong><p>突出该节点的输入与输出，其余连线淡化。</p></> : <p>选一个节点或投射，查看它在环路中的关系。</p>}
       </div>

@@ -66,6 +66,7 @@ export function SliceView({
 }) {
   const stage = useRef<HTMLDivElement>(null);
   const activePointer = useRef<number | null>(null);
+  const touchStart = useRef<{ x: number; y: number; moved: boolean } | null>(null);
   const currentPosition = useRef(position);
   currentPosition.current = position;
   const instructionsId = useId();
@@ -223,6 +224,7 @@ export function SliceView({
   const releasePointer = (e: React.PointerEvent<HTMLButtonElement>) => {
     if (activePointer.current !== e.pointerId) return;
     activePointer.current = null;
+    touchStart.current = null;
     if (e.currentTarget.hasPointerCapture(e.pointerId))
       e.currentTarget.releasePointerCapture(e.pointerId);
   };
@@ -289,17 +291,30 @@ export function SliceView({
           aria-describedby={instructionsId}
           title={instructions}
           onPointerDown={(e) => {
+            if (e.pointerType === "touch" && !e.isPrimary && touchStart.current) touchStart.current.moved = true;
             if (!e.isPrimary || e.button !== 0) return;
             activePointer.current = e.pointerId;
+            if (e.pointerType === "touch") {
+              touchStart.current = { x: e.clientX, y: e.clientY, moved: false };
+              return;
+            }
             e.currentTarget.setPointerCapture(e.pointerId);
             move(e);
           }}
           onPointerMove={(e) => {
-            if (activePointer.current === e.pointerId) move(e);
+            if (activePointer.current !== e.pointerId) return;
+            if (touchStart.current) {
+              if (Math.hypot(e.clientX - touchStart.current.x, e.clientY - touchStart.current.y) > 8)
+                touchStart.current.moved = true;
+              return;
+            }
+            move(e);
           }}
           onPointerUp={(e) => {
             if (activePointer.current !== e.pointerId) return;
-            move(e);
+            // Touch scrolls the page; only a stationary tap commits a slice position.
+            const start = touchStart.current;
+            if (!start || (!start.moved && Math.hypot(e.clientX - start.x, e.clientY - start.y) <= 8)) move(e);
             releasePointer(e);
           }}
           onPointerCancel={releasePointer}
@@ -315,8 +330,10 @@ export function SliceView({
               );
           }}
           onLostPointerCapture={(e) => {
-            if (activePointer.current === e.pointerId)
+            if (activePointer.current === e.pointerId) {
               activePointer.current = null;
+              touchStart.current = null;
+            }
           }}
           onKeyDown={(e) => {
             if (e.altKey || e.ctrlKey || e.metaKey) return;
@@ -448,7 +465,8 @@ export function SliceView({
         id={instructionsId}
         title={instructions}
       >
-        方向键定位 · Page Up / Down 换层 · Shift × 5 · Enter 居中
+        <span className="desktop-copy">方向键定位 · Page Up / Down 换层 · Shift × 5 · Enter 居中</span>
+        <span className="mobile-copy">点按图像定位 · 滑杆调整深度</span>
       </p>
       {showWhiteMatterLegend && (
         <p className="slice-white-matter-legend">

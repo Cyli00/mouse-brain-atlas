@@ -132,6 +132,7 @@ export function AtlasWorkspace({
   const [sceneInspection, setSceneInspection] = useState(0);
   const [showVessels, setShowVessels] = useState(false);
   const [vesselDiameter, setVesselDiameter] = useState<VesselDiameter>(48);
+  const [vesselsAboveOnly, setVesselsAboveOnly] = useState(false);
   const vessels = useVasculature(showVessels && !config.embryonic);
   const [expandedPlane, setExpandedPlane] = useState<PlaneName | null>(null);
   const slices = useSliceAtlas(data, !config.embryonic);
@@ -361,6 +362,7 @@ export function AtlasWorkspace({
     setIsolateRegion(false);
     setShowVessels(false);
     setVesselDiameter(48);
+    setVesselsAboveOnly(false);
   };
   return (
     <div
@@ -500,9 +502,13 @@ export function AtlasWorkspace({
             </div>
             {data ? (
               <BrainScene
+                apZeroUm={apZeroUm}
+                mlZeroUm={mlZeroUm}
+                dvZeroUm={dvZeroUm}
                 data={data}
                 vasculature={config.embryonic ? null : vessels.data}
                 vesselDiameter={vesselDiameter}
+                vesselsAboveOnly={vesselsAboveOnly}
                 position={position}
                 selected={selected}
                 color={region.color}
@@ -602,6 +608,7 @@ export function AtlasWorkspace({
             {!config.embryonic && <VasculatureControls
               enabled={showVessels} onEnabled={setShowVessels}
               diameter={vesselDiameter} onDiameter={setVesselDiameter}
+              aboveOnly={vesselsAboveOnly} onAboveOnly={setVesselsAboveOnly}
               data={vessels.data} error={vessels.error} onRetry={vessels.retry} disabled={!data} />}
           </section>
           <section

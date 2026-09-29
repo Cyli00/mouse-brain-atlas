@@ -43,6 +43,7 @@ export function CoordinateField({
         aria-describedby={describedBy}
         title={`${reference ? `${reference}；` : ""}${min.toFixed(2)} 至 ${max.toFixed(2)} mm，步长 ${step.toFixed(2)} mm，按 Enter 应用`}
         type="number"
+        enterKeyHint="done"
         min={min}
         max={max}
         step={step}

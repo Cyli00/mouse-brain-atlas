@@ -3,9 +3,11 @@ import type { BrainRegion } from "../data/regions";
 import { circuitEmphasis, CONNECTION_COLORS, sameCircuitTarget, type CircuitTarget } from "../lib/circuit-interaction";
 import { useEffect, useId, useRef, useState } from "react";
 import * as THREE from "three";
-import { OrbitControls } from "three/addons/controls/OrbitControls.js";
+import { TrackballControls } from "three/addons/controls/TrackballControls.js";
 import { RotateCcw, Plus, Minus, Focus, CircleHelp, X, ArrowUpRight, Crosshair } from "lucide-react";
-import { ScenePointerGesture } from "../lib/scene-interaction";
+import { coordinateMm } from "../lib/coordinates";
+import { createSliceGizmo } from "../lib/scene-slice-gizmo";
+import { alignSceneCamera, rotateSceneCamera, SCENE_DIRECTIONS, ScenePointerGesture, type SceneDirection } from "../lib/scene-interaction";
 import type { Vasculature, VesselDiameter } from "../lib/vasculature";
 import { invalidateMeshCache, loadMeshGeometry } from "../lib/mesh-cache";
 import {
@@ -21,8 +23,12 @@ import {
 } from "../lib/atlas";
 type Props = {
   data: AtlasData;
+  apZeroUm?: number;
+  mlZeroUm?: number;
+  dvZeroUm?: number;
   vasculature?: Vasculature | null;
   vesselDiameter?: VesselDiameter;
+  vesselsAboveOnly?: boolean;
   whiteMatterData?: AtlasData | null;
   sliceData?: AtlasData | null;
   position: Position;
@@ -50,7 +56,8 @@ type Props = {
 };
 type SceneAPI = {
   update: (p: Props) => void;
-  view: (name: string) => void;
+  align: (direction: SceneDirection) => void;
+  openOrientation: (x?: number, y?: number) => void;
   zoom: (factor: number) => void;
   focus: () => void;
   focusCircuit: () => void;
@@ -74,7 +81,23 @@ export function BrainScene(props: Props) {
   const [error, setError] = useState(""),
     [meshStatus, setMeshStatus] = useState("正在载入三维脑表面…"),
     [retry, setRetry] = useState(0);
-  const [view, setView] = useState("3d");
+  const [orientationPosition, setOrientationPosition] = useState<{ x: number; y: number } | null>(null);
+  const orientation = useRef<HTMLDivElement>(null);
+  const controlHeld = useRef(false);
+  const openOrientation = (x?: number, y?: number) => {
+    const rect = host.current?.getBoundingClientRect();
+    if (!rect) return;
+    setOrientationPosition({
+      x: Math.max(12, Math.min(x ?? rect.left + rect.width / 2, window.innerWidth - 232)),
+      y: Math.max(12, Math.min(y ?? rect.top + rect.height / 2, window.innerHeight - 324)),
+    });
+  };
+  useEffect(() => {
+    if (!orientationPosition) return;
+    host.current?.querySelector("canvas")?.focus({ preventScroll: true });
+    orientation.current?.showPopover();
+    orientation.current?.querySelector("button")?.focus({ preventScroll: true });
+  }, [orientationPosition]);
   const [circuitStatus, setCircuitStatus] = useState("");
   const [ready, setReady] = useState(false);
   const [rootLoading, setRootLoading] = useState(true);
@@ -115,7 +138,7 @@ export function BrainScene(props: Props) {
       ...ids.flatMap((id) => current.data.meshes[String(id)]?.url ?? []),
       ...(current.selected < 0 ? [current.whiteMatterData?.meshes[String(-current.selected)]?.url].filter((url): url is string => !!url) : []),
     ]);
-    setView("3d");
+
     setRetry((value) => value + 1);
   };
   useEffect(() => {
@@ -141,12 +164,13 @@ export function BrainScene(props: Props) {
     const sceneColor = getComputedStyle(container).getPropertyValue("--scene-background").trim() || "#eeebf2";
     renderer.setClearColor(sceneColor, 1);
     renderer.outputColorSpace = THREE.SRGBColorSpace;
+    renderer.localClippingEnabled = true;
     renderer.toneMapping = THREE.ACESFilmicToneMapping;
     renderer.toneMappingExposure = 1.05;
     container.appendChild(renderer.domElement);
     renderer.domElement.setAttribute(
       "aria-label",
-      "小鼠三维脑视图，点击脑区查看详情，拖动旋转，Shift 拖动平移，方向键旋转，Enter 查看所选脑区，F 聚焦，Home 查看全脑",
+      "小鼠三维脑视图，点击脑区查看详情，拖动旋转，Ctrl 拖动平移，Shift 显示切面箭头，方向键旋转，Enter 查看所选脑区，F 聚焦，Home 查看全脑",
     );
     renderer.domElement.setAttribute("role", "img");
     renderer.domElement.setAttribute("aria-describedby", helpId);
@@ -180,21 +204,21 @@ export function BrainScene(props: Props) {
     let autoFit = true;
     const reducedMotion = matchMedia("(prefers-reduced-motion: reduce)");
     camera.position.copy(baseCamera);
-    let controls = new OrbitControls(camera, renderer.domElement);
+    let controls = new TrackballControls(camera, renderer.domElement);
     controls.target.set(0, 0, 0);
-    const configureControls = (orbit: OrbitControls) => {
+    const configureControls = (orbit: TrackballControls) => {
       orbit.minDistance = Math.max(
         (props.data.spacing / 1000) * 3,
         0.1 * modelScale,
       );
       orbit.maxDistance = gridSize.length() * 12;
-      orbit.enableDamping = !reducedMotion.matches;
-      orbit.dampingFactor = 0.1;
-      orbit.rotateSpeed = 0.65;
+      orbit.staticMoving = reducedMotion.matches;
+      orbit.dynamicDampingFactor = 0.25;
+      orbit.keys = ["", "", ""];
+      orbit.rotateSpeed = 2.2;
       orbit.zoomSpeed = 0.85;
       orbit.panSpeed = 0.7;
-      orbit.enablePan = true;
-      orbit.screenSpacePanning = true;
+
     };
     configureControls(controls);
     scene.add(new THREE.HemisphereLight("#fffdf9", "#77718c", 1.8));
@@ -213,6 +237,8 @@ export function BrainScene(props: Props) {
       lastCircuit = "";
     const atlasMeshes = new Map<number, THREE.Mesh>();
     let vesselLines: THREE.LineSegments<THREE.BufferGeometry, THREE.LineBasicMaterial> | undefined;
+    const vesselClipPlane = new THREE.Plane(new THREE.Vector3(0, 1, 0), 0);
+    const vesselClipPlanes = [vesselClipPlane];
     let lastVasculature: Vasculature | null = null;
     let atlasStarted = false;
     let cameraFrame: number | undefined;
@@ -259,7 +285,11 @@ export function BrainScene(props: Props) {
         circuitGroup = undefined;
       }
     };
+    let gizmo: ReturnType<typeof createSliceGizmo> | undefined;
+    let shiftHeld = false;
+    let interacting = false;
     const render = () => {
+      gizmo?.update();
       if (!abort.signal.aborted) renderer.render(scene, camera);
     };
     const themeObserver = new MutationObserver(() => {
@@ -270,29 +300,34 @@ export function BrainScene(props: Props) {
     themeObserver.observe(document.documentElement, { attributes: true, attributeFilter: ["data-theme"] });
     const cameraChanged = () => {
       render();
-      if (cameraFrame === undefined && controls.enableDamping) {
+      if (cameraFrame === undefined) {
         cameraFrame = requestAnimationFrame(() => {
           cameraFrame = undefined;
-          if (!abort.signal.aborted) controls.update();
+          if (abort.signal.aborted) return;
+          controls.update();
+          if (interacting) cameraChanged();
         });
       }
     };
     const startInteraction = () => {
+      interacting = true;
       autoFit = false;
       clearHover();
-      setView("3d");
+
+      cameraChanged();
     };
+    const endInteraction = () => { interacting = false; cameraChanged(); };
     const setCameraUp = (up: THREE.Vector3) => {
-      if (camera.up.equals(up)) return;
       const target = controls.target.clone();
       controls.dispose();
       camera.up.copy(up);
-      // OrbitControls captures the up axis at construction; rebuild it when a preset changes that axis.
-      controls = new OrbitControls(camera, renderer.domElement);
+      controls = new TrackballControls(camera, renderer.domElement);
       controls.target.copy(target);
       configureControls(controls);
+      controls.update();
       controls.addEventListener("change", cameraChanged);
       controls.addEventListener("start", startInteraction);
+      controls.addEventListener("end", endInteraction);
     };
     const selectedSphere = () => {
       if (region?.geometry.boundingSphere)
@@ -437,8 +472,16 @@ export function BrainScene(props: Props) {
           scene.add(vesselLines);
         }
       }
-      if (vesselLines && p.vasculature)
+      if (vesselLines && p.vasculature) {
         vesselLines.geometry.setDrawRange(0, p.vasculature.counts[p.vesselDiameter ?? 48] * 2);
+        // World +Y is dorsal. Clip fragments at the plane so crossing segments retain their upper portion.
+        vesselClipPlane.constant = -toWorld(p.position, p.data.dimensions, p.data.spacing)[1];
+        const clipping = p.vesselsAboveOnly ? vesselClipPlanes : null;
+        if (vesselLines.material.clippingPlanes !== clipping) {
+          vesselLines.material.clippingPlanes = clipping;
+          vesselLines.material.needsUpdate = true;
+        }
+      }
       container.dataset.vascularSegments = String(p.vasculature?.counts[p.vesselDiameter ?? 48] ?? 0);
       if (!p.circuit && p.selected > 0) loadAtlasMeshes();
       const selectedData = p.selected < 0 ? p.whiteMatterData : p.data;
@@ -456,7 +499,7 @@ export function BrainScene(props: Props) {
         d = p.data.dimensions,
         s = p.data.spacing / 1000;
       marker.position.set(...world);
-      marker.visible = p.showPlanes;
+      marker.visible = p.showPlanes || shiftHeld;
       atlasMeshes.forEach((mesh, id) => {
         mesh.visible = !p.circuit && !p.isolateRegion && p.selected > 0 &&
           !(region && region.userData.regionId === id);
@@ -477,10 +520,10 @@ export function BrainScene(props: Props) {
         const mesh = planes[name],
           plane = PLANES[name],
           material = mesh.material as THREE.MeshBasicMaterial;
-        mesh.visible = p.showPlanes;
-        outlines[name].visible = p.showPlanes;
+        mesh.visible = p.showPlanes || shiftHeld;
+        outlines[name].visible = p.showPlanes || shiftHeld;
         const sliceKey = `${p.position[plane.axis]}:${p.overlay ? planeSelected : 0}:${p.overlay}:${p.contrast}`;
-        if (p.showPlanes && sliceKeys[name] !== sliceKey) {
+        if ((p.showPlanes || shiftHeld) && sliceKeys[name] !== sliceKey) {
           const image = makeSlice(
             planeData,
             name,
@@ -689,23 +732,19 @@ export function BrainScene(props: Props) {
     }
     api.current = {
       update,
-      view(name) {
-        autoFit = true;
-        setCameraUp(
-          name === "horizontal"
-            ? new THREE.Vector3(0, 0, -1)
-            : new THREE.Vector3(0, 1, 0),
-        );
-        let direction = baseCamera;
-        if (name === "coronal") direction = new THREE.Vector3(0, 0, 1);
-        else if (name === "sagittal") direction = new THREE.Vector3(1, 0, 0);
-        else if (name === "horizontal") {
-          direction = new THREE.Vector3(0, 1, 0);
-        }
-        frameSphere(
-          framing === "region" ? selectedSphere() : framing === "circuit" && circuitGroup ? new THREE.Box3().setFromObject(circuitGroup).getBoundingSphere(new THREE.Sphere()) : wholeSphere,
-          direction,
-        );
+      openOrientation(x, y) {
+        interacting = false;
+        gesture.cancel();
+        clearHover();
+        setCameraUp(camera.up.clone());
+        openOrientation(x, y);
+      },
+      align(direction) {
+        autoFit = false;
+        setCameraUp(camera.up.clone());
+        alignSceneCamera(camera, controls.target, direction);
+        controls.update();
+        render();
       },
       zoom(factor) {
         autoFit = false;
@@ -730,6 +769,7 @@ export function BrainScene(props: Props) {
       const { width, height } = container.getBoundingClientRect();
       if (!width || !height) return;
       renderer.setSize(width, height);
+      controls.handleResize();
       camera.aspect = width / height;
       camera.updateProjectionMatrix();
       if (autoFit)
@@ -740,6 +780,7 @@ export function BrainScene(props: Props) {
     observer.observe(container);
     controls.addEventListener("change", cameraChanged);
     controls.addEventListener("start", startInteraction);
+    controls.addEventListener("end", endInteraction);
     const keyboard = (event: KeyboardEvent) => {
       if (event.altKey || event.ctrlKey || event.metaKey || event.isComposing)
         return;
@@ -759,7 +800,7 @@ export function BrainScene(props: Props) {
         api.current?.zoom(key === "-" ? 1.15 : 0.85);
       } else if (key === "f" || key === "home") {
         event.preventDefault();
-        setView("3d");
+
         if (key === "f") focusSelected();
         else resetWhole();
       } else if (
@@ -767,35 +808,17 @@ export function BrainScene(props: Props) {
       ) {
         event.preventDefault();
         autoFit = false;
-        const rotation = new THREE.Quaternion().setFromUnitVectors(
-          camera.up,
-          new THREE.Vector3(0, 1, 0),
-        );
-        const offset = camera.position
-          .clone()
-          .sub(controls.target)
-          .applyQuaternion(rotation);
-        const spherical = new THREE.Spherical().setFromVector3(offset);
-        const step = Math.PI / 24;
-        if (key === "arrowleft") spherical.theta -= step;
-        if (key === "arrowright") spherical.theta += step;
-        if (key === "arrowup") spherical.phi -= step;
-        if (key === "arrowdown") spherical.phi += step;
-        spherical.phi = THREE.MathUtils.clamp(
-          spherical.phi,
-          0.02,
-          Math.PI - 0.02,
-        );
-        offset.setFromSpherical(spherical).applyQuaternion(rotation.invert());
-        camera.position.copy(controls.target).add(offset);
+        rotateSceneCamera(camera, controls.target,
+          key === "arrowleft" ? -Math.PI / 24 : key === "arrowright" ? Math.PI / 24 : 0,
+          key === "arrowup" ? -Math.PI / 24 : key === "arrowdown" ? Math.PI / 24 : 0);
         controls.update();
-        setView("3d");
+
         render();
       }
     };
     renderer.domElement.addEventListener("keydown", keyboard);
     const pick = (event: MouseEvent) => {
-      if (latest.current.circuit) return;
+      if (event.shiftKey || event.ctrlKey || event.metaKey) return;
       const rect = renderer.domElement.getBoundingClientRect(),
         mouse = new THREE.Vector2(
           ((event.clientX - rect.left) / rect.width) * 2 - 1,
@@ -803,6 +826,7 @@ export function BrainScene(props: Props) {
         ),
         ray = new THREE.Raycaster();
       ray.setFromCamera(mouse, camera);
+      if (latest.current.circuit) return;
       const visiblePlanes = Object.values(planes).filter((m) => m.visible);
       const candidates = visiblePlanes.length
         ? visiblePlanes
@@ -851,7 +875,7 @@ export function BrainScene(props: Props) {
       }
       setHovered(null);
     };
-    const circuitHit = (event: PointerEvent): CircuitTarget | null => {
+    const circuitHit = (event: MouseEvent): CircuitTarget | null => {
       if (!latest.current.circuit || !circuitGroup) return null;
       const rect = renderer.domElement.getBoundingClientRect();
       const ray = new THREE.Raycaster();
@@ -868,7 +892,7 @@ export function BrainScene(props: Props) {
     };
     const preview = (event: PointerEvent) => {
       gesture.move(event);
-      if (event.buttons || event.pointerType === "touch") return;
+      if (event.buttons || event.pointerType === "touch" || shiftHeld) return;
       if (hoverFrame !== undefined) cancelAnimationFrame(hoverFrame);
       hoverFrame = requestAnimationFrame(() => {
         hoverFrame = undefined;
@@ -909,7 +933,7 @@ export function BrainScene(props: Props) {
     };
     const up = (event: PointerEvent) => {
       renderer.domElement.style.cursor = "grab";
-      if (gesture.up(event)) {
+      if (gesture.up(event) && !event.ctrlKey && !event.metaKey && !event.shiftKey) {
         if (latest.current.circuit) {
           const target = circuitHit(event);
           if (target) latest.current.onCircuitSelect?.(target);
@@ -923,14 +947,57 @@ export function BrainScene(props: Props) {
         }
       }
     };
-    const cancelPointer = () => { gesture.cancel(); leave(); };
+    const cancelPointer = () => {
+      gesture.cancel();
+      interacting = false;
+      setCameraUp(camera.up.clone());
+      leave();
+    };
+    const setShift = (value: boolean) => {
+      if (shiftHeld === value) return;
+      shiftHeld = value;
+      if (value && !interacting) setCameraUp(camera.up.clone());
+      gizmo?.setVisible(value);
+      leave();
+      update(latest.current);
+    };
+    const modifiers = (event: KeyboardEvent) => {
+      if (event.key === "Control") controlHeld.current = event.type === "keydown";
+      const editing = event.target instanceof HTMLElement &&
+        !!event.target.closest("input, textarea, select, [contenteditable=true]");
+      if (event.key === "Shift" && (event.type === "keyup" || !editing)) setShift(event.type === "keydown");
+    };
+    const blur = () => { controlHeld.current = false; setShift(false); cancelPointer(); interacting = false; };
+    const routePointer = (event: PointerEvent) => {
+      const pan = event.ctrlKey || controlHeld.current;
+      if (event.button === 2 && !pan) {
+        event.stopImmediatePropagation();
+        return;
+      }
+      if (event.pointerType !== "touch") setShift(event.shiftKey);
+      if (event.shiftKey && !pan) {
+        event.stopImmediatePropagation();
+        event.preventDefault();
+        return;
+      }
+      // macOS can report Control-click as a secondary button; both routes must pan.
+      controls.mouseButtons.LEFT = pan ? THREE.MOUSE.PAN : THREE.MOUSE.ROTATE;
+      controls.mouseButtons.RIGHT = THREE.MOUSE.PAN;
+    };
+    gizmo = createSliceGizmo(container, camera, () => latest.current, () => {
+      gesture.cancel(); leave();
+    });
+    window.addEventListener("keydown", modifiers);
+    window.addEventListener("keyup", modifiers);
+    window.addEventListener("blur", blur);
+    renderer.domElement.addEventListener("pointerdown", routePointer, true);
     renderer.domElement.addEventListener("pointercancel", cancelPointer);
     renderer.domElement.addEventListener("pointermove", preview);
     renderer.domElement.addEventListener("pointerleave", leave);
     renderer.domElement.addEventListener("pointerdown", down);
     renderer.domElement.addEventListener("pointerup", up);
     const motionPreference = () => {
-      controls.enableDamping = !reducedMotion.matches;
+      controls.staticMoving = reducedMotion.matches;
       syncFlow();
     };
     reducedMotion.addEventListener("change", motionPreference);
@@ -981,6 +1048,7 @@ export function BrainScene(props: Props) {
     renderer.domElement.addEventListener("webglcontextlost", lost);
     return () => {
       abort.abort();
+      controlHeld.current = false;
       if (cameraFrame !== undefined) cancelAnimationFrame(cameraFrame);
       if (hoverFrame !== undefined) cancelAnimationFrame(hoverFrame);
       regionAbort?.abort();
@@ -989,6 +1057,11 @@ export function BrainScene(props: Props) {
       observer.disconnect();
       themeObserver.disconnect();
       controls.dispose();
+      gizmo?.dispose();
+      window.removeEventListener("keydown", modifiers);
+      window.removeEventListener("keyup", modifiers);
+      window.removeEventListener("blur", blur);
+      renderer.domElement.removeEventListener("pointerdown", routePointer, true);
       renderer.domElement.removeEventListener("pointercancel", cancelPointer);
       renderer.domElement.removeEventListener("pointermove", preview);
       renderer.domElement.removeEventListener("pointerleave", leave);
@@ -1028,10 +1101,15 @@ export function BrainScene(props: Props) {
       props.isolateRegion,
       props.vasculature,
       props.vesselDiameter,
+      props.vesselsAboveOnly,
     ],
   );
   return (
-    <div className="brain-scene">
+    <div className="brain-scene" onContextMenu={(event) => {
+      event.preventDefault();
+      if (event.ctrlKey || controlHeld.current) return;
+      api.current?.openOrientation(event.clientX, event.clientY);
+    }}>
       <div ref={host} className="three-host" />
       <div className="scene-caption">
         <span className="eyebrow">ANATOMY STUDIO</span>
@@ -1075,30 +1153,41 @@ export function BrainScene(props: Props) {
           </button>
         </section>
       )}
-      <div className="view-switch" aria-label="三维观察方向">
-        {[
-          ["3d", "自由视角"],
-          ["coronal", "冠状"],
-          ["sagittal", "矢状"],
-          ["horizontal", "水平"],
-        ].map(([value, label]) => (
-          <button
-            key={value}
-            type="button"
-            disabled={!ready}
-            aria-pressed={view === value}
-            onClick={() => {
-              setView(value);
-              api.current?.view(value);
-            }}
-          >
-            {label}
-          </button>
-        ))}
-      </div>
+      {orientationPosition && (
+        <div ref={orientation} popover="auto" className="scene-orientation" role="dialog"
+          aria-label="正对切面" style={{ left: orientationPosition.x, top: orientationPosition.y }}
+          onToggle={(event) => { if (event.newState === "closed") setOrientationPosition(null); }}>
+          <strong>正对切面</strong>
+          <p>保持切面位置、缩放与观察中心</p>
+          {PLANE_ORDER.map((name) => (
+            <div className="scene-orientation-group" key={name} role="group" aria-label={PLANES[name].name}>
+              <span className="scene-orientation-plane">
+                <span className="region-dot" style={{ background: PLANES[name].color }} />
+                {PLANES[name].name}
+              </span>
+              <div className="scene-orientation-sides">
+                {(Object.keys(SCENE_DIRECTIONS) as SceneDirection[])
+                  .filter((direction) => SCENE_DIRECTIONS[direction].plane === name)
+                  .map((direction) => (
+                    <button key={direction} type="button"
+                      aria-label={`${PLANES[name].name}，从${SCENE_DIRECTIONS[direction].label}观察`}
+                      onClick={() => {
+                        api.current?.align(direction);
+                        orientation.current?.hidePopover();
+                        host.current?.querySelector("canvas")?.focus({ preventScroll: true });
+                      }}>
+                      从{SCENE_DIRECTIONS[direction].label}看
+                    </button>
+                  ))}
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
       <div className="scene-actions">
-        {!props.circuit && <button className="scene-details-button" disabled={!ready} onClick={() => setDetailsOpen(!detailsOpen)} aria-expanded={detailsOpen}>脑区详情</button>}
+        {!props.circuit && <button className="scene-details-button" disabled={!ready} onClick={() => setDetailsOpen(!detailsOpen)} aria-expanded={detailsOpen} aria-label="脑区详情"><span className="desktop-copy">脑区详情</span><span className="mobile-copy">详情</span></button>}
         {props.circuit && <button className="scene-circuit-focus" type="button" aria-label="聚焦整个环路" title="聚焦整个环路" disabled={!ready} onClick={() => api.current?.focusCircuit()}>全环路</button>}
+        <button className="scene-orientation-button" type="button" disabled={!ready} aria-label="选择观察方向" onClick={() => api.current?.openOrientation()}>视角</button>
         <button
           type="button"
           className="scene-focus-button"
@@ -1106,7 +1195,7 @@ export function BrainScene(props: Props) {
           title="聚焦所选结构（F）"
           disabled={!ready}
           onClick={() => {
-            setView("3d");
+
             api.current?.focus();
           }}
         >
@@ -1137,7 +1226,7 @@ export function BrainScene(props: Props) {
           aria-label="重置三维视角"
           title="查看全脑（Home）"
           onClick={() => {
-            setView("3d");
+
             api.current?.reset();
           }}
         >
@@ -1145,7 +1234,8 @@ export function BrainScene(props: Props) {
         </button>
       </div>
       <div className="scene-instruction" id={helpId}>
-        {props.circuit ? "悬停强调 · 点击保持 · 拖动旋转 · Esc 清除" : "点击脑区查看 · 拖动旋转 · Shift 拖动平移 · 滚轮缩放"}
+        <span className="desktop-copy">{props.circuit ? "悬停强调 · 点击保持 · 拖动旋转 · 右键正对切面 · 滚轮缩放 · Esc 清除" : "点击选区 · 拖动旋转 · Ctrl 平移 · Shift 切面 · 右键正对切面 · 滚轮缩放"}</span>
+        <span className="mobile-copy">单指旋转 · 双指缩放与平移</span>
       </div>
       <details className="scene-help">
         <summary>
@@ -1154,21 +1244,29 @@ export function BrainScene(props: Props) {
         </summary>
         <div className="scene-help-content">
           <p>
-            单击彩色脑区打开详情并同步目录和切片。拖动旋转，Shift + 拖动或右键拖动平移，滚轮缩放；触屏单指旋转、双指缩放和平移。
+            单击彩色脑区打开详情并同步目录和切片。拖动旋转，Ctrl + 拖动平移；按住 Shift 显示正交切面箭头，拖动 AP、DV、ML 箭头移动对应切面，滚轮缩放；触屏单指旋转、双指缩放和平移。
           </p>
           <p>
             按 Tab 聚焦三维视图后，用方向键旋转，+ / − 缩放，F
             聚焦所选结构，Home 返回全脑，Enter 打开详情，Esc 关闭。也可用脑区索引选择被外层遮挡的结构。
           </p>
           <p>
-            切换脑区后，可用“聚焦所选结构”查看小核团。观察方向按钮沿当前观察范围切换视角。
+            在三维视图任意位置右键，可从头侧／尾侧正对冠状面、左侧／右侧正对矢状面、腹侧／背侧正对水平面，保持切面位置、缩放和观察中心。切换脑区后，可用“聚焦所选结构”查看小核团。
           </p>
+          <button type="button" disabled={!ready} onClick={() => api.current?.openOrientation()}>正对切面…</button>
         </div>
       </details>
-      <div className="axis-legend">
-        <span style={{ color: PLANES.coronal.color }}>AP</span>
-        <span style={{ color: PLANES.horizontal.color }}>DV</span>
-        <span style={{ color: PLANES.sagittal.color }}>ML</span>
+      <div className="axis-legend" aria-label="当前交点坐标，毫米">
+        <span className="axis-legend-title">交点 · mm</span>
+        {(["coronal", "horizontal", "sagittal"] as const).map((name) => {
+          const axis = PLANES[name].axis;
+          const label = axis === 0 ? "AP" : axis === 1 ? "DV" : "ML";
+          const value = coordinateMm(props.position[axis], axis, props.data.spacing,
+            props.apZeroUm, props.mlZeroUm, props.dvZeroUm);
+          return <span key={name} data-axis={label}>
+            <b style={{ color: PLANES[name].color }}>{label}</b> {value.toFixed(2)}
+          </span>;
+        })}
       </div>
       {props.circuit && (
         <div className="scene-circuit-label">

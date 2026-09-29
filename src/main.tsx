@@ -4,6 +4,7 @@ import App from "./App";
 import "./styles.css";
 import "./studio.css";
 import "./theme.css";
+import "./mobile.css";
 import { applyTheme, storedTheme } from "./lib/theme";
 applyTheme(storedTheme());
 createRoot(document.getElementById("root")!).render(

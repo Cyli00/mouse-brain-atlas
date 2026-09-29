@@ -4,6 +4,8 @@ type Props = {
   enabled: boolean;
   onEnabled: (value: boolean) => void;
   diameter: VesselDiameter;
+  aboveOnly: boolean;
+  onAboveOnly: (value: boolean) => void;
   onDiameter: (value: VesselDiameter) => void;
   data: Vasculature | null;
   error: string;
@@ -12,9 +14,9 @@ type Props = {
 };
 
 export function VasculatureControls(p: Props) {
-  return <div className="vascular-controls">
+  return <div className="vascular-controls" data-enabled={p.enabled}>
     <div className="vascular-control-row">
-      <label className="check-field">
+      <label className="check-field vascular-toggle">
         <input type="checkbox" checked={p.enabled} disabled={p.disabled}
           onChange={(e) => p.onEnabled(e.target.checked)} aria-describedby="vascular-description" />
         <span className="vascular-swatch" aria-hidden="true" />
@@ -26,8 +28,13 @@ export function VasculatureControls(p: Props) {
             <option value={60}>≥ 60 μm</option><option value={48}>≥ 48 μm</option><option value={36}>≥ 36 μm</option>
           </select>
         </label>
+        <label className="check-field vascular-above">
+          <input type="checkbox" checked={p.aboveOnly} disabled={!p.enabled || p.disabled}
+            onChange={(e) => p.onAboveOnly(e.target.checked)} />
+          仅显示交点水平面以上的血管
+        </label>
         <span className="vascular-load-status" role="status">
-          {p.enabled ? p.error ? "血管加载失败" : p.data ? `${p.data.counts[p.diameter].toLocaleString("zh-CN")} 个血管段` : "正在载入血管…" : "成年标本 · 按需加载"}
+          {p.enabled ? p.error ? "血管加载失败" : p.data ? p.aboveOnly ? "显示交点水平面以上部分" : `${p.data.counts[p.diameter].toLocaleString("zh-CN")} 个血管段` : "正在载入血管…" : "成年标本 · 按需加载"}
         </span>
       <details className="vascular-source" onKeyDown={(e) => {
         if (e.key === "Escape") {
@@ -43,7 +50,7 @@ export function VasculatureControls(p: Props) {
         </div>
       </details>
     </div>
-    {p.enabled && <p className="vascular-note">单标本血管网络图 · 脑区表面淡化显示 · 连线不表示管壁或血流方向</p>}
+    {p.enabled && <p className="vascular-note">单标本血管网络图 · 脑区表面淡化显示 · 连线不表示管壁或血流方向{p.aboveOnly && " · 以上指背侧，随 DV 交点位置更新"}</p>}
     {p.error && <p className="vascular-error" role="alert">{p.error} <button className="text-button" onClick={p.onRetry}>重试血管</button></p>}
   </div>;
 }

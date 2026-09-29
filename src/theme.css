@@ -28,12 +28,12 @@
 
 [data-theme="dark"] :is(.brand-word, .brand-mark, .theme-toggle) { color: var(--primary); }
 [data-theme="dark"] :is(.workspace .viewer-panel, .scene-region-card, .scene-circuit-label) { border-color: var(--border); }
-[data-theme="dark"] :is(.view-switch, .atlas-mesh-status, .mobile-workspace-nav, .slice-card, .search-field, .icon-button, .scene-help-content, .scene-error, .circuit-load-status) { background: var(--surface); color: var(--ink); }
+[data-theme="dark"] :is(.atlas-mesh-status, .mobile-workspace-nav, .slice-card, .search-field, .icon-button, .scene-help-content, .scene-error, .circuit-load-status) { background: var(--surface); color: var(--ink); }
 [data-theme="dark"] :is(.viewer-loading, .slice-placeholder, .slice-card-map .slice-stage) { background: var(--scene-background); }
 [data-theme="dark"] :is(.slice-card-map .orient, .slice-card-map .scale-mark) { color: var(--muted); border-color: var(--muted); }
 [data-theme="dark"] :is(.scene-mode-switch button[aria-pressed="true"], .guide-region-card.selected, .inspector-navigation button[aria-pressed="true"], .mobile-workspace-nav button[aria-pressed="true"]) { background: var(--selected); color: var(--selected-border); }
-[data-theme="dark"] :is(.view-switch button[aria-pressed="true"], .scene-actions .scene-details-button, .primary-button) { background: var(--primary); color: var(--background); border-color: var(--primary); }
-[data-theme="dark"] :is(.view-switch button[aria-pressed="true"]:hover, .scene-actions .scene-details-button:hover, .primary-button:hover) { background: var(--selected-border); color: var(--background); border-color: var(--selected-border); }
+[data-theme="dark"] :is(.scene-actions .scene-details-button, .primary-button) { background: var(--primary); color: var(--background); border-color: var(--primary); }
+[data-theme="dark"] :is(.scene-actions .scene-details-button:hover, .primary-button:hover) { background: var(--selected-border); color: var(--background); border-color: var(--selected-border); }
 [data-theme="dark"] .scene-actions .scene-details-button[aria-expanded="true"] { background: var(--selected-border); border-color: var(--selected-border); color: var(--background); }
 [data-theme="dark"] .scene-hover-label { background: var(--surface); color: var(--ink); border: 1px solid var(--selected-border); }
 [data-theme="dark"] .scene-hover-label small { color: var(--muted); }
