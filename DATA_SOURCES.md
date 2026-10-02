@@ -11,11 +11,11 @@
 | 平均荧光模板 | [average_template_50.nrrd](https://download.alleninstitute.org/informatics-archive/current-release/mouse_ccf/average_template/average_template_50.nrrd) | 无损提取 uint16 体素，重新 gzip 压缩 |
 | 脑区标注 | [annotation_50.nrrd](https://download.alleninstitute.org/informatics-archive/current-release/mouse_ccf/annotation/ccf_2017/annotation_50.nrrd) | 无损提取 uint32 Allen 结构 ID，未重新编号 |
 | 脑区本体 | [structure graph 1](https://api.brain-map.org/api/v2/structure_graph_download/1.json) | 将树展开为数组，保留 ID、名称、缩写、颜色、父 ID 与完整祖先路径 |
-| 整脑和 65 个区域网格 | [2017 structure meshes](https://download.alleninstitute.org/informatics-archive/current-release/mouse_ccf/annotation/ccf_2017/structure_meshes/) | 保留官方顶点和三角形，转换成 float32/uint32 二进制；渲染时重算法线 |
+| 整脑和 107 个区域网格 | [2017 structure meshes](https://download.alleninstitute.org/informatics-archive/current-release/mouse_ccf/annotation/ccf_2017/structure_meshes/) | 保留官方顶点和三角形，转换成 float32/uint32 二进制；渲染时重算法线 |
 
 平均模板是 1,675 只小鼠脑的形状和背景荧光强度平均，原始成像方式是连续双光子断层成像。它不是单只小鼠的组织学切片序列，也不是 MRI。三维重建与配准由 Allen 完成；本项目负责获取、无损打包、区域表面显示和三正交平面的实时重切。[Wang et al., 2020](https://doi.org/10.1016/j.cell.2020.04.007)
 
-成年小鼠图谱现包含 65 个区域与 root 997 整脑网格。完整 ID、缩写和 Allen 名称保存在 `public/data/adult-region-ids.json`，此文件也是数据制备脚本的输入。所有 65 个区域均有官方 OBJ 网格和 50 µm 标注中的实际体素。
+成年小鼠图谱现包含 107 个区域与 root 997 整脑网格。完整 ID、缩写和 Allen 名称保存在 `public/data/adult-region-ids.json`，此文件也是数据制备脚本的输入。所有 107 个区域均有官方 OBJ 网格和 50 µm 标注中的实际体素。
 
 | 范围 | 主要区域 |
 | --- | --- |
@@ -88,7 +88,7 @@ python scripts/prepare_kim_data.py \
 - `template.uint16.gz` 解压后为 little-endian uint16。实测强度范围是 0 到 516，未做归一化或滤波。
 - `annotation.uint32.gz` 解压后为 little-endian uint32。0 表示未标注背景，其他值是 Allen 结构 ID。
 - `ontology.json` 是完整的平铺本体，`structureIdPath` 包括自身 ID。
-- `adult-region-ids.json` 是可重建的成年脑区清单，包含 65 项 ID、缩写和名称。`manifest.regions` 补充了网格、定位体素、祖先和子区域关系及空间检验结果。
+- `adult-region-ids.json` 是可重建的成年脑区清单，包含 107 项 ID、缩写和名称。`manifest.regions` 补充了网格、定位体素、祖先和子区域关系及空间检验结果。
 - `meshes/<id>.bin.gz` 解压后前 8 字节是两个 little-endian uint32，依次为顶点数和三角形数；之后为 `顶点数 × 3` 个 float32 坐标和 `三角形数 × 3` 个 uint32 顶点索引。坐标单位为 µm，顺序是 AP、DV、ML。没有简化表面网格。
 
 ## 重新获取与验证
@@ -173,3 +173,25 @@ uv run --with numpy --with scipy --with nibabel --with scikit-image python scrip
 ## 新增经典环路
 
 海马三突触及内嗅区直接到 CA1 的支路参考 Kohara 等 2014，doi:10.1038/nn.3614；该研究也说明经典简图之外存在 CA2 等通路。MD 与前额叶回路参考 Schmitt 等 2017，doi:10.1038/nature22073。CEA 到腹外侧 PAG 的冻结通路参考 Tovote 等 2016，doi:10.1038/nature17996，抑制性输入通过去抑制产生行为输出，不等于抑制整个 PAG。基底节增加 GPe→STN 和 STN→SNr，分别依据 Chu 等 2015，doi:10.1016/j.neuron.2014.12.022 与 Fife 等 2017，doi:10.7554/eLife.27689。所有曲线及流动均为方向示意，不表示轴突轨迹、连接强度或传导速度。
+
+## 皮层表面覆盖核验
+
+成年目录补充 42 个官方结构，全部使用 `ccf_2017/structure_meshes/<ID>.obj`，不按外观补画边界。原始下载 SHA-256 和每个输出网格校验值保存在 manifest；英文名称、缩写、颜色、祖先路径与 `structure_graph_download/1.json` 逐项核对。当前 API 本体与先前保存的来源哈希相同，这项检查不将动态 API 当作单独的冻结 2017 版本。中文是显示译名，官方英文名称和 ID 是身份依据；容易混淆的术语保留英文。
+
+| 核验范围 | 独立表面所覆盖的 50 μm 标注体素 | 比例 |
+| --- | --- | --- |
+| Isocortex / 新皮层，ID 315 | 986,098 / 986,098 | 100% |
+| Cortical plate，ID 695，含 Isocortex、OLF 和 HPF | 1,657,253 / 1,700,484 | 97.4577% |
+
+29 个新皮层模型互不包含，没有父子区域重复叠加；每个新皮层标注体素恰好归入其中一个模型。新增嗅区和海马模型包括 PIR、SUB、CA2、PRE、POST、PAR 等。剩余 39,798 个体素仅标为 OLF 698，3,433 个仅标为 HPF 1089，来源没有给出更细归属。这 43,231 个体素仍保留在切片中，不生成自命名分区，也不宣称整个大脑皮层完整。覆盖率描述标签并集；官方平滑网格与 50 μm 栅格边界并不逐点相等。
+
+42 个新增压缩网格共 1,436,145 字节、80,529 顶点、160,692 三角形；解析后的顶点和索引与官方下载 OBJ 逐字节相同。新增解说只说明解剖位置及来源，不为新区域编写未核实的功能结论。
+
+从现有已校验体积增量补充官方表面：
+
+```sh
+python3 scripts/prepare_allen_data.py --extend-regions --cache /tmp/mice-adult-cortex-source
+python3 scripts/verify_allen_data.py --source-cache /tmp/mice-adult-cortex-source
+```
+
+`manifest.corticalCoverage` 保存逐层级的覆盖、重复和未覆盖标签。测试独立遍历体素核对该报告，并核对前端目录与官方身份。
