@@ -8,6 +8,7 @@ import {
   layoutSliceLabels,
 } from "../src/lib/slice-segmentation";
 import { WHITE_MATTER_COLOR } from "../src/lib/white-matter";
+import { scenePlaneImage } from "../src/lib/scene-plane";
 import {
   planePosition,
   voxelIndex,
@@ -56,6 +57,41 @@ function synthetic(rows: number[][]): AtlasData {
     ),
   };
 }
+
+test("slice reuse stays within the current atlas and evicts least-recently-used depths", () => {
+  const oneSlice = synthetic([[1, 2], [2, 1]]);
+  const first = segmentSlice(oneSlice, "coronal", 0);
+  assert.strictEqual(segmentSlice(oneSlice, "coronal", 0), first,
+    "a preview, enlarged view and 3D texture share one segmentation");
+  const otherAtlas = { ...oneSlice, annotation: new Uint32Array(oneSlice.annotation) };
+  otherAtlas.annotation[0] = 2;
+  const otherSlice = segmentSlice(otherAtlas, "coronal", 0);
+  assert.notStrictEqual(otherSlice, first);
+  assert.equal(otherSlice.labels[0], 2);
+  assert.equal(first.labels[0], 1);
+
+  const data = { ...oneSlice, dimensions: [14, 1, 1] as Position, annotation: new Uint32Array(14).fill(1) };
+  const firstDepth = segmentSlice(data, "coronal", 0);
+  const secondDepth = segmentSlice(data, "coronal", 1);
+  for (let depth = 2; depth < 12; depth++) segmentSlice(data, "coronal", depth);
+  assert.strictEqual(segmentSlice(data, "coronal", 0), firstDepth);
+  segmentSlice(data, "coronal", 12);
+  assert.strictEqual(segmentSlice(data, "coronal", 0), firstDepth, "recently revisited depth remains cached");
+  assert.notStrictEqual(segmentSlice(data, "coronal", 1), secondDepth, "cache does not grow with every visited depth");
+});
+
+test("3D alpha and boundary edits never change cached 2D partition colors", () => {
+  const data = synthetic([[0, 1, 2], [0, 1, 2]]);
+  const segmentation = segmentSlice(data, "coronal", 0);
+  const before = segmentationImage(segmentation, data);
+  const expected = before.data.slice();
+  const image3D = scenePlaneImage(data, "coronal", [0, 0, 0], "regions", 200);
+  assert.equal(image3D.data[3], 0, "3D background is transparent");
+  assert.notDeepEqual(image3D.data, expected, "3D adds its own boundaries");
+  before.data.fill(0);
+  assert.deepEqual(segmentationImage(segmentation, data).data, expected,
+    "each mutable canvas image owns its pixels");
+});
 
 test("segmentation retains internal interfaces, holes, and separate bilateral components", () => {  const data = synthetic([
     [1, 1, 1, 0, 2],

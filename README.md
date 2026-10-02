@@ -18,9 +18,9 @@ npm run build
 npm run preview
 ```
 
-坐标回归测试使用 `npm test`。浏览器测试覆盖四个胚胎阶段、成年坐标、键盘输入、放大切片与窄屏无障碍检查。先运行 `npm run dev -- --port 5186`，再在另一终端运行 `BROWSER_CHANNEL=chrome npm run test:coordinates:browser`，使用本机 Chrome。已安装 Playwright Chromium 时可省略 `BROWSER_CHANNEL`；测试其他本地端口时设置 `ATLAS_TEST_URL`。
+坐标回归测试使用 `npm test`。浏览器测试覆盖四个胚胎阶段、成年坐标、键盘输入、放大切片与窄屏无障碍检查。先运行 `npm run dev -- --port 5187`，再在另一终端运行 `BROWSER_CHANNEL=chrome npm run test:coordinates:browser`，使用本机 Chrome。已安装 Playwright Chromium 时可省略 `BROWSER_CHANNEL`；测试其他本地端口时设置 `ATLAS_TEST_URL`。
 
-三维交互回归运行 `BROWSER_CHANNEL=chrome ATLAS_TEST_URL=http://127.0.0.1:5186 npm run test:scene:browser`，覆盖真实表面点击、悬停、拖动旋转、Shift 平移、单区观察、手机触控、环路模式及部分网格失败重试。截图保存在系统临时目录。
+三维交互回归运行 `BROWSER_CHANNEL=chrome ATLAS_TEST_URL=http://127.0.0.1:5187 npm run test:scene:browser`，覆盖真实表面点击、悬停、拖动旋转、Ctrl 平移、单区观察、手机触控、环路模式及部分网格失败重试。截图保存在系统临时目录。
 
 ## Vercel 部署
 
@@ -54,7 +54,7 @@ npm run preview
 - “交点所在区域”与已选脑区独立。点击“查看解说”查找交点最近的已收录父区，保留当前位置。
 - 进入环路时记录普通脑区的切面和不透明度设置，退出后恢复。“恢复显示”只还原当前模式显示设置；相机由单独的视角复位按钮控制。
 
-同一页面内网格缓存有 24 项、32 MiB 上限。切片只在该方向的深度、灰度或标注变化时重新绘制，平面内移动十字线不会重复生成同一位图。
+同一页面内脑区网格缓存有 24 项、32 MiB 上限。血管图层关闭后保留几何体，再开启时复用；离开工作区时释放，三类血管共用 3 个材质。切片分区结果按图谱分别缓存，最多 12 个切面，标签、底图及边界字符串预算为 16 MiB；预览、放大和三维复用结果。三维对像素的修改使用副本，不影响二维图像。平面内移动十字线不会重复生成同一位图。
 
 ## 成年脑区与环路
 
@@ -80,6 +80,7 @@ uv run --with numpy --with scipy --with scikit-image python scripts/prepare_embr
 
 ## 数据与坐标
 
+- 成年“血管网络”按需加载 MICe 单标本的 14 项具名血管表面，可选择静脉窦、主要动脉或主要静脉，保留交点背侧裁切。已移除按 μm 直径筛选的旧网络，不显示未命名微血管。该层未覆盖完整脑膜血管及桥静脉，跨图谱配准误差和复现方法见 [DATA_SOURCES.md](DATA_SOURCES.md)。
 - 体素网格为 264 × 160 × 228，间距 50 µm，共 9,630,720 个体素。
 - 存储轴为 AP、DV、ML，AP 最快，索引 `ap + 264 * (dv + 160 * ml)`。
 - 底层 CCF 体素索引沿后、腹侧、右增大，原始体素位置等于索引乘以 0.05 mm；页面显示的 AP 和 ML 读数按下述零点换算。
@@ -111,8 +112,13 @@ python3 scripts/verify_allen_data.py
 
 自动测试覆盖真实体数据解码、HTTP 自动解压兼容、损坏响应、三平面方向、共同交点、坐标往返、脑区定位、父级标注、文件完整性及网格范围。交互与布局还需要真实浏览器检查。
 
+完整浏览器回归运行 `BROWSER_CHANNEL=chrome npm run test:browser`，使用同一个 5187 本地服务并串行运行，避免多个 WebGL 测试争用资源。单项命令仍可单独执行。
+
 ## 项目结构
 
+- `src/lib/mesh-geometry.ts`：脑区与血管共用的坐标转换和网格构建。
+- `src/lib/scene-vasculature.ts`：血管显示、分类、裁切、主题与资源生命周期。
+- `src/lib/use-workspace-atlas.ts` / `workspace-route.ts`：图谱加载、交点更新和 URL 状态。
 - `src/lib/atlas.ts`：体数据、坐标、切片与本体逻辑。
 - `src/components/BrainScene.tsx`：Three.js 三维脑、切面、环路示意与定位。
 - `src/components/AtlasWorkspace.tsx`：成年与胚胎页面的共享交互。
@@ -120,5 +126,5 @@ python3 scripts/verify_allen_data.py
 - `src/data/regions.ts`：65 个成年脑区说明与文献。
 - `src/data/circuits.ts`：有来源和证据范围的环路关系。
 - `src/data/embryo.ts`：四个胚胎阶段与发育分区说明。
-- `scripts/`：可重现的数据准备和验证。
+- `scripts/`：可重现的数据准备和验证，共用 `data_assets.py` 的二进制编码、压缩和校验。
 - `tests/atlas.test.ts`：真实数据与坐标回归测试。

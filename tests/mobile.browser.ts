@@ -1,17 +1,12 @@
+import { atlasUrl as base, launchBrowser, collectPageErrors, waitForScene as ready } from "./helpers/browser";
 import assert from "node:assert/strict";
 import test from "node:test";
 import { mkdtemp } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
-import { chromium, expect, type Page } from "@playwright/test";
+import { expect, type Page } from "@playwright/test";
 import AxeBuilder from "@axe-core/playwright";
 
-const base = process.env.ATLAS_TEST_URL ?? "http://127.0.0.1:5187";
-async function ready(page: Page) {
-  await expect(page.locator(".three-host canvas")).toBeVisible({ timeout: 30000 });
-  await expect(page.locator(".atlas-mesh-status")).toHaveCount(0, { timeout: 30000 });
-  await expect(page.locator(".mesh-status")).toHaveCount(0, { timeout: 30000 });
-}
 async function fits(page: Page) {
   assert.ok(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth), "page must not overflow horizontally");
   const cramped = await page.locator(".mobile-workspace-nav button, .scene-actions button, .slice-heading h3, .slice-heading-actions .mono, .scene-orientation button").evaluateAll((elements) => elements.filter((el) => {
@@ -22,12 +17,11 @@ async function fits(page: Page) {
 }
 
 test("mobile modules remain readable and touch controls work at 320, 390 and 700 pixels", async () => {
-  const browser = await chromium.launch({ channel: process.env.BROWSER_CHANNEL });
+  const browser = await launchBrowser();
   const context = await browser.newContext({ viewport: { width: 390, height: 900 }, isMobile: true, hasTouch: true, reducedMotion: "reduce" });
   const page = await context.newPage();
   const screenshots = await mkdtemp(join(tmpdir(), "brain-mobile-"));
-  const errors: string[] = [];
-  page.on("pageerror", (e) => errors.push(e.message));
+  const errors = collectPageErrors(page);
   try {
     for (const width of [320, 390, 700]) {
       await page.setViewportSize({ width, height: 900 });
@@ -80,9 +74,15 @@ test("mobile modules remain readable and touch controls work at 320, 390 and 700
     await page.setViewportSize({ width: 390, height: 900 });
     await page.goto(base); await ready(page);
     await page.getByRole("checkbox", { name: "血管网络", exact: true }).check();
-    await expect(page.locator(".three-host")).toHaveAttribute("data-vascular-segments", "39214");
+    await expect(page.locator(".three-host")).toHaveAttribute("data-vascular-vessels", "14");
+    const vascularFilter = page.getByRole("combobox", { name: "血管类别" });
+    await vascularFilter.selectOption("sinus");
+    await expect(page.locator(".three-host")).toHaveAttribute("data-vascular-vessels", "5");
+    await expect(page.locator(".three-host")).toHaveAttribute("data-vascular-filter", "sinus");
+    assert.ok((await vascularFilter.boundingBox())!.height >= 44);
     await page.getByRole("checkbox", { name: "仅显示交点水平面以上的血管" }).check();
     await page.locator(".vascular-source summary").tap();
+    await expect(page.locator(".vascular-name-list li")).toHaveCount(5);
     await page.locator(".vascular-controls").screenshot({ path: join(screenshots, "vascular.png") });
     assert.ok(await page.locator(".vascular-source > div").evaluate((el) => getComputedStyle(el).position === "static"));
     await fits(page);
@@ -101,7 +101,7 @@ test("mobile modules remain readable and touch controls work at 320, 390 and 700
 });
 
 test("touch scrolling a slice does not move its crosshair and expanded content remains reachable", async () => {
-  const browser = await chromium.launch({ channel: process.env.BROWSER_CHANNEL });
+  const browser = await launchBrowser();
   const context = await browser.newContext({ viewport: { width: 390, height: 844 }, isMobile: true, hasTouch: true, reducedMotion: "reduce" });
   const page = await context.newPage();
   const cdp = await context.newCDPSession(page);

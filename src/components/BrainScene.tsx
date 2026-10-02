@@ -9,7 +9,8 @@ import { RotateCcw, Plus, Minus, Focus, CircleHelp, X, ArrowUpRight, Crosshair }
 import { coordinateMm } from "../lib/coordinates";
 import { createSliceGizmo } from "../lib/scene-slice-gizmo";
 import { alignSceneCamera, rotateSceneCamera, SCENE_DIRECTIONS, ScenePointerGesture, type SceneDirection } from "../lib/scene-interaction";
-import type { Vasculature, VesselDiameter } from "../lib/vasculature";
+import type { Vasculature, VesselFilter } from "../lib/vasculature";
+import { createSceneVasculature, vesselColorsFromStyle } from "../lib/scene-vasculature";
 import { invalidateMeshCache, loadMeshGeometry } from "../lib/mesh-cache";
 import {
   PLANES,
@@ -27,7 +28,7 @@ type Props = {
   mlZeroUm?: number;
   dvZeroUm?: number;
   vasculature?: Vasculature | null;
-  vesselDiameter?: VesselDiameter;
+  vesselFilter?: VesselFilter;
   vesselsAboveOnly?: boolean;
   whiteMatterData?: AtlasData | null;
   sliceData?: AtlasData | null;
@@ -161,7 +162,8 @@ export function BrainScene(props: Props) {
     setError("");
     setMeshStatus("正在载入三维脑表面…");
     renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
-    const sceneColor = getComputedStyle(container).getPropertyValue("--scene-background").trim() || "#eeebf2";
+    const sceneStyle = getComputedStyle(container);
+    const sceneColor = sceneStyle.getPropertyValue("--scene-background").trim() || "#eeebf2";
     renderer.setClearColor(sceneColor, 1);
     renderer.outputColorSpace = THREE.SRGBColorSpace;
     renderer.localClippingEnabled = true;
@@ -236,10 +238,7 @@ export function BrainScene(props: Props) {
       circuitAbort: AbortController | undefined,
       lastCircuit = "";
     const atlasMeshes = new Map<number, THREE.Mesh>();
-    let vesselLines: THREE.LineSegments<THREE.BufferGeometry, THREE.LineBasicMaterial> | undefined;
-    const vesselClipPlane = new THREE.Plane(new THREE.Vector3(0, 1, 0), 0);
-    const vesselClipPlanes = [vesselClipPlane];
-    let lastVasculature: Vasculature | null = null;
+    const vessels = createSceneVasculature(scene, props.data, vesselColorsFromStyle(sceneStyle));
     let atlasStarted = false;
     let cameraFrame: number | undefined;
     let hoverMesh: THREE.Mesh | null = null;
@@ -247,13 +246,18 @@ export function BrainScene(props: Props) {
     let flowLinks: FlowLink[] = [];
     let flowFrame: number | undefined;
     let motionEdges = new Set<number>();
-    const motionAllowed = () => !!latest.current.circuitFlow && !!latest.current.circuitTarget && !reducedMotion.matches && !document.hidden;
-    const syncFlow = () => {
+    const motionAllowed = () => flowLinks.length > 0 && motionEdges.size > 0 &&
+      !!latest.current.circuitFlow && !!latest.current.circuitTarget && !reducedMotion.matches && !document.hidden;
+    const syncFlow = (redraw = true) => {
       if (!motionAllowed()) {
         if (flowFrame !== undefined) cancelAnimationFrame(flowFrame);
         flowFrame = undefined;
-        flowLinks.forEach((link) => link.dots.forEach((dot) => { dot.visible = false; }));
-        render();
+        let changed = false;
+        flowLinks.forEach((link) => link.dots.forEach((dot) => {
+          changed ||= dot.visible;
+          dot.visible = false;
+        }));
+        if (redraw && changed) render();
         return;
       }
       if (flowFrame !== undefined) return;
@@ -293,8 +297,9 @@ export function BrainScene(props: Props) {
       if (!abort.signal.aborted) renderer.render(scene, camera);
     };
     const themeObserver = new MutationObserver(() => {
-      renderer.setClearColor(getComputedStyle(container).getPropertyValue("--scene-background").trim(), 1);
-      vesselLines?.material.color.set(getComputedStyle(container).getPropertyValue("--vessel-color").trim());
+      const style = getComputedStyle(container);
+      renderer.setClearColor(style.getPropertyValue("--scene-background").trim(), 1);
+      vessels.setColors(vesselColorsFromStyle(style));
       render();
     });
     themeObserver.observe(document.documentElement, { attributes: true, attributeFilter: ["data-theme"] });
@@ -447,42 +452,12 @@ export function BrainScene(props: Props) {
       void Promise.all(Array.from({ length: Math.min(4, catalog.length) }, worker));
     };
     function update(p: Props) {
-      if (lastVasculature !== (p.vasculature ?? null)) {
-        if (vesselLines) {
-          scene.remove(vesselLines);
-          vesselLines.geometry.dispose();
-          vesselLines.material.dispose();
-          vesselLines = undefined;
-        }
-        lastVasculature = p.vasculature ?? null;
-        if (p.vasculature) {
-          const source = p.vasculature.positions;
-          const positions = new Float32Array(source.length);
-          for (let i = 0; i < source.length; i += 3) {
-            positions.set(toWorld([source[i] / p.data.spacing, source[i + 1] / p.data.spacing,
-              source[i + 2] / p.data.spacing], p.data.dimensions, p.data.spacing), i);
-          }
-          const geometry = new THREE.BufferGeometry();
-          geometry.setAttribute("position", new THREE.BufferAttribute(positions, 3));
-          vesselLines = new THREE.LineSegments(geometry, new THREE.LineBasicMaterial({
-            color: getComputedStyle(container).getPropertyValue("--vessel-color").trim(),
-            transparent: true, opacity: 0.85, depthWrite: false,
-          }));
-          vesselLines.renderOrder = 3;
-          scene.add(vesselLines);
-        }
-      }
-      if (vesselLines && p.vasculature) {
-        vesselLines.geometry.setDrawRange(0, p.vasculature.counts[p.vesselDiameter ?? 48] * 2);
-        // World +Y is dorsal. Clip fragments at the plane so crossing segments retain their upper portion.
-        vesselClipPlane.constant = -toWorld(p.position, p.data.dimensions, p.data.spacing)[1];
-        const clipping = p.vesselsAboveOnly ? vesselClipPlanes : null;
-        if (vesselLines.material.clippingPlanes !== clipping) {
-          vesselLines.material.clippingPlanes = clipping;
-          vesselLines.material.needsUpdate = true;
-        }
-      }
-      container.dataset.vascularSegments = String(p.vasculature?.counts[p.vesselDiameter ?? 48] ?? 0);
+      const world = toWorld(p.position, p.data.dimensions, p.data.spacing);
+      const vesselFilter = p.vesselFilter ?? "all";
+      const vesselCount = vessels.update({ data: p.vasculature ?? null, filter: vesselFilter,
+        aboveOnly: !!p.vesselsAboveOnly, dorsalWorldY: world[1] });
+      container.dataset.vascularVessels = String(vesselCount);
+      container.dataset.vascularFilter = vesselFilter;
       if (!p.circuit && p.selected > 0) loadAtlasMeshes();
       const selectedData = p.selected < 0 ? p.whiteMatterData : p.data;
       const selectedId = Math.abs(p.selected);
@@ -495,8 +470,7 @@ export function BrainScene(props: Props) {
       const planesVisible = p.planeDisplay !== "off" || shiftHeld;
       const planeMode = p.planeDisplay === "off" ? "transparent" : p.planeDisplay;
       const texturedPlanes = planesVisible && planeMode !== "transparent";
-      const world = toWorld(p.position, p.data.dimensions, p.data.spacing),
-        d = p.data.dimensions,
+      const d = p.data.dimensions,
         s = p.data.spacing / 1000;
       marker.position.set(...world);
       marker.visible = planesVisible;
@@ -724,7 +698,7 @@ export function BrainScene(props: Props) {
           if (child instanceof THREE.Mesh && child !== link.hit) (child.material as THREE.MeshBasicMaterial).opacity = relevant ? 0.95 : 0.10;
         });
       });
-      syncFlow();
+      syncFlow(false);
       render();
     }
     api.current = {
@@ -997,8 +971,9 @@ export function BrainScene(props: Props) {
       controls.staticMoving = reducedMotion.matches;
       syncFlow();
     };
+    const visibilityChanged = () => syncFlow();
     reducedMotion.addEventListener("change", motionPreference);
-    document.addEventListener("visibilitychange", syncFlow);
+    document.addEventListener("visibilitychange", visibilityChanged);
     renderer.domElement.addEventListener("dblclick", pick);
     const rootInfo = props.data.meshes[String(props.data.rootId ?? 997)];
     if (rootInfo)
@@ -1050,6 +1025,7 @@ export function BrainScene(props: Props) {
       if (hoverFrame !== undefined) cancelAnimationFrame(hoverFrame);
       regionAbort?.abort();
       clearCircuit();
+      vessels.dispose();
       api.current = null;
       observer.disconnect();
       themeObserver.disconnect();
@@ -1065,7 +1041,7 @@ export function BrainScene(props: Props) {
       renderer.domElement.removeEventListener("pointerdown", down);
       renderer.domElement.removeEventListener("pointerup", up);
       reducedMotion.removeEventListener("change", motionPreference);
-      document.removeEventListener("visibilitychange", syncFlow);
+      document.removeEventListener("visibilitychange", visibilityChanged);
       renderer.domElement.removeEventListener("dblclick", pick);
       renderer.domElement.removeEventListener("keydown", keyboard);
       renderer.domElement.removeEventListener("webglcontextlost", lost);
@@ -1097,7 +1073,7 @@ export function BrainScene(props: Props) {
       props.sliceData,
       props.isolateRegion,
       props.vasculature,
-      props.vesselDiameter,
+      props.vesselFilter,
       props.vesselsAboveOnly,
     ],
   );

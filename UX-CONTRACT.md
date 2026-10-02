@@ -24,15 +24,21 @@
 
 ## 加载与恢复
 
-血管层由 VasculatureControls、useVasculature 和 BrainScene 共用管理。成年鼠默认关闭，开启后按需读取单标本血管图；切换直径阈值仅改变绘制数量，不重复下载、不重置相机和交点。加载失败提供“重试血管”，关闭、离开页面和超时会取消请求。成功数据仅在当前工作区缓存。血管显示时淡化脑区表面，关闭后恢复；恢复显示同时关闭血管并恢复 48 μm 阈值。三维图层不改变二维切片。
+useWorkspaceAtlas 统一图谱请求、错误恢复和交点边界检查，workspace-route 负责 URL 初值与同步。切片分区结果按 AtlasData 引用隔离缓存，最多 12 条，标签、RGBA 底图和边界字符串预算 16 MiB；预览、放大和三维共用分割结果，返回给三维的像素始终是副本。
 
-本次只接入成年血管。胚胎四阶段不显示血管控件、不请求成年血管文件。源直径估计、线段近似和单标本局限在同一来源说明入口展示。说明使用非模态 details 浮层，内部滚动，Escape 关闭并把焦点返回 summary，不压缩画布高度。数据证据、许可与配准核验见 DATA_SOURCES.md。血管色样和模型颜色共用 --vessel-color，主题切换不重新创建场景。
+scene-vasculature 管理血管资源，关闭图层只隐藏几何体，重开不重建法线；替换数据或离开场景才释放。三类血管共用三个材质，DV 移动只更新裁切平面。mesh-geometry 统一脑区与血管的 CCF 到显示坐标变换、面序和法线。无可见流动对象时不运行环路动画循环，普通状态更新只请求一次绘制。
+
+血管层由 VasculatureControls、useVasculature 和 BrainScene 共用管理。成年鼠默认关闭，开启后按需读取 MICe 单标本具名血管；原生“血管类别”筛选提供全部主要血管、静脉窦、主要动脉、主要静脉，默认全部。切换类别不重复下载、不重置相机和交点。加载失败提供“重试血管”，关闭、离开页面和超时会取消请求。成功数据仅在当前工作区缓存。血管显示时淡化脑区表面，关闭后恢复；恢复显示同时关闭血管并恢复全部主要血管。三维图层不改变二维切片。
+
+本次只接入成年血管。胚胎四阶段不显示血管控件、不请求成年血管文件。来源说明明确单标本、跨图谱配准及解剖参考用途，不宣称完整覆盖脑膜细小血管或桥静脉，不将空白位置解释为无血管。说明使用非模态 details 浮层，内部滚动，Escape 关闭并把焦点返回 summary，不压缩画布高度。成功载入后展示当前类别的具名血管数量与清单；裁切时数量和清单均标明属于裁切前范围，不冒充可见血管计数。数据证据、许可与配准核验见 DATA_SOURCES.md。血管色样和模型颜色共用 --vessel-sinus、--vessel-artery、--vessel-vein，颜色与类别文字同时显示，主题切换不重新创建场景。
 
 ThemeToggle 在右上角数据链接右侧切换日间／夜间模式，默认日间。src/lib/theme.ts 在应用挂载前恢复 mouse-brain-atlas-theme 偏好，切换同步保存到 localStorage 并更新浏览器主题色；成年与胚胎页及其他已打开标签页共用偏好。存储不可用时，当前页面仍可切换。BrainScene 仅更新渲染器背景，不重建模型、重置相机、选区或坐标。
 
 先读取 manifest，验证维度后读取匹配体积和本体。载入时保留版面高度，切面控件禁用。体数据错误在工作区说明并提供重试；三维失败不影响二维切片。请求超时有上限，页面卸载取消体数据和网格请求。体数据读入后无需继续网络请求即可切片；尚未载入网格仍依赖本地服务器。
 
 ## 科学语义
+
+血管界面只按具名解剖类别筛选。五个静脉窦保留源标签，动静脉默认省略细末梢与部分细小环路，保留较粗部分的连接；来源中说明显示简化与人工截断。数量按具名标签条目计算，不将内部筛选参数呈现为实测管径或风险等级。未显示的血管不能解释为不存在或无损伤风险。
 
 成年 AP 按 IBL 的近似 Bregma 参考换算，AP = 5.40 − CCF AP，单位毫米，前正、后负。成年 ML 以正中线为零，DV 保留 CCF 原点。胚胎 AP、DV、ML 分别以该阶段标注脑部的最前、最背侧、单侧内侧边界为局部零点，AP 前正后负，DV 向腹侧增加，ML 向右增加；ML 未校准解剖正中线，DV 不表示当前位置的脑表面深度，不套用成年 Bregma。换算只改变显示和输入，底层 voxel 与三维空间不变。胚胎的单侧标注不镜像复制。网格来源及重采样方法在每阶段说明中可查。没有文献支持的核团只提供有来源的解剖说明，不补写细胞级功能推断。
 
@@ -65,7 +71,7 @@ ThemeToggle 在右上角数据链接右侧切换日间／夜间模式，默认�
 
 | Capability     | Canonical owner                | Source of truth | Allowed variants                  | Verification                                       |
 | -------------- | ------------------------------ | --------------- | --------------------------------- | -------------------------------------------------- |
-| Select/Listbox | RegionBrowser / AtlasWorkspace | UX-CONTRACT.md  | native                            | Browser popup, keyboard selection, filter and atlas recovery |
+| Select/Listbox | RegionBrowser / AtlasWorkspace / VasculatureControls | UX-CONTRACT.md  | native                            | Browser popup, keyboard selection, filter and atlas recovery |
 | Scrollbar      | src/styles.css global baseline | DESIGN.md       | Global baseline and stable gutter | Computed styles and narrow/desktop browser review  |
 
 ## 分区轮廓与名称
@@ -126,7 +132,7 @@ AtlasWorkspace 持有 embryoLevel 与 mapView，预览、放大对话框和三�
 
 所有平台（含 macOS）统一由 Ctrl＋拖拽平移，Command／Meta 不作为平移修饰键。macOS 的 Control-click 即使按右键事件上报仍进入平移；其 contextmenu 事件被拦截，不打开正对切面菜单。普通右键仍打开菜单，窗口失焦清除 Control 按键状态。
 
-VasculatureControls 的“仅显示交点水平面以上的血管”由 AtlasWorkspace 持有状态，BrainScene 按共享 position[1] 对血管使用局部裁切，保留 DV 不大于交点的部分。跨越水平面的线段在平面处截断，直径筛选与裁切同时生效，不重新加载血管，不改变相机、脑区、二维切片或三维切面开关。关闭血管后保留该偏好，再次开启时恢复；“恢复显示”将其重置为关闭。启用裁切时状态文字说明显示范围，不把未裁切段数当作可见段数。
+VasculatureControls 的“仅显示交点水平面以上的血管”由 AtlasWorkspace 持有状态，BrainScene 按共享 position[1] 对血管使用局部裁切，保留 DV 不大于交点的部分。跨越水平面的血管表面在平面处截断，类别筛选与裁切同时生效，不重新加载血管，不改变相机、脑区、二维切片或三维切面开关。关闭血管后保留类别与裁切偏好，再次开启时恢复；“恢复显示”将类别重置为全部、裁切重置为关闭。类别与裁切都是当前工作区的临时观察设置，不写入 URL。启用裁切时状态文字说明显示范围，数量明确标为裁切前具名条目数。
 
 700px 以下三维画布与详情分开占用页面高度，打开详情及血管设置不压缩画布。三张切片单列呈现，保留联动交点；触屏只在未滑动的点按结束时提交位置，滚动、pointercancel 与多指手势不改交点。鼠标、键盘定位保持原行为。手机新增直接打开六方向菜单的“视角”按钮。血管关闭时收起次级筛选但保留选项状态；放大切片弹窗独立滚动，关闭按钮保持可达。
 

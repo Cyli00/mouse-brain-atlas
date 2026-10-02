@@ -1,7 +1,7 @@
 import * as THREE from "three";
-import { getBinary, toWorld, type AtlasData } from "./atlas";
-
-type MeshSpace = Pick<AtlasData, "dimensions" | "spacing">;
+import { getBinary } from "./atlas";
+import { decodeMeshData } from "./mesh-data";
+import { createMeshGeometry, type MeshSpace } from "./mesh-geometry";
 
 type CachedMesh = {
   url: string;
@@ -32,56 +32,6 @@ function removeCached(key: string) {
   cache.delete(key);
   cacheBytes -= entry.bytes;
   entry.geometry.dispose();
-}
-
-function parseMesh(buffer: ArrayBuffer, data: MeshSpace) {
-  if (buffer.byteLength < 8) throw new Error("三维网格文件不完整");
-  const header = new DataView(buffer);
-  const vertexCount = header.getUint32(0, true);
-  const triangleCount = header.getUint32(4, true);
-  if (
-    !vertexCount ||
-    !triangleCount ||
-    buffer.byteLength !== 8 + (vertexCount + triangleCount) * 12
-  )
-    throw new Error("三维网格文件长度异常");
-  const source = new Float32Array(buffer, 8, vertexCount * 3);
-  const faces = new Uint32Array(
-    new Uint32Array(buffer, 8 + vertexCount * 12, triangleCount * 3),
-  );
-  const vertices = new Float32Array(source.length);
-  for (let i = 0; i < vertexCount; i++) {
-    const ap = source[i * 3],
-      dv = source[i * 3 + 1],
-      ml = source[i * 3 + 2];
-    if (![ap, dv, ml].every(Number.isFinite))
-      throw new Error("三维网格坐标无效");
-    vertices.set(
-      toWorld(
-        [ap / data.spacing, dv / data.spacing, ml / data.spacing],
-        data.dimensions,
-        data.spacing,
-      ),
-      i * 3,
-    );
-  }
-  for (let i = 0; i < faces.length; i += 3) {
-    if (
-      faces[i] >= vertexCount ||
-      faces[i + 1] >= vertexCount ||
-      faces[i + 2] >= vertexCount
-    )
-      throw new Error("三维网格索引无效");
-    // The PIR-to-view transform reflects one axis, so outward winding must reverse.
-    [faces[i + 1], faces[i + 2]] = [faces[i + 2], faces[i + 1]];
-  }
-  const geometry = new THREE.BufferGeometry();
-  geometry.setAttribute("position", new THREE.BufferAttribute(vertices, 3));
-  geometry.setIndex(new THREE.BufferAttribute(faces, 1));
-  geometry.computeVertexNormals();
-  geometry.computeBoundingBox();
-  geometry.computeBoundingSphere();
-  return geometry;
 }
 
 function remember(key: string, url: string, geometry: THREE.BufferGeometry) {
@@ -117,7 +67,7 @@ export function loadMeshGeometry(
     const controller = new AbortController();
     const promise = getBinary(url, controller.signal).then((buffer) => {
       if (controller.signal.aborted) throw abortError();
-      const geometry = parseMesh(buffer, data);
+      const geometry = createMeshGeometry(decodeMeshData(buffer), data);
       remember(key, url, geometry);
       return geometry;
     });

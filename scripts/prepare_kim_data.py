@@ -6,21 +6,17 @@ no PDF, image tracing, registration fitting, or label interpolation is used.
 import argparse
 import csv
 import gzip
-import hashlib
 import json
 from pathlib import Path
 import struct
 
 import numpy as np
 
+from data_assets import file_digest as digest, sha256
+
 ROOT = Path(__file__).resolve().parents[1]
 SOURCE = "https://figshare.com/articles/dataset/Unified_mouse_brain_atlas_v2/25750983"
 ORIENTATION_SOURCE = "https://github.com/brainglobe/brainglobe-atlasapi/blob/main/atlas_scripts/kim_mouse_isotropic.py"
-
-
-def digest(path, algorithm="sha256"):
-    with path.open("rb") as stream:
-        return hashlib.file_digest(stream, algorithm).hexdigest()
 
 
 def read_volume(path, expected_md5):
@@ -107,8 +103,8 @@ def main():
         "conversion": "Transpose (2,1,0), reverse AP and ML; nearest neighbor at floor(index*50/20+0.5). No label interpolation.",
         "referenceValidation": {"allenTemplateSha256": allen["template"]["uncompressedSha256"], "pearsonEveryFifthVoxel": correlation},
         "annotation": {"url": "/data/kim-v2/annotation.uint32.gz", "dtype": "uint32", "bytes": len(compressed),
-                       "uncompressedBytes": len(raw), "sha256": hashlib.sha256(compressed).hexdigest(),
-                       "uncompressedSha256": hashlib.sha256(raw).hexdigest(), "presentStructureCount": len(present)},
+                       "uncompressedBytes": len(raw), "sha256": sha256(compressed),
+                       "uncompressedSha256": sha256(raw), "presentStructureCount": len(present)},
         "ontology": {"url": "/data/kim-v2/ontology.json", "structureCount": len(structures), "sha256": digest(output / "ontology.json")},
         "sources": [{"url": f"https://ndownloader.figshare.com/files/{id_}", "sha256": digest(path)}
                     for id_, path in [(46096131, args.annotation), (46096122, args.template), (46096116, args.ontology)]]

@@ -1,10 +1,7 @@
 import {
   PLANES,
-  planePosition,
-  voxelIndex,
   type AtlasData,
   type PlaneName,
-  type Position,
 } from "./atlas";
 import { isWhiteMatterStructure, WHITE_MATTER_COLOR } from "./white-matter";
 
@@ -31,7 +28,55 @@ export type SliceSegmentation = {
   regions: SliceRegion[];
 };
 
+const MAX_CACHED_SLICES = 12;
+const MAX_SLICE_CACHE_BYTES = 16 * 1024 * 1024;
+type CachedSlice = {
+  segmentation: SliceSegmentation;
+  bytes: number;
+  image?: { structures: AtlasData["structures"]; pixels: Uint8ClampedArray };
+};
+const sliceCaches = new WeakMap<AtlasData, Map<string, CachedSlice>>();
+const cachedImages = new WeakMap<SliceSegmentation, CachedSlice>();
+
 export function segmentSlice(
+  data: AtlasData,
+  name: PlaneName,
+  depth: number,
+): SliceSegmentation {
+  let cache = sliceCaches.get(data);
+  if (!cache) {
+    cache = new Map();
+    sliceCaches.set(data, cache);
+  }
+  const key = `${name}:${depth}`;
+  const cached = cache.get(key);
+  if (cached) {
+    cache.delete(key);
+    cache.set(key, cached);
+    return cached.segmentation;
+  }
+  const segmentation = computeSliceSegmentation(data, name, depth);
+  // Atlas buffers are immutable. Share a slice across previews, dialogs and 3D,
+  // reserving its label bytes, one RGBA bitmap and UTF-16 boundary strings.
+  const bytes = segmentation.labels.byteLength * 2 +
+    (segmentation.boundaryPath.length + segmentation.whiteMatterPath.length) * 2;
+  if (bytes <= MAX_SLICE_CACHE_BYTES) {
+    const entry = { segmentation, bytes };
+    cache.set(key, entry);
+    cachedImages.set(segmentation, entry);
+    let totalBytes = [...cache.values()].reduce((total, item) => total + item.bytes, 0);
+    while (cache.size > MAX_CACHED_SLICES || totalBytes > MAX_SLICE_CACHE_BYTES) {
+      const oldestKey = cache.keys().next().value!;
+      const oldest = cache.get(oldestKey)!;
+      totalBytes -= oldest.bytes;
+      cachedImages.delete(oldest.segmentation);
+      cache.delete(oldestKey);
+    }
+  }
+  return segmentation;
+}
+
+function computeSliceSegmentation(
   data: AtlasData,
   name: PlaneName,
   depth: number,
@@ -39,15 +84,13 @@ export function segmentSlice(
   const plane = PLANES[name],
     width = data.dimensions[plane.u],
     height = data.dimensions[plane.v];
-  const position: Position = [0, 0, 0];
-  position[plane.axis] = depth;
+  const strides = [1, data.dimensions[0], data.dimensions[0] * data.dimensions[1]];
+  const base = depth * strides[plane.axis];
+  const strideU = strides[plane.u], strideV = strides[plane.v];
   const labels = new Uint32Array(width * height);
   for (let v = 0; v < height; v++)
     for (let u = 0; u < width; u++)
-      labels[v * width + u] =
-        data.annotation[
-          voxelIndex(planePosition(name, position, u, v), data.dimensions)
-        ];
+      labels[v * width + u] = data.annotation[base + u * strideU + v * strideV];
   const at = (u: number, v: number) =>
     u < 0 || v < 0 || u >= width || v >= height ? 0 : labels[v * width + u];
   // Draw each interface once, merging collinear voxel edges without moving anatomical boundaries.
@@ -189,6 +232,9 @@ export function segmentationImage(
   segmentation: SliceSegmentation,
   data: AtlasData,
 ): ImageData {
+  const cached = cachedImages.get(segmentation);
+  if (cached?.image?.structures === data.structures)
+    return new ImageData(cached.image.pixels.slice(), segmentation.width, segmentation.height);
   const pixels = new Uint8ClampedArray(segmentation.labels.length * 4);
   const colors = new Map<number, number[]>();
   for (const region of segmentation.regions) {
@@ -204,9 +250,14 @@ export function segmentationImage(
     );
   }
   for (let i = 0; i < segmentation.labels.length; i++) {
-    const color = colors.get(segmentation.labels[i]) ?? [255, 255, 255];
-    pixels.set([...color, 255], i * 4);
+    const color = colors.get(segmentation.labels[i]);
+    pixels[i * 4] = color?.[0] ?? 255;
+    pixels[i * 4 + 1] = color?.[1] ?? 255;
+    pixels[i * 4 + 2] = color?.[2] ?? 255;
+    pixels[i * 4 + 3] = 255;
   }
+  // The 3D caller changes alpha and boundary pixels; never expose the cached buffer.
+  if (cached) cached.image = { structures: data.structures, pixels: pixels.slice() };
   return new ImageData(pixels, segmentation.width, segmentation.height);
 }
 

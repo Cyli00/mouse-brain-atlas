@@ -1,20 +1,20 @@
+import { atlasUrl as base, launchBrowser, collectPageErrors } from "./helpers/browser";
 import assert from "node:assert/strict";
 import test from "node:test";
 import { mkdtemp } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { createHash } from "node:crypto";
-import { chromium, expect } from "@playwright/test";
+import { expect } from "@playwright/test";
 import AxeBuilder from "@axe-core/playwright";
 
 test("night mode preserves the scene, persists across pages, and keeps header controls aligned", async () => {
-  const browser = await chromium.launch({ channel: process.env.BROWSER_CHANNEL });
+  const browser = await launchBrowser();
   const context = await browser.newContext({ viewport: { width: 1440, height: 1000 } });
   const page = await context.newPage();
-  const base = process.env.ATLAS_TEST_URL ?? "http://127.0.0.1:5187";
+
   const screenshots = await mkdtemp(join(tmpdir(), "atlas-night-"));
-  const errors: string[] = [];
-  page.on("pageerror", (error) => errors.push(error.message));
+  const errors = collectPageErrors(page);
   try {
     await page.goto(base);
     await expect(page.locator(".three-host canvas")).toBeVisible();
@@ -72,13 +72,13 @@ test("night mode preserves the scene, persists across pages, and keeps header co
 });
 
 test("theme switching still works when persistent storage is unavailable", async () => {
-  const browser = await chromium.launch({ channel: process.env.BROWSER_CHANNEL });
+  const browser = await launchBrowser();
   const page = await browser.newPage();
   try {
     await page.addInitScript(() => {
       Object.defineProperty(window, "localStorage", { get() { throw new DOMException("Blocked", "SecurityError"); } });
     });
-    await page.goto(process.env.ATLAS_TEST_URL ?? "http://127.0.0.1:5187");
+    await page.goto(base);
     await page.getByRole("button", { name: "切换到夜间模式" }).click();
     await expect(page.locator("html")).toHaveAttribute("data-theme", "dark");
     await page.getByRole("button", { name: "切换到日间模式" }).click();

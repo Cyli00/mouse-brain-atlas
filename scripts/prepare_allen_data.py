@@ -11,24 +11,20 @@ import array
 import concurrent.futures
 import datetime
 import gzip
-import hashlib
 import json
 import math
 from pathlib import Path
-import struct
 import subprocess
 import sys
 import tempfile
+
+from data_assets import mesh_bytes, sha256, write_gzip as write_asset
 
 
 BASE = "https://download.alleninstitute.org/informatics-archive/current-release/mouse_ccf"
 ONTOLOGY_URL = "https://api.brain-map.org/api/v2/structure_graph_download/1.json"
 ROOT_ID = 997
 DEFAULT_REGION_CATALOG = Path(__file__).resolve().parents[1] / "public/data/adult-region-ids.json"
-
-
-def sha256(data: bytes) -> str:
-    return hashlib.sha256(data).hexdigest()
 
 
 def save_json(path: Path, value: object) -> None:
@@ -71,13 +67,9 @@ def read_nrrd(path: Path, expected_type: str, resolution: int) -> tuple[bytes, d
 
 
 def write_gzip(path: Path, raw: bytes) -> dict:
-    compressed = gzip.compress(raw, compresslevel=9, mtime=0)
-    path.parent.mkdir(parents=True, exist_ok=True)
-    path.write_bytes(compressed)
     return {
         "url": f"/data/{path.parent.name + '/' if path.parent.name == 'meshes' else ''}{path.name}",
-        "compression": "gzip", "bytes": len(compressed), "uncompressedBytes": len(raw),
-        "sha256": sha256(compressed), "uncompressedSha256": sha256(raw),
+        "compression": "gzip", **write_asset(path, raw),
     }
 
 
@@ -123,7 +115,7 @@ def pack_mesh(source: Path, output: Path) -> dict:
     if sys.byteorder != "little":
         vertices.byteswap()
         triangles.byteswap()
-    raw = struct.pack("<II", vertex_count, triangle_count) + vertices.tobytes() + triangles.tobytes()
+    raw = mesh_bytes(vertex_count, triangle_count, vertices.tobytes(), triangles.tobytes())
     details = write_gzip(output, raw)
     details.update({
         "format": "allen-mesh-v1", "vertexCount": vertex_count,

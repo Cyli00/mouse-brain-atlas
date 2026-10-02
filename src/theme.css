@@ -11,7 +11,9 @@
   --selected: #18333e;
   --selected-border: #00f0ff;
   --scene-background: #14112c;
-  --vessel-color: #ff86ae;
+  --vessel-artery: #ff8e9c;
+  --vessel-vein: #74baff;
+  --vessel-sinus: #bc9aff;
   --lavender: #29253f;
   --lavender-ink: #00f0ff;
   --scroll-thumb: #68617f;
@@ -37,12 +39,12 @@
 [data-theme="dark"] .scene-actions .scene-details-button[aria-expanded="true"] { background: var(--selected-border); border-color: var(--selected-border); color: var(--background); }
 [data-theme="dark"] .scene-hover-label { background: var(--surface); color: var(--ink); border: 1px solid var(--selected-border); }
 [data-theme="dark"] .scene-hover-label small { color: var(--muted); }
-[data-theme="dark"] :is(.region-summary, .function-note p, .function-note .eyebrow, .category-tag, .reference a svg, .circuit-disclaimer) { color: var(--ink); }
-[data-theme="dark"] :is(.sidebar-heading > span, .category-tag, .function-note, .probe-inspect-button, .probe-inspect-button:disabled, .circuit-map, .circuit-map-node.muted, .circuit-selection-note, .circuit-edges button, .circuit-disclaimer) { background: var(--surface-soft); border-color: var(--border); }
-[data-theme="dark"] :is(.segmented-control button:hover, .search-field button:hover, .region-group-toggle:hover, .region-option:hover, .detail-tabs button:hover, .probe-inspect-button:hover:not(:disabled), .circuit-edges button:hover, .development-timeline a:hover) { background: var(--selected); border-color: var(--selected-border); }
+[data-theme="dark"] :is(.region-summary, .category-tag, .reference a svg) { color: var(--ink); }
+[data-theme="dark"] :is(.category-tag, .probe-inspect-button, .probe-inspect-button:disabled, .circuit-map, .circuit-map-node.muted, .circuit-selection-note) { background: var(--surface-soft); border-color: var(--border); }
+[data-theme="dark"] :is(.segmented-control button:hover, .search-field button:hover, .detail-tabs button:hover, .probe-inspect-button:hover:not(:disabled), .development-timeline a:hover) { background: var(--selected); border-color: var(--selected-border); }
 [data-theme="dark"] .guide-region-symbol { background: color-mix(in srgb, var(--region-color) 14%, var(--surface)); color: var(--ink); }
 [data-theme="dark"] .search-field:focus-within { border-color: var(--selected-border); }
-[data-theme="dark"] :is(.white-matter-badge, .slice-region-list .slice-region-white strong) { color: #ddbd8e; }
+[data-theme="dark"] .slice-region-list .slice-region-white strong { color: #ddbd8e; }
 [data-theme="dark"] .circuit-map-node.emphasized { outline-color: var(--selected-border); }
 [data-theme="dark"] ::selection { background: var(--selected-border); color: var(--background); }
 @media (max-width: 1000px) {

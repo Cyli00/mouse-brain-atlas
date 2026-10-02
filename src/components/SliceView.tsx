@@ -96,7 +96,10 @@ export function SliceView({
         : [],
     [segmentation, overlay, displayedSize.width, displayedSize.height],
   );
-  const bitmapSelection = overlay ? selected : 0;
+  const isSegmentationBitmap = mapView && segmentation !== null;
+  const bitmapSelection = !isSegmentationBitmap && overlay ? selected : 0;
+  const bitmapOverlay = !isSegmentationBitmap && overlay;
+  const bitmapContrast = isSegmentationBitmap ? 0 : contrast;
   const whiteRegions = useMemo(
     () => segmentation?.regions.filter((r) => r.whiteMatter) ?? [],
     [segmentation],
@@ -173,43 +176,35 @@ export function SliceView({
           parseFloat(style.paddingBottom);
       const ratio = width / height;
       const fittedWidth = Math.max(1, Math.min(w, h * ratio));
-      setImageSize({ width: fittedWidth, height: fittedWidth / ratio });
+      const fittedHeight = fittedWidth / ratio;
+      setImageSize((previous) => previous.width === fittedWidth && previous.height === fittedHeight
+        ? previous : { width: fittedWidth, height: fittedHeight });
     };
     const observer = new ResizeObserver(resize);
     observer.observe(element);
     resize();
     return () => observer.disconnect();
   }, [width, height]);
-  useEffect(() => {
+  const bitmap = useMemo(() => {
     // makeSlice replaces both in-plane indices for every pixel; only depth affects the bitmap.
     const slicePosition: Position = [0, 0, 0];
     slicePosition[PLANES[name].axis] = depth;
-    canvas.current
-      ?.getContext("2d")
-      ?.putImageData(
-        mapView && segmentation
-          ? segmentationImage(segmentation, data)
-          : makeSlice(
-              data,
-              name,
-              slicePosition,
-              bitmapSelection,
-              overlay,
-              contrast,
-            ),
-        0,
-        0,
-      );
+    return isSegmentationBitmap
+      ? segmentationImage(segmentation, data)
+      : makeSlice(data, name, slicePosition, bitmapSelection, bitmapOverlay, bitmapContrast);
   }, [
     data,
     name,
     depth,
     bitmapSelection,
-    overlay,
-    contrast,
+    bitmapOverlay,
+    bitmapContrast,
     segmentation,
-    mapView,
+    isSegmentationBitmap,
   ]);
+  useEffect(() => {
+    canvas.current?.getContext("2d")?.putImageData(bitmap, 0, 0);
+  }, [bitmap]);
   const move = (e: React.PointerEvent<HTMLButtonElement>) => {
     onPosition(
       slicePointFromClient(

@@ -1,0 +1,1609 @@
+{
+  "version": 1,
+  "dataset": "MICe Cerebral Vascular Atlas of the CBA Mouse",
+  "stage": "adult",
+  "coordinateSpace": "Allen CCFv3 2017",
+  "axisOrder": [
+    "AP",
+    "DV",
+    "ML"
+  ],
+  "units": "um",
+  "vesselCount": 14,
+  "vessels": [
+    {
+      "id": 11,
+      "sourceLabelId": 11,
+      "name": "上矢状窦",
+      "englishName": "Superior sagittal sinus",
+      "group": "sinus",
+      "hemisphere": "midline",
+      "url": "/vasculature/mice/meshes/11.bin.gz",
+      "signedMeshVolumeUm3": 3031047746.814808,
+      "format": "allen-mesh-v1",
+      "bytes": 1444413,
+      "uncompressedBytes": 2854484,
+      "sha256": "bf7a67902abca29b4d4b4ee7546014373559acbbf91dafe5f40b6a78fe3dbd3a",
+      "vertexCount": 79179,
+      "triangleCount": 158694,
+      "boundsUm": [
+        [
+          1464.9149169921875,
+          8795.6357421875
+        ],
+        [
+          53.52781295776367,
+          4420.1201171875
+        ],
+        [
+          2714.080810546875,
+          9315.7431640625
+        ]
+      ],
+      "sourceVoxelCount": 82106,
+      "displayVoxelCount": 82106,
+      "displaySelection": {
+        "method": "unchanged source sinus mask",
+        "originalVoxels": 82106,
+        "retainedVoxels": 82106,
+        "retainedPct": 100.0,
+        "originalComponents": 10,
+        "remainingComponents": 10,
+        "mainComponentSplitCount": 1,
+        "addedVoxels": 0
+      },
+      "sourceBoundsVoxel": [
+        [
+          65,
+          277
+        ],
+        [
+          191,
+          407
+        ],
+        [
+          146,
+          252
+        ]
+      ],
+      "touchesSourceVolumeBoundary": true
+    },
+    {
+      "id": 246,
+      "sourceLabelId": 246,
+      "name": "左横窦",
+      "englishName": "Transverse sinus",
+      "group": "sinus",
+      "hemisphere": "left",
+      "url": "/vasculature/mice/meshes/246.bin.gz",
+      "signedMeshVolumeUm3": 1756914996.0095224,
+      "format": "allen-mesh-v1",
+      "bytes": 398752,
+      "uncompressedBytes": 792872,
+      "sha256": "9e5fdc583f22da66d65a9f13022d26ea77edf725fa42392602a118b6b7d26700",
+      "vertexCount": 22016,
+      "triangleCount": 44056,
+      "boundsUm": [
+        [
+          8588.5361328125,
+          11067.40625
+        ],
+        [
+          313.7044372558594,
+          4252.37939453125
+        ],
+        [
+          1267.679931640625,
+          5760.158203125
+        ]
+      ],
+      "sourceVoxelCount": 46668,
+      "displayVoxelCount": 46668,
+      "displaySelection": {
+        "method": "unchanged source sinus mask",
+        "originalVoxels": 46668,
+        "retainedVoxels": 46668,
+        "retainedPct": 100.0,
+        "originalComponents": 3,
+        "remainingComponents": 3,
+        "mainComponentSplitCount": 1,
+        "addedVoxels": 0
+      },
+      "sourceBoundsVoxel": [
+        [
+          17,
+          160
+        ],
+        [
+          128,
+          196
+        ],
+        [
+          126,
+          237
+        ]
+      ],
+      "touchesSourceVolumeBoundary": false
+    },
+    {
+      "id": 30,
+      "sourceLabelId": 30,
+      "name": "右横窦",
+      "englishName": "Transverse sinus",
+      "group": "sinus",
+      "hemisphere": "right",
+      "url": "/vasculature/mice/meshes/30.bin.gz",
+      "signedMeshVolumeUm3": 3536435512.1915298,
+      "format": "allen-mesh-v1",
+      "bytes": 625141,
+      "uncompressedBytes": 1245308,
+      "sha256": "d63bddb5b09887fb943dfd3408c7621fec60c98652c3052b98f42d28b5f8ff8a",
+      "vertexCount": 34601,
+      "triangleCount": 69174,
+      "boundsUm": [
+        [
+          8758.7578125,
+          11420.5908203125
+        ],
+        [
+          185.34359741210938,
+          5056.2021484375
+        ],
+        [
+          5422.955078125,
+          10510.359375
+        ]
+      ],
+      "sourceVoxelCount": 93880,
+      "displayVoxelCount": 93880,
+      "displaySelection": {
+        "method": "unchanged source sinus mask",
+        "originalVoxels": 93880,
+        "retainedVoxels": 93880,
+        "retainedPct": 100.0,
+        "originalComponents": 9,
+        "remainingComponents": 9,
+        "mainComponentSplitCount": 1,
+        "addedVoxels": 0
+      },
+      "sourceBoundsVoxel": [
+        [
+          150,
+          313
+        ],
+        [
+          119,
+          191
+        ],
+        [
+          103,
+          243
+        ]
+      ],
+      "touchesSourceVolumeBoundary": false
+    },
+    {
+      "id": 24,
+      "sourceLabelId": 24,
+      "name": "左乙状窦",
+      "englishName": "Sigmoid sinus",
+      "group": "sinus",
+      "hemisphere": "left",
+      "url": "/vasculature/mice/meshes/24.bin.gz",
+      "signedMeshVolumeUm3": 386966362.50512815,
+      "format": "allen-mesh-v1",
+      "bytes": 194350,
+      "uncompressedBytes": 386780,
+      "sha256": "c0970aa542f749e6a83de7fea304d009dfe4eb45a7f9509ddef73cbad4511087",
+      "vertexCount": 10729,
+      "triangleCount": 21502,
+      "boundsUm": [
+        [
+          10412.140625,
+          12792.169921875
+        ],
+        [
+          659.9574584960938,
+          3007.43994140625
+        ],
+        [
+          2324.423583984375,
+          5390.12451171875
+        ]
+      ],
+      "sourceVoxelCount": 10462,
+      "displayVoxelCount": 10462,
+      "displaySelection": {
+        "method": "unchanged source sinus mask",
+        "originalVoxels": 10462,
+        "retainedVoxels": 10462,
+        "retainedPct": 100.0,
+        "originalComponents": 2,
+        "remainingComponents": 2,
+        "mainComponentSplitCount": 1,
+        "addedVoxels": 0
+      },
+      "sourceBoundsVoxel": [
+        [
+          50,
+          147
+        ],
+        [
+          79,
+          146
+        ],
+        [
+          151,
+          219
+        ]
+      ],
+      "touchesSourceVolumeBoundary": false
+    },
+    {
+      "id": 101,
+      "sourceLabelId": 101,
+      "name": "右乙状窦",
+      "englishName": "Sigmoid sinus",
+      "group": "sinus",
+      "hemisphere": "right",
+      "url": "/vasculature/mice/meshes/101.bin.gz",
+      "signedMeshVolumeUm3": 272490032.6689729,
+      "format": "allen-mesh-v1",
+      "bytes": 132984,
+      "uncompressedBytes": 265628,
+      "sha256": "00d424aa5e2a3872c5ae13f0cbeb97d4888f48d36e1500409ce97452b3a90dde",
+      "vertexCount": 7373,
+      "triangleCount": 14762,
+      "boundsUm": [
+        [
+          10853.9267578125,
+          12437.22265625
+        ],
+        [
+          721.619140625,
+          3138.99365234375
+        ],
+        [
+          6202.84521484375,
+          8371.849609375
+        ]
+      ],
+      "sourceVoxelCount": 7355,
+      "displayVoxelCount": 7355,
+      "displaySelection": {
+        "method": "unchanged source sinus mask",
+        "originalVoxels": 7355,
+        "retainedVoxels": 7355,
+        "retainedPct": 100.0,
+        "originalComponents": 1,
+        "remainingComponents": 1,
+        "mainComponentSplitCount": 1,
+        "addedVoxels": 0
+      },
+      "sourceBoundsVoxel": [
+        [
+          174,
+          243
+        ],
+        [
+          88,
+          131
+        ],
+        [
+          146,
+          215
+        ]
+      ],
+      "touchesSourceVolumeBoundary": false
+    },
+    {
+      "id": 35,
+      "sourceLabelId": 35,
+      "name": "大脑前动脉",
+      "englishName": "Anterior cerebral artery",
+      "group": "artery",
+      "hemisphere": "bilateral",
+      "url": "/vasculature/mice/meshes/35.bin.gz",
+      "signedMeshVolumeUm3": 879329724.0805849,
+      "format": "allen-mesh-v1",
+      "bytes": 560960,
+      "uncompressedBytes": 1132712,
+      "sha256": "750c34e10d54f9a8dcb00b5cb07551e17920504a46c5dca07b60d42ce0e4bbb9",
+      "vertexCount": 31360,
+      "triangleCount": 63032,
+      "boundsUm": [
+        [
+          1680.93896484375,
+          8251.013671875
+        ],
+        [
+          847.1401977539062,
+          7487.09716796875
+        ],
+        [
+          4275.138671875,
+          8628.4775390625
+        ]
+      ],
+      "sourceVoxelCount": 73706,
+      "displayVoxelCount": 23978,
+      "displaySelection": {
+        "method": "coarse-core skeleton paths, source-mask subset",
+        "coreDistanceVoxels": 2,
+        "skeletonPoints": 9537,
+        "coreSkeletonPoints": 871,
+        "keptSkeletonPoints": 1355,
+        "originalVoxels": 73706,
+        "retainedVoxels": 23978,
+        "retainedPct": 32.5,
+        "originalComponents": 82,
+        "remainingComponents": 2,
+        "mainComponentSplitCount": 1,
+        "largestRemainingPct": 99.9,
+        "addedVoxels": 0,
+        "protectedCorePointsPreserved": true,
+        "protectedCoreSourceComponents": 2,
+        "protectedCoreConnectivityPreserved": true,
+        "maxOriginalComponentSplitCount": 1,
+        "componentConnectivityCheck": "All original components containing protected core points",
+        "unsupportedFragmentVoxelsRemoved": 5
+      },
+      "sourceBoundsVoxel": [
+        [
+          84,
+          267
+        ],
+        [
+          200,
+          407
+        ],
+        [
+          57,
+          233
+        ]
+      ],
+      "touchesSourceVolumeBoundary": false
+    },
+    {
+      "id": 190,
+      "sourceLabelId": 190,
+      "name": "左大脑中动脉",
+      "englishName": "Middle cerebral artery",
+      "group": "artery",
+      "hemisphere": "left",
+      "url": "/vasculature/mice/meshes/190.bin.gz",
+      "signedMeshVolumeUm3": 1418912841.4182384,
+      "format": "allen-mesh-v1",
+      "bytes": 822504,
+      "uncompressedBytes": 1628828,
+      "sha256": "7238384b983284e182d071475a7f24afb4562e7f61a861442f72fda8eed3f855",
+      "vertexCount": 45217,
+      "triangleCount": 90518,
+      "boundsUm": [
+        [
+          3062.419189453125,
+          9399.876953125
+        ],
+        [
+          146.65753173828125,
+          7773.8671875
+        ],
+        [
+          770.0762939453125,
+          4925.97509765625
+        ]
+      ],
+      "sourceVoxelCount": 75779,
+      "displayVoxelCount": 38578,
+      "displaySelection": {
+        "method": "coarse-core skeleton paths, source-mask subset",
+        "coreDistanceVoxels": 2,
+        "skeletonPoints": 6421,
+        "coreSkeletonPoints": 807,
+        "keptSkeletonPoints": 1673,
+        "originalVoxels": 75779,
+        "retainedVoxels": 38578,
+        "retainedPct": 50.9,
+        "originalComponents": 51,
+        "remainingComponents": 1,
+        "mainComponentSplitCount": 1,
+        "largestRemainingPct": 100.0,
+        "addedVoxels": 0,
+        "protectedCorePointsPreserved": true,
+        "protectedCoreSourceComponents": 1,
+        "protectedCoreConnectivityPreserved": true,
+        "maxOriginalComponentSplitCount": 1,
+        "componentConnectivityCheck": "All original components containing protected core points",
+        "unsupportedFragmentVoxelsRemoved": 4
+      },
+      "sourceBoundsVoxel": [
+        [
+          3,
+          142
+        ],
+        [
+          158,
+          388
+        ],
+        [
+          47,
+          249
+        ]
+      ],
+      "touchesSourceVolumeBoundary": false
+    },
+    {
+      "id": 191,
+      "sourceLabelId": 191,
+      "name": "右大脑中动脉",
+      "englishName": "Middle cerebral artery",
+      "group": "artery",
+      "hemisphere": "right",
+      "url": "/vasculature/mice/meshes/191.bin.gz",
+      "signedMeshVolumeUm3": 410945107.86104417,
+      "format": "allen-mesh-v1",
+      "bytes": 266453,
+      "uncompressedBytes": 545384,
+      "sha256": "9a7c4d2233ef2454f692faf3763852ef456d5f10d2b629cc791fbe6fc7351c69",
+      "vertexCount": 15120,
+      "triangleCount": 30328,
+      "boundsUm": [
+        [
+          3663.51513671875,
+          6348.7705078125
+        ],
+        [
+          2001.99462890625,
+          7656.28369140625
+        ],
+        [
+          6481.37451171875,
+          10177.271484375
+        ]
+      ],
+      "sourceVoxelCount": 48905,
+      "displayVoxelCount": 11239,
+      "displaySelection": {
+        "method": "coarse-core skeleton paths, source-mask subset",
+        "coreDistanceVoxels": 2,
+        "skeletonPoints": 5978,
+        "coreSkeletonPoints": 294,
+        "keptSkeletonPoints": 581,
+        "originalVoxels": 48905,
+        "retainedVoxels": 11239,
+        "retainedPct": 23.0,
+        "originalComponents": 65,
+        "remainingComponents": 2,
+        "mainComponentSplitCount": 1,
+        "largestRemainingPct": 82.3,
+        "addedVoxels": 0,
+        "protectedCorePointsPreserved": true,
+        "protectedCoreSourceComponents": 2,
+        "protectedCoreConnectivityPreserved": true,
+        "maxOriginalComponentSplitCount": 1,
+        "componentConnectivityCheck": "All original components containing protected core points",
+        "unsupportedFragmentVoxelsRemoved": 0
+      },
+      "sourceBoundsVoxel": [
+        [
+          171,
+          308
+        ],
+        [
+          148,
+          363
+        ],
+        [
+          49,
+          247
+        ]
+      ],
+      "touchesSourceVolumeBoundary": false
+    },
+    {
+      "id": 5,
+      "sourceLabelId": 5,
+      "name": "左大脑后动脉",
+      "englishName": "Posterior cerebral artery",
+      "group": "artery",
+      "hemisphere": "left",
+      "url": "/vasculature/mice/meshes/5.bin.gz",
+      "signedMeshVolumeUm3": 399976609.3457768,
+      "format": "allen-mesh-v1",
+      "bytes": 295562,
+      "uncompressedBytes": 588968,
+      "sha256": "837874553e4812500793790f8f218eb12bc21c8248a453285f93fae3763fc3fc",
+      "vertexCount": 16296,
+      "triangleCount": 32784,
+      "boundsUm": [
+        [
+          6846.35400390625,
+          10112.568359375
+        ],
+        [
+          1351.101806640625,
+          6258.60107421875
+        ],
+        [
+          2920.599609375,
+          5697.21435546875
+        ]
+      ],
+      "sourceVoxelCount": 62573,
+      "displayVoxelCount": 10976,
+      "displaySelection": {
+        "method": "coarse-core skeleton paths, source-mask subset",
+        "coreDistanceVoxels": 2,
+        "skeletonPoints": 9558,
+        "coreSkeletonPoints": 317,
+        "keptSkeletonPoints": 689,
+        "originalVoxels": 62573,
+        "retainedVoxels": 10976,
+        "retainedPct": 17.5,
+        "originalComponents": 36,
+        "remainingComponents": 1,
+        "mainComponentSplitCount": 1,
+        "largestRemainingPct": 100.0,
+        "addedVoxels": 0,
+        "protectedCorePointsPreserved": true,
+        "protectedCoreSourceComponents": 1,
+        "protectedCoreConnectivityPreserved": true,
+        "maxOriginalComponentSplitCount": 1,
+        "componentConnectivityCheck": "All original components containing protected core points",
+        "unsupportedFragmentVoxelsRemoved": 0
+      },
+      "sourceBoundsVoxel": [
+        [
+          30,
+          167
+        ],
+        [
+          148,
+          266
+        ],
+        [
+          77,
+          217
+        ]
+      ],
+      "touchesSourceVolumeBoundary": false
+    },
+    {
+      "id": 8,
+      "sourceLabelId": 8,
+      "name": "右大脑后动脉",
+      "englishName": "Posterior cerebral artery",
+      "group": "artery",
+      "hemisphere": "right",
+      "url": "/vasculature/mice/meshes/8.bin.gz",
+      "signedMeshVolumeUm3": 379428567.45491177,
+      "format": "allen-mesh-v1",
+      "bytes": 282611,
+      "uncompressedBytes": 568532,
+      "sha256": "a7ac34ed14d9415dc8a7710e8b717a95973042eba7601dc2736a7e02460b22c3",
+      "vertexCount": 15715,
+      "triangleCount": 31662,
+      "boundsUm": [
+        [
+          7027.37255859375,
+          10053.07421875
+        ],
+        [
+          1555.68359375,
+          6245.98779296875
+        ],
+        [
+          5666.03515625,
+          8836.7080078125
+        ]
+      ],
+      "sourceVoxelCount": 48981,
+      "displayVoxelCount": 10426,
+      "displaySelection": {
+        "method": "coarse-core skeleton paths, source-mask subset",
+        "coreDistanceVoxels": 2,
+        "skeletonPoints": 7028,
+        "coreSkeletonPoints": 398,
+        "keptSkeletonPoints": 774,
+        "originalVoxels": 48981,
+        "retainedVoxels": 10426,
+        "retainedPct": 21.3,
+        "originalComponents": 39,
+        "remainingComponents": 1,
+        "mainComponentSplitCount": 1,
+        "largestRemainingPct": 100.0,
+        "addedVoxels": 0,
+        "protectedCorePointsPreserved": true,
+        "protectedCoreSourceComponents": 1,
+        "protectedCoreConnectivityPreserved": true,
+        "maxOriginalComponentSplitCount": 1,
+        "componentConnectivityCheck": "All original components containing protected core points",
+        "unsupportedFragmentVoxelsRemoved": 0
+      },
+      "sourceBoundsVoxel": [
+        [
+          157,
+          283
+        ],
+        [
+          150,
+          274
+        ],
+        [
+          76,
+          218
+        ]
+      ],
+      "touchesSourceVolumeBoundary": false
+    },
+    {
+      "id": 21,
+      "sourceLabelId": 21,
+      "name": "左头端鼻裂静脉",
+      "englishName": "Rostral rhinal vein",
+      "group": "vein",
+      "hemisphere": "left",
+      "url": "/vasculature/mice/meshes/21.bin.gz",
+      "signedMeshVolumeUm3": 242515027.97844338,
+      "format": "allen-mesh-v1",
+      "bytes": 121671,
+      "uncompressedBytes": 245912,
+      "sha256": "7925316986d8c10b786d4803bf70ba8b34fdb169efd666dbf1f011719caf0603",
+      "vertexCount": 6824,
+      "triangleCount": 13668,
+      "boundsUm": [
+        [
+          1652.3323974609375,
+          3887.026611328125
+        ],
+        [
+          2370.56884765625,
+          5017.56396484375
+        ],
+        [
+          2826.641845703125,
+          5449.251953125
+        ]
+      ],
+      "sourceVoxelCount": 11458,
+      "displayVoxelCount": 6546,
+      "displaySelection": {
+        "method": "coarse-core skeleton paths, source-mask subset",
+        "coreDistanceVoxels": 2,
+        "skeletonPoints": 747,
+        "coreSkeletonPoints": 140,
+        "keptSkeletonPoints": 196,
+        "originalVoxels": 11458,
+        "retainedVoxels": 6546,
+        "retainedPct": 57.1,
+        "originalComponents": 1,
+        "remainingComponents": 1,
+        "mainComponentSplitCount": 1,
+        "largestRemainingPct": 100.0,
+        "addedVoxels": 0,
+        "protectedCorePointsPreserved": true,
+        "protectedCoreSourceComponents": 1,
+        "protectedCoreConnectivityPreserved": true,
+        "maxOriginalComponentSplitCount": 1,
+        "componentConnectivityCheck": "All original components containing protected core points",
+        "unsupportedFragmentVoxelsRemoved": 0
+      },
+      "sourceBoundsVoxel": [
+        [
+          56,
+          159
+        ],
+        [
+          322,
+          405
+        ],
+        [
+          115,
+          217
+        ]
+      ],
+      "touchesSourceVolumeBoundary": false
+    },
+    {
+      "id": 20,
+      "sourceLabelId": 20,
+      "name": "右头端鼻裂静脉",
+      "englishName": "Rostral rhinal vein",
+      "group": "vein",
+      "hemisphere": "right",
+      "url": "/vasculature/mice/meshes/20.bin.gz",
+      "signedMeshVolumeUm3": 243704212.6733478,
+      "format": "allen-mesh-v1",
+      "bytes": 115053,
+      "uncompressedBytes": 232580,
+      "sha256": "c33d67f3246608045e79951386fedb177cf171f27b0bfd9daa2641ea15fe37e6",
+      "vertexCount": 6455,
+      "triangleCount": 12926,
+      "boundsUm": [
+        [
+          1161.9586181640625,
+          2962.309326171875
+        ],
+        [
+          2132.5009765625,
+          4893.4951171875
+        ],
+        [
+          5541.40380859375,
+          8089.8642578125
+        ]
+      ],
+      "sourceVoxelCount": 9598,
+      "displayVoxelCount": 6561,
+      "displaySelection": {
+        "method": "coarse-core skeleton paths, source-mask subset",
+        "coreDistanceVoxels": 2,
+        "skeletonPoints": 416,
+        "coreSkeletonPoints": 129,
+        "keptSkeletonPoints": 157,
+        "originalVoxels": 9598,
+        "retainedVoxels": 6561,
+        "retainedPct": 68.4,
+        "originalComponents": 3,
+        "remainingComponents": 1,
+        "mainComponentSplitCount": 1,
+        "largestRemainingPct": 100.0,
+        "addedVoxels": 0,
+        "protectedCorePointsPreserved": true,
+        "protectedCoreSourceComponents": 1,
+        "protectedCoreConnectivityPreserved": true,
+        "maxOriginalComponentSplitCount": 1,
+        "componentConnectivityCheck": "All original components containing protected core points",
+        "unsupportedFragmentVoxelsRemoved": 0
+      },
+      "sourceBoundsVoxel": [
+        [
+          158,
+          256
+        ],
+        [
+          345,
+          416
+        ],
+        [
+          119,
+          226
+        ]
+      ],
+      "touchesSourceVolumeBoundary": true
+    },
+    {
+      "id": 34,
+      "sourceLabelId": 34,
+      "name": "左尾端鼻裂静脉",
+      "englishName": "Caudal rhinal vein",
+      "group": "vein",
+      "hemisphere": "left",
+      "url": "/vasculature/mice/meshes/34.bin.gz",
+      "signedMeshVolumeUm3": 975134595.8102971,
+      "format": "allen-mesh-v1",
+      "bytes": 406868,
+      "uncompressedBytes": 796316,
+      "sha256": "9e2f9018c02db973270d18b2427c2b80657a9a916fbc4f5970f6e73a38799e70",
+      "vertexCount": 22105,
+      "triangleCount": 44254,
+      "boundsUm": [
+        [
+          4646.7958984375,
+          10476.9033203125
+        ],
+        [
+          1643.322509765625,
+          5361.97607421875
+        ],
+        [
+          688.78564453125,
+          2799.779541015625
+        ]
+      ],
+      "sourceVoxelCount": 43082,
+      "displayVoxelCount": 26182,
+      "displaySelection": {
+        "method": "coarse-core skeleton paths, source-mask subset",
+        "coreDistanceVoxels": 2,
+        "skeletonPoints": 2922,
+        "coreSkeletonPoints": 427,
+        "keptSkeletonPoints": 644,
+        "originalVoxels": 43082,
+        "retainedVoxels": 26182,
+        "retainedPct": 60.8,
+        "originalComponents": 32,
+        "remainingComponents": 1,
+        "mainComponentSplitCount": 1,
+        "largestRemainingPct": 100.0,
+        "addedVoxels": 0,
+        "protectedCorePointsPreserved": true,
+        "protectedCoreSourceComponents": 1,
+        "protectedCoreConnectivityPreserved": true,
+        "maxOriginalComponentSplitCount": 1,
+        "componentConnectivityCheck": "All original components containing protected core points",
+        "unsupportedFragmentVoxelsRemoved": 0
+      },
+      "sourceBoundsVoxel": [
+        [
+          0,
+          127
+        ],
+        [
+          147,
+          366
+        ],
+        [
+          102,
+          226
+        ]
+      ],
+      "touchesSourceVolumeBoundary": true
+    },
+    {
+      "id": 192,
+      "sourceLabelId": 192,
+      "name": "右尾端鼻裂静脉",
+      "englishName": "Caudal rhinal vein",
+      "group": "vein",
+      "hemisphere": "right",
+      "url": "/vasculature/mice/meshes/192.bin.gz",
+      "signedMeshVolumeUm3": 847699927.9892172,
+      "format": "allen-mesh-v1",
+      "bytes": 337781,
+      "uncompressedBytes": 677804,
+      "sha256": "88f949d92f6c67a90ba9a34b1505d0ac86a6779834f5f4b0f418c8d1025aac5f",
+      "vertexCount": 18825,
+      "triangleCount": 37658,
+      "boundsUm": [
+        [
+          4478.51123046875,
+          10701.5849609375
+        ],
+        [
+          1754.2705078125,
+          5700.1044921875
+        ],
+        [
+          8771.849609375,
+          10697.82421875
+        ]
+      ],
+      "sourceVoxelCount": 34362,
+      "displayVoxelCount": 22761,
+      "displaySelection": {
+        "method": "coarse-core skeleton paths, source-mask subset",
+        "coreDistanceVoxels": 2,
+        "skeletonPoints": 1986,
+        "coreSkeletonPoints": 351,
+        "keptSkeletonPoints": 539,
+        "originalVoxels": 34362,
+        "retainedVoxels": 22761,
+        "retainedPct": 66.2,
+        "originalComponents": 17,
+        "remainingComponents": 1,
+        "mainComponentSplitCount": 1,
+        "largestRemainingPct": 100.0,
+        "addedVoxels": 0,
+        "protectedCorePointsPreserved": true,
+        "protectedCoreSourceComponents": 1,
+        "protectedCoreConnectivityPreserved": true,
+        "maxOriginalComponentSplitCount": 1,
+        "componentConnectivityCheck": "All original components containing protected core points",
+        "unsupportedFragmentVoxelsRemoved": 0
+      },
+      "sourceBoundsVoxel": [
+        [
+          229,
+          321
+        ],
+        [
+          140,
+          337
+        ],
+        [
+          89,
+          215
+        ]
+      ],
+      "touchesSourceVolumeBoundary": true
+    }
+  ],
+  "source": {
+    "page": "https://www.mouseimaging.ca/technologies/mouse_atlas/cerebral_vasc_atlas.html",
+    "paper": "https://doi.org/10.1016/j.neuroimage.2006.12.040",
+    "labelKey": "https://www.mouseimaging.ca/technologies/mouse_atlas/cerebral_vasc_atlas/mouse_vasculature_atlas_key.pdf",
+    "attribution": "Dorr A, Sled JG, Kabani N. NeuroImage 35 (2007), 1409–1423; Mouse Imaging Centre.",
+    "species": "Mus musculus",
+    "strain": "CBA",
+    "sex": "male",
+    "ageMonths": 6,
+    "vascularSpecimenCount": 1,
+    "paperCtAcquisitionVoxelSpacingUm": [
+      20,
+      20,
+      20
+    ],
+    "publishedVascularLabelVoxelSpacingUm": [
+      32.0,
+      32.0,
+      32.0
+    ],
+    "publishedBrainLabelVoxelSpacingUm": [
+      64.0,
+      64.0,
+      64.0
+    ],
+    "license": "No explicit dataset redistribution license was identified on the source download page. Source terms apply; this project grants no additional rights.",
+    "termsUrl": "https://www.mouseimaging.ca/terms.html"
+  },
+  "provenance": {
+    "files": [
+      {
+        "file": "cba_vasculature_labels.mnc",
+        "url": "https://www.mouseimaging.ca/mnc/cerebral_vasc_atlas/cba_vasculature_labels.mnc",
+        "bytes": 33975240,
+        "sha256": "2f604d3ad2d8d122bfe66de18ccb9aef82d2de5b9f929c328d09f9577ede1b37",
+        "shape": [
+          322,
+          417,
+          253
+        ],
+        "storageAxisOrder": [
+          "xspace",
+          "yspace",
+          "zspace"
+        ],
+        "voxelSpacingUm": [
+          32.0,
+          32.0,
+          32.0
+        ],
+        "voxelToSourceWorldRasMm": [
+          [
+            0.032,
+            0.0,
+            0.0,
+            -5.05
+          ],
+          [
+            0.0,
+            0.032,
+            0.0,
+            -9.087
+          ],
+          [
+            0.0,
+            0.0,
+            0.032,
+            -4.768
+          ],
+          [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ]
+        ]
+      },
+      {
+        "file": "cba_brain_labels.mnc",
+        "url": "https://www.mouseimaging.ca/mnc/cerebral_vasc_atlas/cba_brain_labels.mnc",
+        "bytes": 4363652,
+        "sha256": "35ebc62a70e6b4d9b0892f375ce3d9e7aabdefb6a60b4600930cdd7e32ada983",
+        "shape": [
+          165,
+          224,
+          118
+        ],
+        "storageAxisOrder": [
+          "xspace",
+          "yspace",
+          "zspace"
+        ],
+        "voxelSpacingUm": [
+          64.0,
+          64.0,
+          64.0
+        ],
+        "voxelToSourceWorldRasMm": [
+          [
+            0.064,
+            0.0,
+            0.0,
+            -5.21
+          ],
+          [
+            0.0,
+            0.064,
+            0.0,
+            -8.479000000000001
+          ],
+          [
+            0.0,
+            0.0,
+            0.064,
+            -4.3839999999999995
+          ],
+          [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ]
+        ]
+      }
+    ],
+    "selection": "Fourteen named atlas labels: sagittal/transverse/sigmoid sinuses, anterior/middle/posterior cerebral arteries, and rostral/caudal rhinal veins. Other vascular labels are excluded.",
+    "processing": "The five sinus masks are unchanged. Nine artery/vein masks are source-label subsets: Lee skeletons, native distance-transform core points >2 voxels, and width-weighted shortest paths on the original skeleton retain connected cores. Original voxels are assigned to the nearest original skeleton point; assignments to omitted branches and disconnected fragments containing no retained skeleton are removed. No voxels are added. Marching cubes at 0.5 on the published 32 um grid; no smoothing, mesh decimation, mirrored completion, or reconstructed vessel segments.",
+    "displayRule": "Core distance and skeleton path costs are display-selection parameters, not physical vessel-diameter measurements or bleeding-risk thresholds.",
+    "sourceCoordinateSpace": "MICe CBA mean MRI, RAS millimeters; voxel centers follow MINC starts and steps.",
+    "registrationFileSha256": "fdefb183463145e62fe79473b957320fb792ae52c5a20e1c56353b12e54c3500",
+    "generator": "scripts/prepare_mice_vasculature.py",
+    "generatorEnvironment": {
+      "python": "3.14.4",
+      "numpy": "2.5.3",
+      "scipy": "1.18.1",
+      "nibabel": "5.4.2",
+      "scikit-image": "0.26.0"
+    }
+  },
+  "registration": {
+    "method": "12-parameter affine, initialized by 12 named bilateral region centroids; optimized symmetric signed-distance surfaces of the same 12 regions and whole brain mask",
+    "coordinateSpace": "Allen CCFv3 2017",
+    "sourceWorldRasMmToCcfUm": [
+      [
+        -14.45056478871185,
+        -1056.2013856992082,
+        -96.22951807144896,
+        5872.966262394277
+      ],
+      [
+        -19.31276335677586,
+        181.86834551459827,
+        -1104.177707642345,
+        4111.078641984158
+      ],
+      [
+        973.2913201113322,
+        -17.48165565533788,
+        11.689535490474029,
+        5594.896265361428
+      ],
+      [
+        0.0,
+        0.0,
+        0.0,
+        1.0
+      ]
+    ],
+    "sourceWorldRasMmToCcfMm": [
+      [
+        -0.01445056478871185,
+        -1.0562013856992083,
+        -0.09622951807144896,
+        5.872966262394277
+      ],
+      [
+        -0.01931276335677586,
+        0.18186834551459827,
+        -1.104177707642345,
+        4.111078641984158
+      ],
+      [
+        0.9732913201113322,
+        -0.01748165565533788,
+        0.011689535490474029,
+        5.594896265361428
+      ],
+      [
+        0.0,
+        0.0,
+        0.0,
+        1.0
+      ]
+    ],
+    "sourceBrainIndexToWorldRasMm": [
+      [
+        0.064,
+        0.0,
+        0.0,
+        -5.21
+      ],
+      [
+        0.0,
+        0.064,
+        0.0,
+        -8.479000000000001
+      ],
+      [
+        0.0,
+        0.0,
+        0.064,
+        -4.3839999999999995
+      ],
+      [
+        0.0,
+        0.0,
+        0.0,
+        1.0
+      ]
+    ],
+    "initialCentroidAffineToCcfMm": [
+      [
+        -0.006075749557858134,
+        -1.0988460575496193,
+        -0.20565219405353385,
+        5.701511457734437
+      ],
+      [
+        -0.02069786445443206,
+        0.1780447344984582,
+        -0.8999834330967773,
+        4.096779537411778
+      ],
+      [
+        0.966871162202625,
+        -0.007262255681967613,
+        0.01161997339035386,
+        5.61744534127186
+      ],
+      [
+        0.0,
+        0.0,
+        0.0,
+        1.0
+      ]
+    ],
+    "sources": {
+      "brainLabelsUrl": "https://www.mouseimaging.ca/mnc/cerebral_vasc_atlas/cba_brain_labels.mnc",
+      "brainLabelsSha256": "35ebc62a70e6b4d9b0892f375ce3d9e7aabdefb6a60b4600930cdd7e32ada983",
+      "allenAnnotationSha256": "980917be84ba6419b1d21982aa860b7ea58fe162fca69801f117573282f63028",
+      "keyUrl": "https://www.mouseimaging.ca/technologies/mouse_atlas/cerebral_vasc_atlas/mouse_vasculature_atlas_key.pdf"
+    },
+    "optimizer": {
+      "converged": true,
+      "message": "`ftol` termination condition is satisfied.",
+      "evaluations": 30,
+      "initialRmsMm": 1.4363587967318376,
+      "finalRmsMm": 1.004535336579803,
+      "linearDeterminant": 1.1520964073556599
+    },
+    "fitConfiguration": {
+      "sourceFitGridUm": 128,
+      "targetFitGridUm": 100,
+      "regionSurfaceSamplesPerHemisphere": 400,
+      "regionSurfaceWeight": 0.4,
+      "filledWholeBrainSurfaceSamples": 3500,
+      "wholeBrainSurfaceWeight": 2.0,
+      "centroidWeight": 4.0,
+      "affinePriorWeight": 2.0,
+      "loss": "soft_l1",
+      "lossScaleMm": 0.2,
+      "linearCoefficientBoundsFromInitial": 0.35,
+      "translationBoundsFromInitialMm": 1.5,
+      "sampling": "deterministic evenly spaced surface voxel indices"
+    },
+    "dependencies": {
+      "numpy": "2.5.3",
+      "scipy": "1.18.1",
+      "nibabel": "5.4.2",
+      "pillow": "12.3.0"
+    },
+    "wholeBrain": {
+      "dice": 0.9402000064263063,
+      "centroidDistanceUm": 234.828111547431,
+      "meanSymmetricSurfaceDistanceUm": 191.54577911680838,
+      "symmetricSurfaceDistance95Um": 613.9947316103041
+    },
+    "filledBrainExterior": {
+      "dice": 0.9402795306333104,
+      "centroidDistanceUm": 234.7842893472138,
+      "meanSymmetricSurfaceDistanceUm": 187.13969852911913,
+      "symmetricSurfaceDistance95Um": 579.6923328922535
+    },
+    "corticalExteriorEnvelopes": {
+      "dorsal": {
+        "rayCount": 28381,
+        "medianSignedInwardOffsetUm": 100.0,
+        "meanAbsoluteOffsetUm": 162.68101899157887,
+        "absoluteOffset95Um": 400.0
+      },
+      "leftLateral": {
+        "rayCount": 13476,
+        "medianSignedInwardOffsetUm": 0.0,
+        "meanAbsoluteOffsetUm": 181.0886019590383,
+        "absoluteOffset95Um": 500.0
+      },
+      "rightLateral": {
+        "rayCount": 13477,
+        "medianSignedInwardOffsetUm": 50.0,
+        "meanAbsoluteOffsetUm": 161.26734436447282,
+        "absoluteOffset95Um": 400.0
+      },
+      "definition": "First nonzero voxel along dorsal/left/right rays; only rays whose Allen exterior voxel belongs to Isocortex are included. Uses 50-um nearest-neighbour resampling, and describes template surface agreement, not vessel landmark error."
+    },
+    "regions": [
+      {
+        "name": "olfactory bulb",
+        "side": "left",
+        "sourceId": 140,
+        "allenAncestorIds": [
+          507,
+          151
+        ],
+        "use": "fit",
+        "dice": 0.5441361885350064,
+        "centroidDistanceUm": 572.2821944477685,
+        "meanSymmetricSurfaceDistanceUm": 385.2492107480105,
+        "symmetricSurfaceDistance95Um": 1274.2939550052267
+      },
+      {
+        "name": "olfactory bulb",
+        "side": "right",
+        "sourceId": 198,
+        "allenAncestorIds": [
+          507,
+          151
+        ],
+        "use": "fit",
+        "dice": 0.5388313120176406,
+        "centroidDistanceUm": 522.3118564153762,
+        "meanSymmetricSurfaceDistanceUm": 389.5845569881573,
+        "symmetricSurfaceDistance95Um": 1208.053570883277
+      },
+      {
+        "name": "striatum / caudoputamen",
+        "side": "left",
+        "sourceId": 42,
+        "allenAncestorIds": [
+          672
+        ],
+        "use": "fit",
+        "dice": 0.8356614712431206,
+        "centroidDistanceUm": 138.6668315704029,
+        "meanSymmetricSurfaceDistanceUm": 118.45572797291565,
+        "symmetricSurfaceDistance95Um": 283.5676748873653
+      },
+      {
+        "name": "striatum / caudoputamen",
+        "side": "right",
+        "sourceId": 154,
+        "allenAncestorIds": [
+          672
+        ],
+        "use": "fit",
+        "dice": 0.8186581469648563,
+        "centroidDistanceUm": 128.6136245438962,
+        "meanSymmetricSurfaceDistanceUm": 132.06964941447723,
+        "symmetricSurfaceDistance95Um": 330.4089403115487
+      },
+      {
+        "name": "thalamus",
+        "side": "left",
+        "sourceId": 102,
+        "allenAncestorIds": [
+          549
+        ],
+        "use": "fit",
+        "dice": 0.7187787025997068,
+        "centroidDistanceUm": 400.99567486529713,
+        "meanSymmetricSurfaceDistanceUm": 185.8810457240516,
+        "symmetricSurfaceDistance95Um": 678.5857385858721
+      },
+      {
+        "name": "thalamus",
+        "side": "right",
+        "sourceId": 9,
+        "allenAncestorIds": [
+          549
+        ],
+        "use": "fit",
+        "dice": 0.734296868882351,
+        "centroidDistanceUm": 362.77600142734434,
+        "meanSymmetricSurfaceDistanceUm": 181.16749310840075,
+        "symmetricSurfaceDistance95Um": 656.288494306376
+      },
+      {
+        "name": "midbrain",
+        "side": "left",
+        "sourceId": 223,
+        "allenAncestorIds": [
+          313
+        ],
+        "use": "fit",
+        "dice": 0.7947429207630955,
+        "centroidDistanceUm": 156.64966951621562,
+        "meanSymmetricSurfaceDistanceUm": 162.10282572975342,
+        "symmetricSurfaceDistance95Um": 443.35917653904954
+      },
+      {
+        "name": "midbrain",
+        "side": "right",
+        "sourceId": 225,
+        "allenAncestorIds": [
+          313
+        ],
+        "use": "fit",
+        "dice": 0.7956956061674897,
+        "centroidDistanceUm": 196.8289402912338,
+        "meanSymmetricSurfaceDistanceUm": 161.18484184419395,
+        "symmetricSurfaceDistance95Um": 439.5192465280836
+      },
+      {
+        "name": "cerebellum including arbor vitae",
+        "side": "left",
+        "sourceId": 199,
+        "allenAncestorIds": [
+          512,
+          728
+        ],
+        "use": "fit",
+        "dice": 0.8445189030058878,
+        "centroidDistanceUm": 193.3129444098195,
+        "meanSymmetricSurfaceDistanceUm": 162.10269035383254,
+        "symmetricSurfaceDistance95Um": 397.38037676333215
+      },
+      {
+        "name": "cerebellum including arbor vitae",
+        "side": "right",
+        "sourceId": 19,
+        "allenAncestorIds": [
+          512,
+          728
+        ],
+        "use": "fit",
+        "dice": 0.8687656113854197,
+        "centroidDistanceUm": 107.525105420767,
+        "meanSymmetricSurfaceDistanceUm": 144.52915871682546,
+        "symmetricSurfaceDistance95Um": 384.056064422363
+      },
+      {
+        "name": "hippocampus including fimbria",
+        "side": "left",
+        "sourceId": 58,
+        "allenAncestorIds": [
+          1080,
+          603
+        ],
+        "use": "check",
+        "dice": 0.736917607434666,
+        "centroidDistanceUm": 276.94874195426024,
+        "meanSymmetricSurfaceDistanceUm": 164.7502518698505,
+        "symmetricSurfaceDistance95Um": 383.1740855961134
+      },
+      {
+        "name": "hippocampus including fimbria",
+        "side": "right",
+        "sourceId": 44,
+        "allenAncestorIds": [
+          1080,
+          603
+        ],
+        "use": "check",
+        "dice": 0.73906816669531,
+        "centroidDistanceUm": 285.2033873896345,
+        "meanSymmetricSurfaceDistanceUm": 166.30548424438777,
+        "symmetricSurfaceDistance95Um": 403.61516492683745
+      },
+      {
+        "name": "hypothalamus",
+        "side": "left",
+        "sourceId": 229,
+        "allenAncestorIds": [
+          1097
+        ],
+        "use": "fit",
+        "dice": 0.6835172726585532,
+        "centroidDistanceUm": 411.3659173364713,
+        "meanSymmetricSurfaceDistanceUm": 267.00616558205303,
+        "symmetricSurfaceDistance95Um": 1250.9695097128129
+      },
+      {
+        "name": "hypothalamus",
+        "side": "right",
+        "sourceId": 200,
+        "allenAncestorIds": [
+          1097
+        ],
+        "use": "fit",
+        "dice": 0.6909261173394114,
+        "centroidDistanceUm": 424.4531801169837,
+        "meanSymmetricSurfaceDistanceUm": 257.9972499579145,
+        "symmetricSurfaceDistance95Um": 1169.0485785116698
+      },
+      {
+        "name": "pons",
+        "side": "left",
+        "sourceId": 33,
+        "allenAncestorIds": [
+          771
+        ],
+        "use": "check",
+        "dice": 0.4427922209495139,
+        "centroidDistanceUm": 1070.8713288024007,
+        "meanSymmetricSurfaceDistanceUm": 405.14655567604365,
+        "symmetricSurfaceDistance95Um": 1681.0880790849728
+      },
+      {
+        "name": "pons",
+        "side": "right",
+        "sourceId": 35,
+        "allenAncestorIds": [
+          771
+        ],
+        "use": "check",
+        "dice": 0.43987714100438396,
+        "centroidDistanceUm": 1031.7307570756639,
+        "meanSymmetricSurfaceDistanceUm": 426.9643612754099,
+        "symmetricSurfaceDistance95Um": 1684.9659371635653
+      },
+      {
+        "name": "medulla",
+        "side": "left",
+        "sourceId": 66,
+        "allenAncestorIds": [
+          354
+        ],
+        "use": "check",
+        "dice": 0.2450405725347885,
+        "centroidDistanceUm": 1932.033079690446,
+        "meanSymmetricSurfaceDistanceUm": 1049.1357427902428,
+        "symmetricSurfaceDistance95Um": 2327.3896405015557
+      },
+      {
+        "name": "medulla",
+        "side": "right",
+        "sourceId": 61,
+        "allenAncestorIds": [
+          354
+        ],
+        "use": "check",
+        "dice": 0.2642642254067868,
+        "centroidDistanceUm": 1937.5434484928105,
+        "meanSymmetricSurfaceDistanceUm": 968.4884109011508,
+        "symmetricSurfaceDistance95Um": 2306.1925984640834
+      },
+      {
+        "name": "globus pallidus",
+        "side": "left",
+        "sourceId": 100,
+        "allenAncestorIds": [
+          1022,
+          1031
+        ],
+        "use": "check",
+        "dice": 0.4163222045574987,
+        "centroidDistanceUm": 301.2055160893623,
+        "meanSymmetricSurfaceDistanceUm": 168.78895785740252,
+        "symmetricSurfaceDistance95Um": 421.67783926545684
+      },
+      {
+        "name": "globus pallidus",
+        "side": "right",
+        "sourceId": 3,
+        "allenAncestorIds": [
+          1022,
+          1031
+        ],
+        "use": "check",
+        "dice": 0.27566999474513926,
+        "centroidDistanceUm": 412.9702359018797,
+        "meanSymmetricSurfaceDistanceUm": 224.54651052543164,
+        "symmetricSurfaceDistance95Um": 586.5041852696154
+      },
+      {
+        "name": "corpus callosum",
+        "side": "left",
+        "sourceId": 34,
+        "allenAncestorIds": [
+          776
+        ],
+        "use": "check",
+        "dice": 0.34740370801121984,
+        "centroidDistanceUm": 250.6788346359847,
+        "meanSymmetricSurfaceDistanceUm": 117.80039857400443,
+        "symmetricSurfaceDistance95Um": 336.3920492552353
+      },
+      {
+        "name": "corpus callosum",
+        "side": "right",
+        "sourceId": 4,
+        "allenAncestorIds": [
+          776
+        ],
+        "use": "check",
+        "dice": 0.34949712387645854,
+        "centroidDistanceUm": 272.89163603790394,
+        "meanSymmetricSurfaceDistanceUm": 125.12054205033859,
+        "symmetricSurfaceDistance95Um": 367.1378883531694
+      },
+      {
+        "name": "anterior commissure",
+        "side": "left",
+        "sourceId": 22,
+        "allenAncestorIds": [
+          900,
+          908
+        ],
+        "use": "check",
+        "dice": 0.3195067264573991,
+        "centroidDistanceUm": 307.5805617616437,
+        "meanSymmetricSurfaceDistanceUm": 138.46914517278609,
+        "symmetricSurfaceDistance95Um": 436.49984581745537
+      },
+      {
+        "name": "anterior commissure",
+        "side": "right",
+        "sourceId": 23,
+        "allenAncestorIds": [
+          900,
+          908
+        ],
+        "use": "check",
+        "dice": 0.34370241461822926,
+        "centroidDistanceUm": 314.3250644354202,
+        "meanSymmetricSurfaceDistanceUm": 127.50461247890497,
+        "symmetricSurfaceDistance95Um": 380.03181099867544
+      },
+      {
+        "name": "fasciculus retroflexus",
+        "side": "left",
+        "sourceId": 201,
+        "allenAncestorIds": [
+          595
+        ],
+        "use": "check",
+        "dice": 0.3127208480565371,
+        "centroidDistanceUm": 451.09781454084685,
+        "meanSymmetricSurfaceDistanceUm": 113.43276903351855,
+        "symmetricSurfaceDistance95Um": 306.42492010128734
+      },
+      {
+        "name": "fasciculus retroflexus",
+        "side": "right",
+        "sourceId": 216,
+        "allenAncestorIds": [
+          595
+        ],
+        "use": "check",
+        "dice": 0.29225352112676056,
+        "centroidDistanceUm": 409.92110270955607,
+        "meanSymmetricSurfaceDistanceUm": 112.88594922908332,
+        "symmetricSurfaceDistance95Um": 312.25733918914074
+      }
+    ],
+    "heldOut": {
+      "count": 14,
+      "medianCentroidDistanceUm": 362.1230835724881,
+      "medianMeanSurfaceDistanceUm": 165.52786805711912,
+      "maximumSurfaceDistance95Um": 2327.3896405015557
+    },
+    "limitations": [
+      "A newly fitted inter-atlas affine, not an author-supplied MICe-to-Allen transformation.",
+      "MICe CBA and Allen C57BL/6J anatomy and delineation protocols differ; gross-region correspondences are approximate.",
+      "Held-out region boundaries did not contribute to the objective, but share the brain volume and outer mask used in fitting; they are not independent specimens or vessel landmarks.",
+      "Boundary distances and overlap quantify anatomical label agreement, not individual vessel localization error or a surgical safety margin.",
+      "One vascular specimen, no skull or individual-animal registration, no nonlinear correction.",
+      "Brain labels contain left olfactory bulb ID 140, whereas the published label key prints 14; identity was checked by bilateral location and shape."
+    ]
+  },
+  "limitations": [
+    "One six-month-old male CBA vascular specimen; not a population or individual-animal vascular map.",
+    "CT was acquired after brain removal from the skull; complete dural vasculature and bridging-vein connections are not established by this dataset.",
+    "The source label for the superior sagittal sinus does not distinguish the upper and lower compartments reported by later studies.",
+    "Artery/vein display selection omits narrow terminal branches and may omit narrow alternative paths or loops; it is not a complete vascular network.",
+    "Display pruning can remove original wall voxels near branch junctions; only the selected source-mask subset and protected core connectivity are preserved.",
+    "Truncated and capped surfaces at omitted branches are display boundaries, not anatomical vessel endpoints. Vessel diameter and bleeding risk are not quantified.",
+    "Published 32 um manual label surfaces and affine atlas registration limit spatial accuracy; blank regions do not establish vessel absence.",
+    "Labels touching the source volume edge have clipped boundaries, which are closed for mesh rendering and are not anatomical endpoints."
+  ],
+  "meshFormat": {
+    "name": "allen-mesh-v1",
+    "endian": "little",
+    "compression": "gzip",
+    "header": "uint32 vertexCount, uint32 triangleCount",
+    "vertices": "vertexCount * 3 float32, AP/DV/ML micrometers",
+    "triangles": "triangleCount * 3 uint32 vertex indices"
+  }
+}

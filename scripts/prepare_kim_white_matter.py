@@ -22,14 +22,14 @@ Run with an environment providing numpy and scikit-image, e.g.:
 from __future__ import annotations
 
 import gzip
-import hashlib
 import json
-import struct
 import sys
 from pathlib import Path
 
 import numpy as np
 from skimage import measure
+
+from data_assets import mesh_bytes, sha256, write_gzip
 
 ROOT = Path(__file__).resolve().parents[1]
 DATA = ROOT / "public/data/kim-v2"
@@ -45,10 +45,6 @@ EXCEPTION_RULES = {
     2219: "superior-medullary-velum-exception",
 }
 MESH_FORMAT = "allen-mesh-v1"
-
-
-def sha256(data: bytes) -> str:
-    return hashlib.sha256(data).hexdigest()
 
 
 def load_inputs() -> tuple[np.ndarray, list[dict], dict]:
@@ -92,7 +88,7 @@ def build_mesh(mask: np.ndarray, spacing: float) -> tuple[np.ndarray, np.ndarray
 def pack_mesh(vertices: np.ndarray, faces: np.ndarray) -> bytes:
     assert len(vertices) and len(faces)
     assert faces.max() < len(vertices)
-    return struct.pack("<II", len(vertices), len(faces)) + vertices.tobytes() + faces.tobytes()
+    return mesh_bytes(len(vertices), len(faces), vertices.tobytes(), faces.tobytes())
 
 
 def main() -> None:
@@ -119,9 +115,8 @@ def main() -> None:
         vertices, faces = build_mesh(mask, spacing)
         vertices += lo.astype(np.float32) * spacing
         raw = pack_mesh(vertices, faces)
-        compressed = gzip.compress(raw, compresslevel=9, mtime=0)
         path = mesh_dir / f"{identifier}.bin.gz"
-        path.write_bytes(compressed)
+        packed = write_gzip(path, raw)
         counts = voxels.shape[0]
         centroid = voxels.mean(axis=0)
         # Bilateral centroids can fall outside the region; focus is a real
@@ -140,10 +135,7 @@ def main() -> None:
                 "url": f"/data/kim-v2/meshes/{identifier}.bin.gz",
                 "format": MESH_FORMAT,
                 "compression": "gzip",
-                "bytes": len(compressed),
-                "uncompressedBytes": len(raw),
-                "sha256": sha256(compressed),
-                "uncompressedSha256": sha256(raw),
+                **packed,
                 "vertexCount": int(len(vertices)),
                 "triangleCount": int(len(faces)),
                 "boundsUm": [[round(float(vertices[:, a].min()), 3), round(float(vertices[:, a].max()), 3)] for a in range(3)],

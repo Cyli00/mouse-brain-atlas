@@ -1,19 +1,19 @@
+import { atlasUrl as baseUrl, launchBrowser, collectPageErrors } from "./helpers/browser";
 import assert from "node:assert/strict";
 import { mkdtemp } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import test from "node:test";
-import { chromium, expect } from "@playwright/test";
+import { expect } from "@playwright/test";
 import AxeBuilder from "@axe-core/playwright";
 
 test("boundary coordinate inputs select the annotated side in all embryo stages", async () => {
-  const browser = await chromium.launch({ channel: process.env.BROWSER_CHANNEL });
+  const browser = await launchBrowser();
   const context = await browser.newContext({ viewport: { width: 1440, height: 1000 } });
   const page = await context.newPage();
-  const baseUrl = process.env.ATLAS_TEST_URL ?? "http://127.0.0.1:5186";
+
   const screenshots = await mkdtemp(join(tmpdir(), "embryo-coordinates-"));
-  const errors: string[] = [];
-  page.on("pageerror", (error) => errors.push(error.message));
+  const errors = collectPageErrors(page);
   page.on("console", (message) => {
     if (message.type() === "error" && !message.location().url.endsWith("/favicon.ico"))
       errors.push(`${message.text()} ${message.location().url}`);

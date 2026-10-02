@@ -35,12 +35,10 @@ import {
 } from "lucide-react";
 
 import {
-  loadAtlas,
   structureAt,
   clampPosition,
   PLANE_ORDER,
   type PlaneName,
-  type AtlasData,
   type Position,
 } from "../lib/atlas";
 import { BrainScene } from "./BrainScene";
@@ -48,7 +46,7 @@ import { CoordinateField } from "./CoordinateField";
 import { ThemeToggle } from "./ThemeToggle";
 import { VasculatureControls } from "./VasculatureControls";
 import { useVasculature } from "../lib/use-vasculature";
-import type { VesselDiameter } from "../lib/vasculature";
+import type { VesselFilter } from "../lib/vasculature";
 import { SliceView } from "./SliceView";
 import { SlicePresentationControl } from "./SlicePresentationControl";
 import {
@@ -59,6 +57,8 @@ import {
   BREGMA_REFERENCE_URL,
 } from "../lib/coordinates";
 import { useSliceAtlas } from "../lib/use-slice-atlas";
+import { useWorkspaceAtlas } from "../lib/use-workspace-atlas";
+import { readWorkspaceRoute, workspaceUrl } from "../lib/workspace-route";
 import {
   KIM_SOURCE_LABEL,
   KIM_SOURCE_URL,
@@ -73,31 +73,14 @@ export function AtlasWorkspace({
   stageNavigation?: React.ReactNode;
 }) {
   const baseRegions = config.regions;
-  const initialParam = Number(
-    new URLSearchParams(location.search).get("region"),
-  );
-  const initialCircuit = !config.embryonic
-    ? brainCircuits.find(
-        (c) => c.id === new URLSearchParams(location.search).get("circuit"),
-      )
-    : undefined;
-  const initialId = initialCircuit
-    ? initialCircuit.nodeIds.includes(initialParam)
-      ? initialParam
-      : initialCircuit.nodeIds[0]
-    : (!config.embryonic && initialParam < 0 && new URLSearchParams(location.search).get("slices") === "paxinos-kim") || baseRegions.some((r) => r.id === initialParam)
-      ? initialParam
-      : config.initialId;
-  const [data, setData] = useState<AtlasData | null>(null),
-    [loading, setLoading] = useState("正在读取图谱数据…"),
-    [error, setError] = useState(""),
-    [attempt, setAttempt] = useState(0);
+  const [initial] = useState(() => readWorkspaceRoute(config, location.search));
+  const initialCircuit = initial.circuit;
+  const [selected, setSelected] = useState(initial.selectedId);
+  const { data, position, setPosition, loading, error, move, retry } = useWorkspaceAtlas(config.manifestUrl, selected);
   const apZeroUm = config.apBregmaUm ?? data?.coordinateOriginsUm?.[0];
   const dvZeroUm = data?.coordinateOriginsUm?.[1];
   const mlZeroUm = config.mlMidlineUm ?? data?.coordinateOriginsUm?.[2];
-  const [position, setPosition] = useState<Position>([0, 0, 0]),
-    [selected, setSelected] = useState(initialId),
-    [overlay, setOverlay] = useState(true),
+  const [overlay, setOverlay] = useState(true),
     [planeDisplay, setPlaneDisplay] = useState<PlaneDisplay>("off"),
     [opacity, setOpacity] = useState(initialCircuit?.id ? 0.12 : 0.1),
     [contrast, setContrast] = useState(config.contrast),
@@ -132,17 +115,13 @@ export function AtlasWorkspace({
   const [isolateRegion, setIsolateRegion] = useState(false);
   const [sceneInspection, setSceneInspection] = useState(0);
   const [showVessels, setShowVessels] = useState(false);
-  const [vesselDiameter, setVesselDiameter] = useState<VesselDiameter>(48);
+  const [vesselFilter, setVesselFilter] = useState<VesselFilter>("all");
   const [vesselsAboveOnly, setVesselsAboveOnly] = useState(false);
   const vessels = useVasculature(showVessels && !config.embryonic);
   const [expandedPlane, setExpandedPlane] = useState<PlaneName | null>(null);
   const slices = useSliceAtlas(data, !config.embryonic);
-  const [mapView, setMapView] = useState(() =>
-    new URLSearchParams(location.search).get("presentation") !== "tissue",
-  );
-  const [embryoLevel, setEmbryoLevel] = useState<EmbryoPartitionLevel>(() =>
-    new URLSearchParams(location.search).get("detail") === "major" ? "major" : "fine",
-  );
+  const [mapView, setMapView] = useState(initial.mapView);
+  const [embryoLevel, setEmbryoLevel] = useState<EmbryoPartitionLevel>(initial.embryoLevel);
   const embryoPartitionData = useMemo(
     () => config.embryonic && data
       ? embryoPartitions(data, new Set(baseRegions.map((r) => r.id)))
@@ -156,7 +135,8 @@ export function AtlasWorkspace({
   const whiteRegions = useMemo(() => whiteMatterData ? getWhiteMatterRegions(whiteMatterData) : [], [whiteMatterData]);
   const brainRegions = useMemo(() => [...baseRegions, ...whiteRegions], [baseRegions, whiteRegions]);
   const whiteSelected = selected < 0;
-  const restoreWhitePosition = useRef(initialId < 0);
+  const sliceSelected = slices.source === "allen" ? selected : whiteSelected ? -selected : 0;
+  const restoreWhitePosition = useRef(initial.selectedId < 0);
   useEffect(() => {
     if (!whiteSelected || !whiteMatterData) return;
     if (!whiteRegions.some((r) => r.id === selected)) {
@@ -188,8 +168,6 @@ export function AtlasWorkspace({
     : "未标注位置";
   const regionDisplay = useRef<DisplaySettings>(displayDefaults(false));
   const workspace = useRef<HTMLElement>(null);
-  const selectedRef = useRef(selected);
-  selectedRef.current = selected;
   const search = useRef<HTMLInputElement>(null);
   const detailContent = useRef<HTMLDivElement>(null);
   useEffect(() => {
@@ -201,55 +179,15 @@ export function AtlasWorkspace({
   }, [selected, panel]);
   const region = brainRegions.find((r) => r.id === selected) ?? baseRegions.find((r) => r.id === config.initialId)!;
   useEffect(() => {
-    const ctrl = new AbortController();
-    setError("");
-    setData(null);
-    loadAtlas(ctrl.signal, setLoading, config.manifestUrl)
-      .then((atlas) => {
-        if (!ctrl.signal.aborted) {
-          setData(atlas);
-          setPosition(
-            atlas.meshes[String(selectedRef.current)]?.centroid ?? [0, 0, 0],
-          );
-          setLoading("");
-        }
-      })
-      .catch((e) => {
-        if (!ctrl.signal.aborted) {
-          setError(
-            e.name === "TimeoutError"
-              ? "数据载入超时，请检查连接并重试。"
-              : e instanceof TypeError
-                ? "无法读取图谱数据，请检查本地服务和网络连接后重试。"
-                : e instanceof SyntaxError
-                  ? "图谱数据目录格式不正确，请检查数据文件后重试。"
-                  : e.message,
-          );
-          setLoading("");
-        }
-      });
-    return () => ctrl.abort();
-  }, [attempt]);
-  useEffect(() => {
     document.title = `${region.name} · ${config.title}`;
-    const url = new URL(location.href);
-    url.searchParams.set("region", String(selected));
-    if (activeCircuit) url.searchParams.set("circuit", activeCircuit.id);
-    else url.searchParams.delete("circuit");
-    if (!config.embryonic && slices.source === "paxinos-kim")
-      url.searchParams.set("slices", slices.source);
-    else url.searchParams.delete("slices");
-    if (config.embryonic && embryoLevel === "major")
-      url.searchParams.set("detail", "major");
-    else url.searchParams.delete("detail");
-    if (!mapView)
-      url.searchParams.set("presentation", "tissue");
-    else url.searchParams.delete("presentation");
-    url.searchParams.delete("view");
-    history.replaceState(null, "", url);
-  }, [region, selected, activeCircuit, slices.source, embryoLevel, mapView]);
+    history.replaceState(null, "", workspaceUrl(location.href, {
+      selected, circuitId: activeCircuit?.id, embryonic: config.embryonic,
+      sliceSource: slices.source, embryoLevel, mapView,
+    }));
+  }, [region.name, config.title, config.embryonic, selected, activeCircuit, slices.source, embryoLevel, mapView]);
   const whiteProbe = whiteMatterData && isWhiteMatterStructure(sliceStructure) ? sliceStructure : undefined;
-  const currentStructure = whiteProbe ?? (data ? structureAt(data, position) : undefined);
+  const currentStructure = whiteProbe ?? (displayedSliceData === data
+    ? sliceStructure : data ? structureAt(data, position) : undefined);
   const catalogIds = useMemo(
     () => new Set(brainRegions.map((r) => r.id)),
     [brainRegions],
@@ -298,14 +236,6 @@ export function AtlasWorkspace({
     window.addEventListener("keydown", shortcut);
     return () => window.removeEventListener("keydown", shortcut);
   }, [exploreMode]);
-  const move = (p: Position) => {
-    if (data) {
-      const next = clampPosition(p, data.dimensions);
-      setPosition((previous) =>
-        previous.every((value, i) => value === next[i]) ? previous : next,
-      );
-    }
-  };
   const focus = (id: number, keepCircuit = false, navigate = true) => {
     setSelected(id);
     if (!keepCircuit) setPanel("region");
@@ -362,7 +292,7 @@ export function AtlasWorkspace({
     setContrast(config.contrast);
     setIsolateRegion(false);
     setShowVessels(false);
-    setVesselDiameter(48);
+    setVesselFilter("all");
     setVesselsAboveOnly(false);
   };
   return (
@@ -508,7 +438,7 @@ export function AtlasWorkspace({
                 dvZeroUm={dvZeroUm}
                 data={data}
                 vasculature={config.embryonic ? null : vessels.data}
-                vesselDiameter={vesselDiameter}
+                vesselFilter={vesselFilter}
                 vesselsAboveOnly={vesselsAboveOnly}
                 position={position}
                 selected={selected}
@@ -548,7 +478,7 @@ export function AtlasWorkspace({
                     <p>{error}</p>
                     <button
                       className="primary-button"
-                      onClick={() => setAttempt((n) => n + 1)}
+                      onClick={retry}
                     >
                       重新载入数据
                     </button>
@@ -609,7 +539,7 @@ export function AtlasWorkspace({
             </div>
             {!config.embryonic && <VasculatureControls
               enabled={showVessels} onEnabled={setShowVessels}
-              diameter={vesselDiameter} onDiameter={setVesselDiameter}
+              filter={vesselFilter} onFilter={setVesselFilter}
               aboveOnly={vesselsAboveOnly} onAboveOnly={setVesselsAboveOnly}
               data={vessels.data} error={vessels.error} onRetry={vessels.retry} disabled={!data} />}
           </section>
@@ -678,7 +608,7 @@ export function AtlasWorkspace({
                       data={displayedSliceData!}
                       name={name}
                       position={position}
-                      selected={slices.source === "allen" ? selected : whiteSelected ? -selected : 0}
+                      selected={sliceSelected}
                       overlay={overlay}
                       contrast={contrast}
                       onPosition={move}
@@ -1130,7 +1060,7 @@ export function AtlasWorkspace({
         onPlane={setExpandedPlane}
         data={displayedSliceData}
         position={position}
-        selected={slices.source === "allen" ? selected : whiteSelected ? -selected : 0}
+        selected={sliceSelected}
         overlay={overlay}
         onOverlay={setOverlay}
         contrast={contrast}

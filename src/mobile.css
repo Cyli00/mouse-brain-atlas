@@ -80,6 +80,7 @@
   .vascular-toggle { font-size: 14px; }
   .vascular-controls[data-enabled="false"] .vascular-control-row { grid-template-columns: minmax(0, 1fr) auto; }
   .vascular-controls[data-enabled="false"] :is(.vascular-filter, .vascular-above, .vascular-load-status) { display: none; }
+  .vascular-controls[data-enabled="false"] .vascular-source[open] { grid-column: 1 / -1; }
   .vascular-filter { justify-content: space-between; font-size: 13px; }
   .vascular-filter select { min-height: 44px; min-width: 130px; font-size: 16px; }
   .vascular-above { align-items: center; }
@@ -89,7 +90,12 @@
   .vascular-source summary::before { content: "▸"; margin-right: 6px; }
   .vascular-source[open] summary::before { content: "▾"; }
   .vascular-source > div { position: static; width: auto; max-height: none; margin-top: 4px; padding: 12px; box-shadow: none; font-size: 14px; line-height: 1.8; }
-  .vascular-note, .vascular-error { font-size: 13px; line-height: 1.8; margin-top: 12px; }
+  .vascular-name-list li { grid-template-columns: 16px minmax(0, 1fr); gap: 2px 8px; }
+  .vascular-group-label { grid-column: 2; font-size: 12px; }
+  .vascular-context { gap: 8px; margin-top: 12px; }
+  .vascular-legend { gap: 8px 14px; font-size: 13px; }
+  .vascular-note, .vascular-error { font-size: 13px; line-height: 1.8; }
+  .vascular-error { margin-top: 12px; }
   .slices-section { padding: 16px 12px; }
   .section-heading { gap: 8px; align-items: center; }
   .section-heading h2 { font-size: 16px; white-space: nowrap; }

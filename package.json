@@ -1,6 +1,6 @@
 {
   "name": "mouse-brain-atlas",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "private": true,
   "type": "module",
   "engines": {
@@ -11,6 +11,7 @@
     "build": "tsc -b && vite build",
     "preview": "vite preview --host 127.0.0.1",
     "test": "node --import tsx --test tests/*.test.ts",
+    "test:browser": "node --import tsx --test --test-concurrency=1 tests/*.browser.ts",
     "test:coordinates:browser": "node --import tsx --test tests/coordinate-input.browser.ts",
     "test:scene:browser": "node --import tsx --test tests/scene.browser.ts",
     "test:mobile:browser": "node --import tsx --test tests/mobile.browser.ts",

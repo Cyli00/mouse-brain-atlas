@@ -112,23 +112,45 @@ Wang Q, Ding S-L, Li Y, et al. The Allen Mouse Brain Common Coordinate Framework
 
 ## 成年血管网络
 
-血管来源为 Todorov 等 2020 的 [VesSAP](https://doi.org/10.1038/s41592-020-0792-1) 和 Paetzold 等 2021 的 [VesselGraph](https://github.com/jocpae/VesselGraph)，使用成年 BL6J-no1 单标本。Allen 的参考图谱下载目录未列出可直接使用的独立血管网络；本层是第三方数据，不能称为 Allen 官方血管图谱。数据及衍生文件遵循 [CC BY-NC 4.0](https://creativecommons.org/licenses/by-nc/4.0/)，不随应用代码改变许可。
+### 当前显示：MICe 具名大血管
 
-源图含 5,614,677 条边。网页保留源平均半径至少 6 体素的 154,045 条边；源体素为 3 μm，即估计直径至少 36 μm。默认显示至少 48 μm 的 39,214 条边，另可选择至少 60 μm 的 13,967 条边。文件按源半径降序排列，筛选取前缀，不随机抽样。线段连接作者提取的实测节点，近似节点间走向，不重建管壁和完整曲率，也没有动静脉或血流标签。显示线宽不表示实际管径。直径阈值来自变形前标本，不能作为 CCF 中的局部管径测量。
+当前血管层采用 [MICe CBA Cerebral Vascular Atlas](https://www.mouseimaging.ca/technologies/mouse_atlas/cerebral_vasc_atlas.html)，引用 Dorr A, Sled JG, Kabani N. *NeuroImage* 35 (2007), 1409–1423，[doi:10.1016/j.neuroimage.2006.12.040](https://doi.org/10.1016/j.neuroimage.2006.12.040)。血管标本为一只 6 月龄雄性 CBA 小鼠；由本项目独立配准到 Allen CCFv3，并非 Allen 官方血管图谱。
 
-配准采用 [VesSAP 数据服务器](https://discotechnologies.org/VesSAP/)发布的该标本 `TransformParameters.0.FullRes.txt` 和 `TransformParameters.1.FullRes.txt`。作者把 Allen 标签映射到标本空间，Elastix 的重采样变换把标本点映射回参考空间。按其 [Compose 定义](https://elastix.dev/doxygen/classelastix_1_1TransformBase.html)，先应用 Euler ZXY 刚体变换，再应用三次 B-spline。这里的参数单位不是毫米，固定网格间距 0.1 对应标本 3 μm；输出 ML、AP、DV 重排为本项目的 AP、DV、ML。恢复作者由 10 μm 到 3 μm 网格重采样的体素中心偏移，最终 `CCF_um = transformed_[AP,DV,ML] * 30 - 3.5`。没有通过拉伸脑外形拟合血管。
+按原始标签表选取 14 项：上矢状窦、双侧横窦及乙状窦（5 项）；大脑前动脉、双侧大脑中动脉及大脑后动脉（5 项）；双侧头端、尾端鼻裂静脉（4 项）。大脑前动脉原始标签共用一个编号，14 指标签条目数。界面按静脉窦、主要动脉和主要静脉筛选，不再提供 36／48／60 μm 档位。其他血管标签与未命名微血管未加载；所选动静脉进一步省略细末梢与部分细小环路。筛选不表示小血管不会出血，也没有按出血风险分级。
 
-用独立发布的标签结果核验这条坐标转换，2026-09-28 的结果如下。
+论文 CT 采集体素为 20 μm；实际发布的 `cba_vasculature_labels.mnc` 为 **32 μm**，`cba_brain_labels.mnc` 为 **64 μm**。两个 MINC 的网格和原点不同，分别通过自身 affine 转为共同的 RAS 毫米坐标。文件从官方 `https://www.mouseimaging.ca/mnc/cerebral_vasc_atlas/` 下载，字节数、SHA-256、轴向和物理变换均记录在 `public/vasculature/mice/manifest.json`。
 
-| 检查 | 匹配数 | 范围与限制 |
-| --- | --- | --- |
-| 作者配准结果与 Allen 10 μm 标签 | 639 / 641，99.688% | 来自配准结果文件前部的非零抽样点，不覆盖整个体积 |
-| 左右半球方向 | 641 / 641，100% | 作者用负 ID 标记左半球，与 CCF ML < 5700 μm 一致 |
-| 图节点所属脑区组 | 16,794 / 16,869，99.555% | 从全脑节点按每 211 项抽样，与作者发布的脑区组比较，排除背景、root 和本地本体无对应组的项目 |
+五个静脉窦保持原始标签。九个动静脉标签采用 Lee 三维骨架，在源标签内部距离大于 2 个体素的位置选取粗核心，沿原骨架的宽度加权最短路径保留核心之间的连接。原标签体素按距离分配到原骨架，只保留分配给选中路径的部分，并去除不包含保留骨架的 9 个离散体素。最终掩膜始终是原标签的子集，不新增体素、血管连接或镜像结构；所有保护核心均保留，其连接关系在生成时检查。这些参数只用于显示简化，不能解释为实测管径或出血风险门槛。细末梢和部分细小环路会被省略，删枝断端不表示真实解剖终点。
 
-作者配准 NIfTI 用 float32 保存 ID，大整数会舍入，核验时把 Allen ID 转为同一精度。脑区组采用作者的颜色分组，并接受本体祖先组。这些数值验证转换复现，不能解释为独立解剖标志点误差或个体血管定位精度。Allen 官方 `annotation_10.nrrd` 的 SHA-256 为 `a9e9654ef491f0af107dc0a61bd720dabe7f36e8f3e9239532bf3dbdc94ef24c`。
+表面由筛选后标签的 0.5 等值面重建，不再进行表面平滑、网格减面或人为加粗。14 个 gzip 网格合计 **6,005,103 字节**，含 331,815 个顶点、665,018 个三角形。与未删枝的同组标签相比，显示体素由 648,915 减为 397,718，压缩体积由 15,277,472 字节减为 6,005,103 字节。形状来自人工分割标签，未测量管壁厚度或血流方向；源体积边缘及删枝处的网格封口均只服务于显示。
 
-`public/vasculature/adult/manifest.json` 保存源图地址、SHA-256、变换文件校验值和输出校验值。`scripts/prepare_vasculature.py` 需要 numpy、scipy、pandas，使用完整 `C57BL_6_no1.zip` 可复现网页文件。`tests/fixtures/vascular-registration.json.gz` 保存从作者文件抽出的核验点及原始标签，沿用相同数据许可。`scripts/verify_vasculature.py --annotation-raw <Allen_10um_uint32_payload> --report <临时报告路径>` 可重新核验，两个一致率均须达到 99%。
+`scripts/register_mice_vasculature.py` 用六组双侧脑区共 12 个质心初始化仿射，再优化这些区域边界及填孔后的全脑外表面。两套图谱的脑区通过显式编号对应；血管位置不参与拟合。采用 12 参数仿射，不应用非线性形变或手动移动单条血管。变换矩阵、源校验值、软件版本及完整检查结果嵌入 manifest；`sourceWorldRasMmToCcfUm` 将源 RAS 毫米映射到 AP、DV、ML 微米。
+
+2026-10-02 的检查结果如下。填孔后整脑 Dice 为 0.94028。
+
+| 检查对象 | 平均表面距离 | 95 百分位距离 | 检查范围 |
+| --- | --- | --- | --- |
+| 填孔后全脑外表面 | 187.1 μm | 579.7 μm | 外表面参与拟合 |
+| 大脑背侧外包络 | 162.7 μm | 400 μm | 28,381 个有效采样列 |
+| 大脑左侧外包络 | 181.1 μm | 500 μm | 13,476 个有效采样列 |
+| 大脑右侧外包络 | 161.3 μm | 400 μm | 13,477 个有效采样列 |
+
+另有 14 个左右脑区未参与区域拟合，其平均表面距离的中位数为 165.5 μm。脑桥、延髓的分界定义与覆盖差异明显，留出区域最高 95 百分位距离为 2.33 mm，报告保留全部差异。留出脑区仍共享参与拟合的整脑轮廓，不能称为独立动物或独立血管标志点验证。这些距离衡量跨图谱解剖标签贴合，不能解释为个体血管定位误差或手术安全距离。
+
+CT 采集前标本已取脑离颅，数据未证明完整保留硬脑膜血管及桥静脉连接；上矢状窦也未区分后来报道的上下腔室。未显示区域不能认定为无血管，不能据此规划个体手术路径。官网提供公开下载，未发现明确的数据再分发许可证；本项目保留 MICe 署名和来源，不为原始数据或衍生网格另行授予许可。公开分发应先核对来源条款。
+
+将两份标签下载到系统临时目录后，可复现配准和网格；配准不依赖 MRI 强度文件：
+
+```sh
+uv run --with numpy --with scipy --with nibabel --with pillow python scripts/register_mice_vasculature.py --brain-labels /tmp/mice-cache/cba_brain_labels.mnc --output /tmp/mice-cache/registration.json
+uv run --with numpy --with scipy --with nibabel --with scikit-image python scripts/prepare_mice_vasculature.py --cache /tmp/mice-cache --registration /tmp/mice-cache/registration.json
+```
+
+`tests/vasculature.test.ts` 验证标签、分类、校验值、网格拓扑、坐标范围与左右侧别。浏览器测试覆盖真实模型、类别筛选、主题、失败重试及背侧表面裁切。原始 MINC 文件不打包进网页。
+
+### 历史来源
+
+旧版曾使用 Todorov 等 2020 的 [VesSAP](https://doi.org/10.1038/s41592-020-0792-1) / [VesselGraph](https://github.com/jocpae/VesselGraph) 的 BL6J-no1 标本，以节点直线和直径档位显示。1.1.0 已删除停用的数据包、转换脚本和配准测试样本；实现记录可从 Git 历史追溯。旧数据的 [CC BY-NC 4.0](https://creativecommons.org/licenses/by-nc/4.0/) 许可仅适用于该旧来源，不能套用于当前 MICe 数据。
 
 另一候选是 [Demeulenaere 等的 3D ULM 数据](https://zenodo.org/records/6328308)，CC BY 4.0。实查其密度 MAT 只有 588 × 651 × 651 数组，没有原点、轴向或配准矩阵，因此未接入本页。
 

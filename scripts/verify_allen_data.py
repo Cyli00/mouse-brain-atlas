@@ -4,12 +4,13 @@
 import argparse
 import array
 import gzip
-import hashlib
 import json
 import math
 from pathlib import Path
 import struct
 import sys
+
+from data_assets import sha256
 
 
 def main() -> None:
@@ -28,10 +29,10 @@ def main() -> None:
     def unpack(asset: dict) -> bytes:
         packed = (args.data / asset["url"].removeprefix("/data/")).read_bytes()
         assert len(packed) == asset["bytes"]
-        assert hashlib.sha256(packed).hexdigest() == asset["sha256"]
+        assert sha256(packed) == asset["sha256"]
         raw = gzip.decompress(packed)
         assert len(raw) == asset["uncompressedBytes"]
-        assert hashlib.sha256(raw).hexdigest() == asset["uncompressedSha256"]
+        assert sha256(raw) == asset["uncompressedSha256"]
         return raw
 
     template_raw = unpack(manifest["template"])

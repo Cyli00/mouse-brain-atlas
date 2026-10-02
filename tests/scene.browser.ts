@@ -1,17 +1,11 @@
+import { atlasUrl as base, launchBrowser, collectPageErrors, waitForScene as ready } from "./helpers/browser";
 import assert from "node:assert/strict";
 import test from "node:test";
 import { mkdtemp, readFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
-import { chromium, expect, type Page } from "@playwright/test";
+import { expect, type Page } from "@playwright/test";
 import AxeBuilder from "@axe-core/playwright";
-
-async function ready(page: Page) {
-  await expect(page.locator(".three-host canvas")).toBeVisible();
-  await expect(page.getByRole("spinbutton", { name: "AP 坐标，毫米" })).toBeEnabled();
-  await expect(page.locator(".atlas-mesh-status")).toHaveCount(0, { timeout: 30000 });
-  await expect(page.locator(".mesh-status")).toHaveCount(0, { timeout: 30000 });
-}
 
 async function findRegion(page: Page) {
   const box = (await page.locator(".three-host canvas").boundingBox())!;
@@ -28,13 +22,12 @@ async function findRegion(page: Page) {
 }
 
 test("3D atlas supports real mesh picking, detail cards, rotation, pan, and isolation", async () => {
-  const browser = await chromium.launch({ channel: process.env.BROWSER_CHANNEL });
+  const browser = await launchBrowser();
   const context = await browser.newContext({ viewport: { width: 1512, height: 1000 } });
   const page = await context.newPage();
-  const base = process.env.ATLAS_TEST_URL ?? "http://127.0.0.1:5187";
+
   const screenshots = await mkdtemp(join(tmpdir(), "brain-studio-"));
-  const errors: string[] = [];
-  page.on("pageerror", (error) => errors.push(error.message));
+  const errors = collectPageErrors(page);
   page.on("console", (message) => {
     if (message.type() === "error" && !message.location().url.endsWith("/favicon.ico"))
       errors.push(`${message.text()} ${message.location().url}`);
@@ -122,7 +115,7 @@ test("3D atlas supports real mesh picking, detail cards, rotation, pan, and isol
 });
 
 test("a failed atlas surface can retry while other regions remain selectable", async () => {
-  const browser = await chromium.launch({ channel: process.env.BROWSER_CHANNEL });
+  const browser = await launchBrowser();
   const page = await browser.newPage({ viewport: { width: 1440, height: 1000 } });
   try {
     const manifest = JSON.parse(await readFile(new URL("../public/data/manifest.json", import.meta.url), "utf8"));
@@ -131,7 +124,7 @@ test("a failed atlas surface can retry while other regions remain selectable", a
     await page.route(`**${asset}`, (route) => fail
       ? route.fulfill({ status: 503, body: "Surface temporarily unavailable" })
       : route.continue());
-    await page.goto(process.env.ATLAS_TEST_URL ?? "http://127.0.0.1:5187");
+    await page.goto(base);
     await expect(page.locator(".atlas-mesh-status")).toContainText("未能", { timeout: 30000 });
     const hit = await findRegion(page);
     await page.mouse.click(hit.x, hit.y);
@@ -147,11 +140,11 @@ test("a failed atlas surface can retry while other regions remain selectable", a
 });
 
 test("touch selects a brain region and circuit mode retains its own controls", async () => {
-  const browser = await chromium.launch({ channel: process.env.BROWSER_CHANNEL });
+  const browser = await launchBrowser();
   const context = await browser.newContext({ viewport: { width: 390, height: 1000 }, isMobile: true, hasTouch: true });
   const page = await context.newPage();
   try {
-    await page.goto(process.env.ATLAS_TEST_URL ?? "http://127.0.0.1:5187");
+    await page.goto(base);
     await ready(page);
     await page.locator(".viewer-panel").scrollIntoViewIfNeeded();
     const box = (await page.locator(".three-host canvas").boundingBox())!;
@@ -174,14 +167,13 @@ test("touch selects a brain region and circuit mode retains its own controls", a
 });
 
 test("free rotation, Shift slice arrows, and live coordinates work in adult and embryo viewers", async () => {
-  const browser = await chromium.launch({ channel: process.env.BROWSER_CHANNEL });
+  const browser = await launchBrowser();
   const page = await browser.newPage({ viewport: { width: 1512, height: 1000 }, reducedMotion: "reduce" });
   const screenshots = await mkdtemp(join(tmpdir(), "brain-slice-gizmo-"));
-  const errors: string[] = [];
-  page.on("pageerror", (error) => errors.push(error.message));
+  const errors = collectPageErrors(page);
   try {
     for (const route of ["/", "/embryo?stage=E13.5"]) {
-      await page.goto((process.env.ATLAS_TEST_URL ?? "http://127.0.0.1:5187") + route);
+      await page.goto((base) + route);
       await ready(page);
       const canvas = page.locator(".three-host canvas");
       const box = (await canvas.boundingBox())!;
@@ -252,13 +244,12 @@ test("free rotation, Shift slice arrows, and live coordinates work in adult and 
 });
 
 test("right-clicking anywhere in the viewer offers normal-to-slice views without moving slices", async () => {
-  const browser = await chromium.launch({ channel: process.env.BROWSER_CHANNEL });
+  const browser = await launchBrowser();
   const context = await browser.newContext({ viewport: { width: 1512, height: 1000 }, reducedMotion: "reduce" });
   const page = await context.newPage();
   const screenshots = await mkdtemp(join(tmpdir(), "brain-orientation-"));
-  const errors: string[] = [];
-  page.on("pageerror", (error) => errors.push(error.message));
-  const base = process.env.ATLAS_TEST_URL ?? "http://127.0.0.1:5187";
+  const errors = collectPageErrors(page);
+
   try {
     for (const route of ["/", "/embryo?stage=E13.5"]) {
       await page.goto(base + route);
@@ -327,12 +318,11 @@ test("right-clicking anywhere in the viewer offers normal-to-slice views without
 });
 
 test("Control pans on macOS event paths without opening the orientation menu; Meta does not pan", async () => {
-  const browser = await chromium.launch({ channel: process.env.BROWSER_CHANNEL });
+  const browser = await launchBrowser();
   const page = await browser.newPage({ viewport: { width: 1512, height: 1000 }, reducedMotion: "reduce" });
-  const errors: string[] = [];
-  page.on("pageerror", (error) => errors.push(error.message));
+  const errors = collectPageErrors(page);
   try {
-    await page.goto(process.env.ATLAS_TEST_URL ?? "http://127.0.0.1:5187");
+    await page.goto(base);
     await ready(page);
     const canvas = page.locator(".three-host canvas");
     const box = (await canvas.boundingBox())!;
@@ -387,13 +377,12 @@ test("Control pans on macOS event paths without opening the orientation menu; Me
 });
 
 test("3D plane modes show transparent, tissue and partition planes without changing the shared position", async () => {
-  const browser = await chromium.launch({ channel: process.env.BROWSER_CHANNEL });
+  const browser = await launchBrowser();
   const context = await browser.newContext({ viewport: { width: 1512, height: 1000 }, reducedMotion: "reduce" });
   const page = await context.newPage();
   const screenshots = await mkdtemp(join(tmpdir(), "brain-plane-modes-"));
-  const errors: string[] = [];
-  page.on("pageerror", (error) => errors.push(error.message));
-  const base = process.env.ATLAS_TEST_URL ?? "http://127.0.0.1:5187";
+  const errors = collectPageErrors(page);
+
   try {
     for (const [route, prefix] of [["/", "allen"], ["/?slices=paxinos-kim", "pf"], ["/embryo?stage=E13.5", "embryo"]]) {
       await page.goto(base + route); await ready(page);

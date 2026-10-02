@@ -10,11 +10,8 @@ from __future__ import annotations
 import argparse
 import concurrent.futures
 import datetime
-import gzip
-import hashlib
 import json
 from pathlib import Path
-import struct
 import subprocess
 import tempfile
 import zipfile
@@ -23,6 +20,8 @@ import numpy as np
 from scipy.ndimage import map_coordinates
 from skimage.measure import marching_cubes
 
+from data_assets import mesh_bytes, sha256 as digest, write_gzip
+
 BASE = "https://download.alleninstitute.org/informatics-archive/current-release/mouse_annotation"
 ONTOLOGY_URL = "https://api.brain-map.org/api/v2/structure_graph_download/17.json"
 DOCS = "https://brain-map.org/support/documentation/allen-developing-mouse-brain-reference-atlas"
@@ -30,10 +29,6 @@ STAGES = {"E11.5": ("E11pt5", 1), "E13.5": ("E13pt5", 2), "E15.5": ("E15pt5", 3)
 REGION_IDS = [15739, 15569, 15622, 16211, 16309, 16375, 16509, 16650, 16751, 16809, 17092, 17220, 17352]
 BRAIN_ROOTS = [15566, 16649, 16808, 126651562, 126651722, 126651782]
 ROOT_ID = 15565
-
-
-def digest(raw: bytes) -> str:
-    return hashlib.sha256(raw).hexdigest()
 
 
 def save_json(path: Path, obj: object) -> None:
@@ -82,12 +77,8 @@ def read_volume(path: Path) -> tuple[np.ndarray, dict]:
 
 
 def pack_gzip(path: Path, raw: bytes, output_root: Path) -> dict:
-    compressed = gzip.compress(raw, compresslevel=9, mtime=0)
-    path.parent.mkdir(parents=True, exist_ok=True)
-    path.write_bytes(compressed)
     return {"url": "/embryo/" + path.relative_to(output_root).as_posix(), "compression": "gzip",
-            "bytes": len(compressed), "uncompressedBytes": len(raw), "sha256": digest(compressed),
-            "uncompressedSha256": digest(raw)}
+            **write_gzip(path, raw)}
 
 
 def pack_surface(mask: np.ndarray, path: Path, spacing: int, output_root: Path) -> dict:
@@ -98,7 +89,7 @@ def pack_surface(mask: np.ndarray, path: Path, spacing: int, output_root: Path) 
     )
     vertices = np.ascontiguousarray((vertices[:, ::-1] - 1) * spacing, dtype="<f4")
     faces = np.ascontiguousarray(faces[:, ::-1], dtype="<u4")
-    raw = struct.pack("<II", len(vertices), len(faces)) + vertices.tobytes() + faces.tobytes()
+    raw = mesh_bytes(len(vertices), len(faces), vertices.tobytes(), faces.tobytes())
     info = pack_gzip(path, raw, output_root)
     info.update({"format": "allen-mesh-v1", "vertexCount": len(vertices), "triangleCount": len(faces),
                  "boundsUm": [[float(vertices[:, i].min()), float(vertices[:, i].max())] for i in range(3)]})
