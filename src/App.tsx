@@ -1,3 +1,4 @@
+import { useI18n } from "./lib/i18n";
 import { AtlasWorkspace } from "./components/AtlasWorkspace";
 import { brainRegions, atlasReferences } from "./data/regions";
 import { embryoStages, embryoReferences } from "./data/embryo";
@@ -31,6 +32,7 @@ const adult: AtlasConfig = {
   annotationUrl: "https://atlas.brain-map.org/atlas?atlas=1",
 };
 export default function App() {
+  const { t, text } = useI18n();
   if (location.pathname.replace(/\/$/, "") !== "/embryo")
     return <AtlasWorkspace config={adult} />;
   const requested = new URLSearchParams(location.search).get("stage");
@@ -69,12 +71,12 @@ export default function App() {
       key={stage.id}
       config={config}
       stageNavigation={
-        <section className="development-timeline" aria-label="选择胚胎发育阶段">
+        <section className="development-timeline" aria-label={text("选择胚胎发育阶段")}>
           <div className="timeline-intro">
-            <strong>胚胎发育阶段</strong>
-            <span>独立参考标本 · 单侧标注</span>
+            <strong>{text("胚胎发育阶段")}</strong>
+            <span>{text("独立参考标本 · 单侧标注")}</span>
           </div>
-          <nav aria-label="发育时点">
+          <nav aria-label={text("发育时点")}>
             {embryoStages.map((s) => (
               <a
                 key={s.id}
@@ -82,7 +84,7 @@ export default function App() {
                 aria-current={s.id === stage.id ? "page" : undefined}
               >
                 <strong>{s.id}</strong>
-                <span>第 {s.id.slice(1)} 天</span>
+                <span>{t(`第 ${s.id.slice(1)} 天`, `Day ${s.id.slice(1)}`)}</span>
               </a>
             ))}
           </nav>

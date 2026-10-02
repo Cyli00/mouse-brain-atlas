@@ -9,6 +9,7 @@ import {
 } from "../lib/atlas";
 import { SliceView } from "./SliceView";
 import { SlicePresentationControl } from "./SlicePresentationControl";
+import { useI18n } from "../lib/i18n";
 type Props = {
   plane: PlaneName | null;
   onPlane: (plane: PlaneName | null) => void;
@@ -31,6 +32,7 @@ type Props = {
   onMapView: (value: boolean) => void;
 };
 export function SliceDialog(props: Props) {
+  const { t, text } = useI18n();
   const dialog = useRef<HTMLDialogElement>(null);
   useEffect(() => {
     const node = dialog.current;
@@ -57,30 +59,30 @@ export function SliceDialog(props: Props) {
         <header className="slice-dialog-heading">
           <div>
             <span className="eyebrow">
-              正交切片 · {props.sourceLabel ?? "放大查看"}
+              {t("正交切片", "Orthogonal slices")} · {props.sourceLabel ? text(props.sourceLabel) : t("放大查看", "Expanded view")}
             </span>
             <h2 id="slice-dialog-title">
-              {props.plane ? PLANES[props.plane].name : "切片"}
+              {props.plane ? text(PLANES[props.plane].name) : t("切片", "Slice")}
             </h2>
           </div>
           <button
             className="icon-button"
             autoFocus
-            aria-label="关闭放大切片"
+            aria-label={t("关闭放大切片", "Close expanded slice")}
             onClick={() => props.onPlane(null)}
           >
             <X size={20} />
           </button>
         </header>
         <div className="slice-dialog-tools">
-          <div className="segmented-control" aria-label="切换放大切面">
+          <div className="segmented-control" aria-label={t("切换放大切面", "Choose expanded slice plane")}>
             {PLANE_ORDER.map((name) => (
               <button
                 key={name}
                 aria-pressed={props.plane === name}
                 onClick={() => props.onPlane(name)}
               >
-                {PLANES[name].name}
+                {text(PLANES[name].name)}
               </button>
             ))}
           </div>
@@ -97,7 +99,7 @@ export function SliceDialog(props: Props) {
               checked={props.overlay}
               onChange={(e) => props.onOverlay(e.target.checked)}
             />
-            {props.detailed ? "边界与名称" : "脑区标注"}
+            {props.detailed ? t("边界与名称", "Boundaries and names") : t("脑区标注", "Region labels")}
           </label>
         </div>
         {props.data && props.plane && (
@@ -122,10 +124,10 @@ export function SliceDialog(props: Props) {
         <footer className="slice-dialog-footer">
           <ScanLine size={17} />
           <div>
-            <span>交点所在区域</span>
-            <strong>{props.probeName}</strong>
+            <span>{t("交点所在区域", "Region at crosshair")}</span>
+            <strong>{text(props.probeName)}</strong>
           </div>
-          <span className="keyboard-hint">Esc 关闭</span>
+          <span className="keyboard-hint">{t("Esc 关闭", "Esc to close")}</span>
         </footer>
       </div>
     </dialog>

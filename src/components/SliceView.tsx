@@ -30,6 +30,7 @@ import {
   type SliceRegion,
 } from "../lib/slice-segmentation";
 import { WHITE_MATTER_LABEL } from "../lib/white-matter";
+import { useI18n } from "../lib/i18n";
 import "./white-matter.css";
 export function SliceView({
   data,
@@ -64,6 +65,7 @@ export function SliceView({
   detailed?: boolean;
   mapView?: boolean;
 }) {
+  const { locale, t, text } = useI18n();
   const stage = useRef<HTMLDivElement>(null);
   const activePointer = useRef<number | null>(null);
   const touchStart = useRef<{ x: number; y: number; moved: boolean } | null>(null);
@@ -143,7 +145,7 @@ export function SliceView({
       <strong>
         {region.whiteMatter ? `\u25aa ${region.acronym}` : region.acronym}
       </strong>
-      <span>{region.name}</span>
+      <span>{text(region.name)}</span>
     </button>
   );
   const axis = ANATOMICAL_AXES[p.axis];
@@ -159,8 +161,10 @@ export function SliceView({
     mlZeroUm,
     dvZeroUm,
   ).toFixed(2);
-  const instructions =
-    "点击或拖动定位交点；方向键在切面内移动，Page Up / Page Down 切换相邻切片，按住 Shift 每次移动 5 个体素，Enter 或空格将交点放到切面中央。";
+  const instructions = t(
+    "点击或拖动定位交点；方向键在切面内移动，Page Up / Page Down 切换相邻切片，按住 Shift 每次移动 5 个体素，Enter 或空格将交点放到切面中央。",
+    "Click or drag to position the crosshair. Arrow keys move within the plane; Page Up / Page Down change slices. Hold Shift to move 5 voxels at a time. Enter or Space centers the crosshair in the slice.",
+  );
   useLayoutEffect(() => {
     const element = stage.current;
     if (!element) return;
@@ -227,18 +231,19 @@ export function SliceView({
     <section
       className={`slice-card${expanded ? " slice-card-expanded" : ""}${mapView ? " slice-card-map" : ""}`}
       style={{ "--plane-color": p.color } as React.CSSProperties}
-      aria-label={`${p.name}预览`}
+      aria-label={t(`${p.name}预览`, `${text(p.name)} preview`)}
     >
       <div className="slice-heading">
         <h3>
           <span className="plane-dot" />
-          {p.name}
-          <span>{p.english}</span>
+          {text(p.name)}
+          {locale === "zh" && <span>{p.english}</span>}
         </h3>
         <div className="slice-heading-actions">
           <span
             className="mono"
-            title={`${axis.name}，${reference}；坐标增加表示${increasing}`}
+            title={t(`${axis.name}，${reference}；坐标增加表示${increasing}`,
+              `${text(axis.name)}, ${text(reference)}; coordinates increase ${text(increasing)}`)}
           >
             {axis.abbreviation} {depthMm} <small>mm</small>
           </span>
@@ -246,9 +251,9 @@ export function SliceView({
             <button
               type="button"
               className="slice-expand-button"
-              aria-label={`放大查看${p.name}`}
+              aria-label={t(`放大查看${p.name}`, `Expand ${text(p.name)} slice`)}
               aria-haspopup="dialog"
-              title={`放大查看${p.name}`}
+              title={t(`放大查看${p.name}`, `Expand ${text(p.name)} slice`)}
               onClick={onExpand}
             >
               <Maximize2 size={15} />
@@ -258,8 +263,8 @@ export function SliceView({
       </div>
       {expanded && detailed && (
         <div className="slice-zoom-tools">
-          <span>缩放查看小分区</span>
-          <div role="group" aria-label="分区图缩放">
+          <span>{t("缩放查看小分区", "Zoom to inspect small regions")}</span>
+          <div role="group" aria-label={t("分区图缩放", "Region map zoom")}>
             {[1, 2, 3, 4].map((value) => (
               <button
                 key={value}
@@ -271,7 +276,7 @@ export function SliceView({
               </button>
             ))}
           </div>
-          <span>缩写自动避让，完整名称见下方列表</span>
+          <span>{t("缩写自动避让，完整名称见下方列表", "Labels avoid overlap; full names are listed below")}</span>
         </div>
       )}
       <div
@@ -282,7 +287,7 @@ export function SliceView({
           className="slice-image"
           type="button"
           style={displayedSize}
-          aria-label={`${p.name}定位，${ANATOMICAL_AXES.map((a, i) => `${a.abbreviation} ${coordinateMm(position[i], i, data.spacing, apZeroUm, mlZeroUm, dvZeroUm).toFixed(2)} 毫米`).join("，")}`}
+          aria-label={`${text(p.name)}${t("定位，", " crosshair position, ")}${ANATOMICAL_AXES.map((a, i) => `${a.abbreviation} ${coordinateMm(position[i], i, data.spacing, apZeroUm, mlZeroUm, dvZeroUm).toFixed(2)} ${t("毫米", "millimetres")}`).join(t("，", ", "))}`}
           aria-describedby={instructionsId}
           title={instructions}
           onPointerDown={(e) => {
@@ -435,12 +440,14 @@ export function SliceView({
         </span>
       </div>
       <label className="slice-slider">
-        <span title={`${axis.name}，${reference}；${increasing}增加`}>
+        <span title={t(`${axis.name}，${reference}；${increasing}增加`,
+          `${text(axis.name)}, ${text(reference)}; increasing ${text(increasing)}`)}>
           {axis.abbreviation}
         </span>
         <input
-          aria-label={`${p.name}深度，${axis.name}`}
-          aria-valuetext={`${depthMm} 毫米，${reference}；第 ${position[p.axis] + 1} 层，共 ${data.dimensions[p.axis]} 层；坐标增加表示${increasing}`}
+          aria-label={t(`${p.name}深度，${axis.name}`, `${text(p.name)} depth, ${text(axis.name)}`)}
+          aria-valuetext={t(`${depthMm} 毫米，${reference}；第 ${position[p.axis] + 1} 层，共 ${data.dimensions[p.axis]} 层；坐标增加表示${increasing}`,
+            `${depthMm} millimetres, ${text(reference)}; slice ${position[p.axis] + 1} of ${data.dimensions[p.axis]}; coordinates increase ${text(increasing)}`)}
           type="range"
           min="0"
           max={data.dimensions[p.axis] - 1}
@@ -460,35 +467,36 @@ export function SliceView({
         id={instructionsId}
         title={instructions}
       >
-        <span className="desktop-copy">方向键定位 · Page Up / Down 换层 · Shift × 5 · Enter 居中</span>
-        <span className="mobile-copy">点按图像定位 · 滑杆调整深度</span>
+        <span className="desktop-copy">{t("方向键定位 · Page Up / Down 换层 · Shift × 5 · Enter 居中", "Arrows to move · Page Up / Down for slices · Shift × 5 · Enter to center")}</span>
+        <span className="mobile-copy">{t("点按图像定位 · 滑杆调整深度", "Tap to position · Slide to change depth")}</span>
       </p>
       {showWhiteMatterLegend && (
         <p className="slice-white-matter-legend">
           <span className="slice-white-matter-swatch" aria-hidden="true" />
           <span>
-            <strong aria-hidden="true">▪ </strong>前缀缩写与暖棕边界 =
-            {WHITE_MATTER_LABEL}；其余为脑区与其他结构
+            <strong aria-hidden="true">▪ </strong>{t(`前缀缩写与暖棕边界 =${WHITE_MATTER_LABEL}；其余为脑区与其他结构`,
+              `Prefixed acronyms and warm brown boundaries = ${text(WHITE_MATTER_LABEL)}; other labels indicate brain regions and other structures`)}
           </span>
         </p>
       )}
       {expanded && segmentation && (
         <details className="slice-region-directory">
           <summary>
-            本切面全部分区 · {segmentation.regions.length} 个 · 点击名称定位
+            {t(`本切面全部分区 · ${segmentation.regions.length} 个 · 点击名称定位`,
+              `All regions in this slice · ${segmentation.regions.length} · Click a name to locate`)}
           </summary>
           <div className="slice-region-list">
             {segmentation.regions.length === 0 ? (
-              <p>本切面没有标注分区。</p>
+              <p>{t("本切面没有标注分区。", "This slice has no annotated regions.")}</p>
             ) : detailed ? (
               <>
                 {whiteRegions.length > 0 && (
                   <section
                     className="slice-region-group"
-                    aria-label={WHITE_MATTER_LABEL}
+                    aria-label={text(WHITE_MATTER_LABEL)}
                   >
                     <h4>
-                      {WHITE_MATTER_LABEL} · {whiteRegions.length} 个
+                      {text(WHITE_MATTER_LABEL)} · {t(`${whiteRegions.length} 个`, `${whiteRegions.length}`)}
                     </h4>
                     {whiteRegions.map(renderRegion)}
                   </section>
@@ -496,9 +504,9 @@ export function SliceView({
                 {greyRegions.length > 0 && (
                   <section
                     className="slice-region-group"
-                    aria-label="脑区与其他结构"
+                    aria-label={t("脑区与其他结构", "Brain regions and other structures")}
                   >
-                    <h4>脑区与其他结构 · {greyRegions.length} 个</h4>
+                    <h4>{t(`脑区与其他结构 · ${greyRegions.length} 个`, `Brain regions and other structures · ${greyRegions.length}`)}</h4>
                     {greyRegions.map(renderRegion)}
                   </section>
                 )}

@@ -14,6 +14,7 @@ import {
 } from "lucide-react";
 import { brainCircuits } from "../data/circuits";
 import type { BrainRegion } from "../data/regions";
+import { useI18n, translateText } from "../lib/i18n";
 
 type BrowseMode = "regions" | "circuits";
 
@@ -40,6 +41,8 @@ export function RegionBrowser({
   onCircuitSelect,
   searchInputRef,
 }: Props) {
+  const { locale, t, text } = useI18n();
+  const regionName = (region: BrainRegion) => locale === "en" ? region.englishName : region.name;
   const id = useId();
   const localSearchRef = useRef<HTMLInputElement>(null);
   const searchRef = searchInputRef ?? localSearchRef;
@@ -64,7 +67,7 @@ export function RegionBrowser({
   const searchMatches = useMemo(
     () =>
       regions.filter((region) =>
-        `${region.name} ${region.englishName} ${region.acronym} ${region.category}`
+        `${region.name} ${region.englishName} ${region.acronym} ${region.category} ${translateText(region.category, "en")}`
           .toLowerCase()
           .includes(normalizedQuery),
       ),
@@ -146,7 +149,7 @@ export function RegionBrowser({
   return (
     <div className="region-browser">
       {!embryonic && (
-        <div className="explore-switch" role="tablist" aria-label="探索方式">
+        <div className="explore-switch" role="tablist" aria-label={t("探索方式", "Explore by")}>
           {(["regions", "circuits"] as const).map((tab) => (
             <button
               key={tab}
@@ -162,7 +165,7 @@ export function RegionBrowser({
                 if (changeModeWithKeyboard(event.key)) event.preventDefault();
               }}
             >
-              {tab === "regions" ? "解剖分区" : "经典环路"}
+              {tab === "regions" ? t("解剖分区", "Regions") : t("经典环路", "Circuits")}
             </button>
           ))}
         </div>
@@ -180,9 +183,9 @@ export function RegionBrowser({
               ref={searchRef}
               type="search"
               value={query}
-              placeholder="名称、英文或缩写"
-              title="按 / 进入脑区搜索"
-              aria-label="搜索脑区"
+              placeholder={t("名称、英文或缩写", "Name or abbreviation")}
+              title={t("按 / 进入脑区搜索", "Press / to search regions")}
+              aria-label={t("搜索脑区", "Search brain regions")}
               aria-describedby={`${id}-results`}
               onCompositionStart={() => {
                 composing.current = true;
@@ -205,7 +208,7 @@ export function RegionBrowser({
             {query && (
               <button
                 type="button"
-                aria-label="清除脑区搜索"
+                aria-label={t("清除脑区搜索", "Clear region search")}
                 onClick={() => clearSearch()}
               >
                 <X size={14} aria-hidden="true" />
@@ -216,21 +219,21 @@ export function RegionBrowser({
             <div className="catalog-filter-row">
               <select
                 className="category-select"
-                aria-label="筛选脑区分类"
+                aria-label={t("筛选脑区分类", "Filter region category")}
                 value={category}
                 onChange={(event) => changeCategory(event.target.value)}
               >
-                <option value="全部">全部分类</option>
-                {categories.map((name) => <option key={name} value={name}>{name}</option>)}
+                <option value="全部">{t("全部分类", "All categories")}</option>
+                {categories.map((name) => <option key={name} value={name}>{text(name)}</option>)}
               </select>
-              <span className="catalog-result-total" aria-hidden="true">{filtered.length} 项</span>
+              <span className="catalog-result-total" aria-hidden="true">{t(`${filtered.length} 项`, `${filtered.length} ${filtered.length === 1 ? "result" : "results"}`)}</span>
             </div>
           )}
           <span id={`${id}-results`} className="sr-only" role="status" aria-live="polite" aria-atomic="true">
-            {filtered.length} 个结构{category !== "全部" ? `，${category}` : ""}
+            {t(`${filtered.length} 个结构${category !== "全部" ? `，${category}` : ""}`, `${filtered.length} ${filtered.length === 1 ? "structure" : "structures"}${category !== "全部" ? `, ${text(category)}` : ""}`)}
           </span>
         </div>
-        <div ref={listRef} className="region-list" aria-label="脑区搜索结果">
+        <div ref={listRef} className="region-list" aria-label={t("脑区搜索结果", "Region search results")}>
           {overview ? (
             <div className="guide-category-grid">
               {groups.map((group) => (
@@ -241,7 +244,7 @@ export function RegionBrowser({
                   onClick={() => changeCategory(group.name)}
                 >
                   <span className="guide-category-color" style={{ backgroundColor: group.regions[0].color }} aria-hidden="true" />
-                  <strong>{group.name}</strong>
+                  <strong>{text(group.name)}</strong>
                   <small>{group.regions.length}</small>
                 </button>
               ))}
@@ -251,7 +254,7 @@ export function RegionBrowser({
               {groups.map((group) => (
                 <section className="region-group" key={group.name}>
                   <h3 className="guide-group-heading" hidden={category !== "全部"}>
-                    {group.name}
+                    {text(group.name)}
                     <span>{group.regions.length}</span>
                   </h3>
                   <div className="guide-region-grid">
@@ -264,17 +267,17 @@ export function RegionBrowser({
                         type="button"
                         className={`guide-region-card${selected === region.id ? " selected" : ""}`}
                         aria-pressed={selected === region.id}
-                        aria-label={`${region.name} ${region.acronym}，定位并查看解说`}
+                        aria-label={t(`${region.name} ${region.acronym}，定位并查看解说`, `${region.englishName} ${region.acronym}, locate and read details`)}
                         onClick={() => onSelect(region.id)}
                       >
                         <span className="guide-region-copy">
-                          <strong>{region.name}</strong>
-                          <span className="guide-region-english">{region.englishName}</span>
+                          <strong>{regionName(region)}</strong>
+                          {locale === "zh" && <span className="guide-region-english">{region.englishName}</span>}
                         </span>
                         <span className="guide-region-symbol" style={{ "--region-color": region.color } as React.CSSProperties}>
                           {region.acronym}
                         </span>
-                        {selected === region.id ? <Check size={15} aria-label="已选" /> : <ArrowUpRight size={15} aria-hidden="true" />}
+                        {selected === region.id ? <Check size={15} aria-label={t("已选", "Selected")} /> : <ArrowUpRight size={15} aria-hidden="true" />}
                       </button>
                     ))}
                   </div>
@@ -285,21 +288,21 @@ export function RegionBrowser({
           {!filtered.length && (
             <div className="empty-results catalog-status" role="status">
               <Search size={23} aria-hidden="true" />
-              <p>未找到匹配脑区</p>
+              <p>{t("未找到匹配脑区", "No matching regions")}</p>
               <span>
                 {category === "全部"
-                  ? "试试中文名称、英文名称或缩写。"
-                  : `当前只搜索“${category}”。`}
+                  ? t("试试中文名称、英文名称或缩写。", "Try a Chinese or English name, or an abbreviation.")
+                  : t(`当前只搜索“${category}”。`, `Searching only in “${text(category)}”.`)}
               </span>
               {category !== "全部" &&
                 normalizedQuery &&
                 searchMatches.length > 0 && (
                   <button type="button" onClick={() => changeCategory("全部")}>
-                    在全部脑区中搜索（{searchMatches.length}）
+                    {t(`在全部脑区中搜索（${searchMatches.length}）`, `Search all regions (${searchMatches.length})`)}
                   </button>
                 )}
               <button type="button" onClick={() => clearSearch(true)}>
-                清除搜索与筛选
+                {t("清除搜索与筛选", "Clear search and filters")}
               </button>
             </div>
           )}
@@ -321,15 +324,14 @@ export function RegionBrowser({
                 aria-pressed={activeCircuitId === circuit.id}
                 onClick={() => onCircuitSelect(circuit.id)}
               >
-                <strong>{circuit.name}</strong>
-                <span>{circuit.subtitle}</span>
+                <strong>{text(circuit.name)}</strong>
+                <span>{text(circuit.subtitle)}</span>
                 <small>
-                  {circuit.nodeIds.length} 个区域 · {circuit.edges.length}{" "}
-                  条关系
+                  {t(`${circuit.nodeIds.length} 个区域 · ${circuit.edges.length} 条关系`, `${circuit.nodeIds.length} regions · ${circuit.edges.length} connections`)}
                 </small>
               </button>
             ))}
-            <p>节点可定位至三维脑和切片。连线仅示意投射关系。</p>
+            <p>{t("节点可定位至三维脑和切片。连线仅示意投射关系。", "Locate nodes in the 3D brain and slices. Connections are schematic projections.")}</p>
           </div>
         </div>
       )}

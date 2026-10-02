@@ -1,5 +1,6 @@
 import { ArrowUpRight } from "lucide-react";
 import type { BrainReference } from "../data/regions";
+import { useI18n } from "../lib/i18n";
 export function Reference({
   reference,
   index,
@@ -7,6 +8,7 @@ export function Reference({
   reference: BrainReference;
   index: number;
 }) {
+  const { t, text } = useI18n();
   return (
     <li className="reference">
       <span className="reference-index">
@@ -14,14 +16,14 @@ export function Reference({
       </span>
       <div>
         <a href={reference.url} target="_blank" rel="noreferrer">
-          {reference.title}
+          {text(reference.title)}
           <ArrowUpRight size={13} />
         </a>
-        <span className="reference-citation">{reference.year} · {reference.journal}</span>
+        <span className="reference-citation">{reference.year} · {text(reference.journal)}</span>
         <details>
-          <summary>本页文献解读</summary>
-          <p>{reference.finding}</p>
-          <p className="reference-authors">{reference.authors}</p>
+          <summary>{t("本页文献解读", "How this source is used")}</summary>
+          <p>{text(reference.finding)}</p>
+          <p className="reference-authors">{text(reference.authors)}</p>
         </details>
       </div>
     </li>

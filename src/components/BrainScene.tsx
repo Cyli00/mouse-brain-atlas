@@ -12,6 +12,7 @@ import { alignSceneCamera, rotateSceneCamera, SCENE_DIRECTIONS, ScenePointerGest
 import type { Vasculature, VesselFilter } from "../lib/vasculature";
 import { createSceneVasculature, vesselColorsFromStyle } from "../lib/scene-vasculature";
 import { invalidateMeshCache, loadMeshGeometry } from "../lib/mesh-cache";
+import { useI18n } from "../lib/i18n";
 import {
   PLANES,
   PLANE_ORDER,
@@ -74,7 +75,9 @@ function disposeMesh(mesh: THREE.Mesh) {
     m.dispose();
   });
 }
+const SCENE_ARIA_LABEL = "小鼠三维脑视图，点击脑区查看详情，拖动旋转，Ctrl 拖动平移，Shift 显示切面箭头，方向键旋转，Enter 查看所选脑区，F 聚焦，Home 查看全脑";
 export function BrainScene(props: Props) {
+  const { locale, t, text } = useI18n();
   const host = useRef<HTMLDivElement>(null),
     api = useRef<SceneAPI | null>(null),
     latest = useRef(props);
@@ -172,7 +175,7 @@ export function BrainScene(props: Props) {
     container.appendChild(renderer.domElement);
     renderer.domElement.setAttribute(
       "aria-label",
-      "小鼠三维脑视图，点击脑区查看详情，拖动旋转，Ctrl 拖动平移，Shift 显示切面箭头，方向键旋转，Enter 查看所选脑区，F 聚焦，Home 查看全脑",
+      SCENE_ARIA_LABEL,
     );
     renderer.domElement.setAttribute("role", "img");
     renderer.domElement.setAttribute("aria-describedby", helpId);
@@ -1056,6 +1059,14 @@ export function BrainScene(props: Props) {
       renderer.domElement.remove();
     };
   }, [props.data, retry, helpId]);
+  useEffect(() => {
+    const container = host.current;
+    container?.querySelector("canvas")?.setAttribute("aria-label", text(SCENE_ARIA_LABEL));
+    container?.querySelector(".slice-gizmo")?.setAttribute("aria-label", text("正交切面位置箭头"));
+    container?.querySelectorAll<HTMLElement>(".slice-gizmo [data-axis]").forEach((handle) => {
+      handle.setAttribute("aria-label", text(`${handle.dataset.axis} 切面位置`));
+    });
+  }, [text, props.data, retry]);
   useEffect(
     () => api.current?.update(props),
     [
@@ -1086,8 +1097,8 @@ export function BrainScene(props: Props) {
       <div ref={host} className="three-host" />
       <div className="scene-caption">
         <span className="eyebrow">ANATOMY STUDIO</span>
-        <span>{props.datasetLabel ?? "Allen CCFv3"}</span>
-        <span className="scene-coverage">{props.circuit ? `${props.circuit.nodeIds.length} 个环路节点` : props.selected < 0 ? "当前白质结构" : `${props.regions?.filter((r) => r.id > 0 && props.data.meshes[String(r.id)]).length ?? 0} 个导览脑区`}</span>
+        <span>{text(props.datasetLabel ?? "Allen CCFv3")}</span>
+        <span className="scene-coverage">{props.circuit ? t(`${props.circuit.nodeIds.length} 个环路节点`, `${props.circuit.nodeIds.length} circuit regions`) : props.selected < 0 ? t("当前白质结构", "Selected white matter structure") : t(`${props.regions?.filter((r) => r.id > 0 && props.data.meshes[String(r.id)]).length ?? 0} 个导览脑区`, `${props.regions?.filter((r) => r.id > 0 && props.data.meshes[String(r.id)]).length ?? 0} featured regions`)}</span>
       </div>
       {hovered && hoveredRegion && !props.circuit && (
         <div className="scene-hover-label" style={{
@@ -1095,7 +1106,7 @@ export function BrainScene(props: Props) {
           top: Math.max(72, hovered.y - 52),
         }}>
           <span className="region-dot" style={{ background: hoveredRegion.color }} />
-          <strong>{hoveredRegion.name}</strong><small>{hoveredRegion.acronym} · 点击查看</small>
+          <strong>{text(hoveredRegion.name)}</strong><small>{hoveredRegion.acronym} · {t("点击查看", "Click for details")}</small>
         </div>
       )}
       {detailsOpen && selectedRegion && !props.circuit && (
@@ -1108,48 +1119,49 @@ export function BrainScene(props: Props) {
           }}>
           <div className="scene-region-meta">
             <span className="region-dot" style={{ background: selectedRegion.color }} />
-            <span>{selectedRegion.category}</span>
-            <button aria-label="关闭脑区详情" title="关闭脑区详情" onClick={() => {
+            <span>{text(selectedRegion.category)}</span>
+            <button aria-label={t("关闭脑区详情", "Close region details")} title={t("关闭脑区详情", "Close region details")} onClick={() => {
               setDetailsOpen(false);
               host.current?.querySelector("canvas")?.focus({ preventScroll: true });
             }}><X size={17} /></button>
           </div>
-          <h2 id={cardTitle}>{selectedRegion.name}</h2>
-          <p className="scene-region-english">{selectedRegion.englishName} · {selectedRegion.acronym}</p>
-          <p className="scene-region-summary">{selectedRegion.summary}</p>
+          <h2 id={cardTitle}>{text(selectedRegion.name)}</h2>
+          <p className="scene-region-english">{locale === "zh" ? `${selectedRegion.englishName} · ` : ""}{selectedRegion.acronym}</p>
+          <p className="scene-region-summary">{text(selectedRegion.summary)}</p>
           <div className="scene-region-actions">
-            <button onClick={() => { props.onIsolateRegion(true); api.current?.focus(); }}><Focus size={15} />单独观察</button>
-            <button onClick={props.onLocateSlices}><Crosshair size={15} />定位切片</button>
+            <button onClick={() => { props.onIsolateRegion(true); api.current?.focus(); }}><Focus size={15} />{t("单独观察", "Isolate structure")}</button>
+            <button onClick={props.onLocateSlices}><Crosshair size={15} />{t("定位切片", "Locate in slices")}</button>
           </div>
           <button className="scene-read-more" onClick={() => { setDetailsOpen(false); props.onReadRegion(); }}>
-            功能、证据与文献 <ArrowUpRight size={16} />
+            {t("功能、证据与文献", "Function, evidence and references")} <ArrowUpRight size={16} />
           </button>
         </section>
       )}
       {orientationPosition && (
         <div ref={orientation} popover="auto" className="scene-orientation" role="dialog"
-          aria-label="正对切面" style={{ left: orientationPosition.x, top: orientationPosition.y }}
+          aria-label={t("正对切面", "Face a slice plane")} style={{ left: orientationPosition.x, top: orientationPosition.y }}
           onToggle={(event) => { if (event.newState === "closed") setOrientationPosition(null); }}>
-          <strong>正对切面</strong>
-          <p>保持切面位置、缩放与观察中心</p>
+          <strong>{t("正对切面", "Face a slice plane")}</strong>
+          <p>{t("保持切面位置、缩放与观察中心", "Preserves slice positions, zoom and view center")}</p>
           {PLANE_ORDER.map((name) => (
-            <div className="scene-orientation-group" key={name} role="group" aria-label={PLANES[name].name}>
+            <div className="scene-orientation-group" key={name} role="group" aria-label={text(PLANES[name].name)}>
               <span className="scene-orientation-plane">
                 <span className="region-dot" style={{ background: PLANES[name].color }} />
-                {PLANES[name].name}
+                {text(PLANES[name].name)}
               </span>
               <div className="scene-orientation-sides">
                 {(Object.keys(SCENE_DIRECTIONS) as SceneDirection[])
                   .filter((direction) => SCENE_DIRECTIONS[direction].plane === name)
                   .map((direction) => (
                     <button key={direction} type="button"
-                      aria-label={`${PLANES[name].name}，从${SCENE_DIRECTIONS[direction].label}观察`}
+                      aria-label={t(`${PLANES[name].name}，从${SCENE_DIRECTIONS[direction].label}观察`,
+                        `${text(PLANES[name].name)}, view from ${text(SCENE_DIRECTIONS[direction].label)}`)}
                       onClick={() => {
                         api.current?.align(direction);
                         orientation.current?.hidePopover();
                         host.current?.querySelector("canvas")?.focus({ preventScroll: true });
                       }}>
-                      从{SCENE_DIRECTIONS[direction].label}看
+                      {t(`从${SCENE_DIRECTIONS[direction].label}看`, `From ${text(SCENE_DIRECTIONS[direction].label)}`)}
                     </button>
                   ))}
               </div>
@@ -1158,14 +1170,14 @@ export function BrainScene(props: Props) {
         </div>
       )}
       <div className="scene-actions">
-        {!props.circuit && <button className="scene-details-button" disabled={!ready} onClick={() => setDetailsOpen(!detailsOpen)} aria-expanded={detailsOpen} aria-label="脑区详情"><span className="desktop-copy">脑区详情</span><span className="mobile-copy">详情</span></button>}
-        {props.circuit && <button className="scene-circuit-focus" type="button" aria-label="聚焦整个环路" title="聚焦整个环路" disabled={!ready} onClick={() => api.current?.focusCircuit()}>全环路</button>}
-        <button className="scene-orientation-button" type="button" disabled={!ready} aria-label="选择观察方向" onClick={() => api.current?.openOrientation()}>视角</button>
+        {!props.circuit && <button className="scene-details-button" disabled={!ready} onClick={() => setDetailsOpen(!detailsOpen)} aria-expanded={detailsOpen} aria-label={t("脑区详情", "Region details")}><span className="desktop-copy">{t("脑区详情", "Region details")}</span><span className="mobile-copy">{t("详情", "Details")}</span></button>}
+        {props.circuit && <button className="scene-circuit-focus" type="button" aria-label={t("聚焦整个环路", "Focus entire circuit")} title={t("聚焦整个环路", "Focus entire circuit")} disabled={!ready} onClick={() => api.current?.focusCircuit()}>{t("全环路", "Full circuit")}</button>}
+        <button className="scene-orientation-button" type="button" disabled={!ready} aria-label={t("选择观察方向", "Choose view direction")} onClick={() => api.current?.openOrientation()}>{t("视角", "View")}</button>
         <button
           type="button"
           className="scene-focus-button"
-          aria-label="聚焦所选结构"
-          title="聚焦所选结构（F）"
+          aria-label={t("聚焦所选结构", "Focus selected structure")}
+          title={t("聚焦所选结构（F）", "Focus selected structure (F)")}
           disabled={!ready}
           onClick={() => {
 
@@ -1173,13 +1185,13 @@ export function BrainScene(props: Props) {
           }}
         >
           <Focus size={17} aria-hidden="true" />
-          <span>聚焦所选结构</span>
+          <span>{t("聚焦所选结构", "Focus selected structure")}</span>
         </button>
         <button
           type="button"
           disabled={!ready}
-          aria-label="放大三维脑"
-          title="放大"
+          aria-label={t("放大三维脑", "Zoom in on the 3D brain")}
+          title={t("放大", "Zoom in")}
           onClick={() => api.current?.zoom(0.85)}
         >
           <Plus size={17} />
@@ -1187,8 +1199,8 @@ export function BrainScene(props: Props) {
         <button
           type="button"
           disabled={!ready}
-          aria-label="缩小三维脑"
-          title="缩小"
+          aria-label={t("缩小三维脑", "Zoom out of the 3D brain")}
+          title={t("缩小", "Zoom out")}
           onClick={() => api.current?.zoom(1.15)}
         >
           <Minus size={17} />
@@ -1196,8 +1208,8 @@ export function BrainScene(props: Props) {
         <button
           type="button"
           disabled={!ready}
-          aria-label="重置三维视角"
-          title="查看全脑（Home）"
+          aria-label={t("重置三维视角", "Reset 3D view")}
+          title={t("查看全脑（Home）", "View the whole brain (Home)")}
           onClick={() => {
 
             api.current?.reset();
@@ -1207,30 +1219,29 @@ export function BrainScene(props: Props) {
         </button>
       </div>
       <div className="scene-instruction" id={helpId}>
-        <span className="desktop-copy">{props.circuit ? "悬停强调 · 点击保持 · 拖动旋转 · 右键正对切面 · 滚轮缩放 · Esc 清除" : "点击选区 · 拖动旋转 · Ctrl 平移 · Shift 切面 · 右键正对切面 · 滚轮缩放"}</span>
-        <span className="mobile-copy">单指旋转 · 双指缩放与平移</span>
+        <span className="desktop-copy">{props.circuit ? t("悬停强调 · 点击保持 · 拖动旋转 · 右键正对切面 · 滚轮缩放 · Esc 清除", "Hover to highlight · Click to hold · Drag to rotate · Right-click for plane views · Scroll to zoom · Esc to clear") : t("点击选区 · 拖动旋转 · Ctrl 平移 · Shift 切面 · 右键正对切面 · 滚轮缩放", "Click to select · Drag to rotate · Ctrl to pan · Shift for slices · Right-click for plane views · Scroll to zoom")}</span>
+        <span className="mobile-copy">{t("单指旋转 · 双指缩放与平移", "One finger to rotate · Two fingers to zoom and pan")}</span>
       </div>
       <details className="scene-help">
         <summary>
           <CircleHelp size={16} aria-hidden="true" />
-          <span>操作帮助</span>
+          <span>{t("操作帮助", "Controls")}</span>
         </summary>
         <div className="scene-help-content">
           <p>
-            单击彩色脑区打开详情并同步目录和切片。拖动旋转，Ctrl + 拖动平移；按住 Shift 显示正交切面箭头，拖动 AP、DV、ML 箭头移动对应切面，滚轮缩放；触屏单指旋转、双指缩放和平移。
+            {t("单击彩色脑区打开详情并同步目录和切片。拖动旋转，Ctrl + 拖动平移；按住 Shift 显示正交切面箭头，拖动 AP、DV、ML 箭头移动对应切面，滚轮缩放；触屏单指旋转、双指缩放和平移。", "Click a colored region to open its details and synchronize the catalog and slices. Drag to rotate, Ctrl-drag to pan, and scroll to zoom. Hold Shift to show orthogonal slice handles; drag the AP, DV or ML handle to move its plane. On touchscreens, use one finger to rotate and two fingers to zoom and pan.")}
           </p>
           <p>
-            按 Tab 聚焦三维视图后，用方向键旋转，+ / − 缩放，F
-            聚焦所选结构，Home 返回全脑，Enter 打开详情，Esc 关闭。也可用脑区索引选择被外层遮挡的结构。
+            {t("按 Tab 聚焦三维视图后，用方向键旋转，+ / − 缩放，F 聚焦所选结构，Home 返回全脑，Enter 打开详情，Esc 关闭。也可用脑区索引选择被外层遮挡的结构。", "Tab to the 3D view, then use arrow keys to rotate, + / − to zoom, F to focus the selected structure, Home for the whole brain, Enter for details, and Esc to close. Use the region index to select structures hidden beneath outer surfaces.")}
           </p>
           <p>
-            在三维视图任意位置右键，可从头侧／尾侧正对冠状面、左侧／右侧正对矢状面、腹侧／背侧正对水平面，保持切面位置、缩放和观察中心。切换脑区后，可用“聚焦所选结构”查看小核团。
+            {t("在三维视图任意位置右键，可从头侧／尾侧正对冠状面、左侧／右侧正对矢状面、腹侧／背侧正对水平面，保持切面位置、缩放和观察中心。切换脑区后，可用“聚焦所选结构”查看小核团。", "Right-click anywhere in the 3D view to face the coronal plane from the anterior or posterior side, the sagittal plane from the left or right, or the horizontal plane from the ventral or dorsal side. Slice positions, zoom and view center stay fixed. After changing regions, use “Focus selected structure” to inspect small nuclei.")}
           </p>
-          <button type="button" disabled={!ready} onClick={() => api.current?.openOrientation()}>正对切面…</button>
+          <button type="button" disabled={!ready} onClick={() => api.current?.openOrientation()}>{t("正对切面…", "Face a slice plane…")}</button>
         </div>
       </details>
-      <div className="axis-legend" aria-label="当前交点坐标，毫米">
-        <span className="axis-legend-title">交点 · mm</span>
+      <div className="axis-legend" aria-label={t("当前交点坐标，毫米", "Current crosshair coordinates, millimetres")}>
+        <span className="axis-legend-title">{t("交点 · mm", "Crosshair · mm")}</span>
         {(["coronal", "horizontal", "sagittal"] as const).map((name) => {
           const axis = PLANES[name].axis;
           const label = axis === 0 ? "AP" : axis === 1 ? "DV" : "ML";
@@ -1243,40 +1254,40 @@ export function BrainScene(props: Props) {
       </div>
       {props.circuit && (
         <div className="scene-circuit-label">
-          {props.circuit.name} · {circuitSelectionLabel}
+          {text(props.circuit.name)} · {text(circuitSelectionLabel)}
         </div>
       )}
       {circuitStatus && (
         <div className="circuit-load-status" role="status">
-          {circuitStatus}
+          {text(circuitStatus)}
           {circuitStatus.includes("未能") && (
             <button type="button" onClick={retryScene}>
-              重试
+              {t("重试", "Retry")}
             </button>
           )}
         </div>
       )}
       {atlasStatus && !props.circuit && (
         <div className="atlas-mesh-status" role="status">
-          {atlasStatus}
-          {atlasStatus.includes("未能") && <button onClick={retryScene}>重试</button>}
+          {text(atlasStatus)}
+          {atlasStatus.includes("未能") && <button onClick={retryScene}>{t("重试", "Retry")}</button>}
         </div>
       )}
       {(rootLoading || meshStatus) && (
         <div className="mesh-status" role="status">
-          {rootLoading ? "正在载入全脑表面…" : meshStatus}
+          {text(rootLoading ? "正在载入全脑表面…" : meshStatus)}
           {!rootLoading && meshStatus.includes("失败") && (
             <button type="button" onClick={retryScene}>
-              重试
+              {t("重试", "Retry")}
             </button>
           )}
         </div>
       )}
       {error && (
         <div className="scene-error" role="alert">
-          <p>{error}</p>
+          <p>{text(error)}</p>
           <button type="button" onClick={retryScene}>
-            重新载入三维视图
+            {t("重新载入三维视图", "Reload 3D view")}
           </button>
         </div>
       )}

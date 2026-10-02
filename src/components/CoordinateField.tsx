@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { snapCoordinateMm } from "../lib/coordinates";
+import { useI18n } from "../lib/i18n";
 export function CoordinateField({
   axis,
   value,
@@ -23,6 +24,7 @@ export function CoordinateField({
   disabled: boolean;
   onCommit: (value: number) => void;
 }) {
+  const { t, text } = useI18n();
   const [draft, setDraft] = useState(value.toFixed(2));
   useEffect(() => setDraft(value.toFixed(2)), [value]);
   const commit = () => {
@@ -39,9 +41,10 @@ export function CoordinateField({
     <label>
       <span>{axis}</span>
       <input
-        aria-label={`${axis} 坐标，毫米`}
+        aria-label={t(`${axis} 坐标，毫米`, `${axis} coordinate, millimetres`)}
         aria-describedby={describedBy}
-        title={`${reference ? `${reference}；` : ""}${min.toFixed(2)} 至 ${max.toFixed(2)} mm，步长 ${step.toFixed(2)} mm，按 Enter 应用`}
+        title={t(`${reference ? `${reference}；` : ""}${min.toFixed(2)} 至 ${max.toFixed(2)} mm，步长 ${step.toFixed(2)} mm，按 Enter 应用`,
+          `${reference ? `${text(reference)}; ` : ""}${min.toFixed(2)} to ${max.toFixed(2)} mm, step ${step.toFixed(2)} mm; press Enter to apply`)}
         type="number"
         enterKeyHint="done"
         min={min}

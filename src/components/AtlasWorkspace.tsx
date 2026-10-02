@@ -1,3 +1,4 @@
+import { useI18n } from "../lib/i18n";
 import type { PlaneDisplay } from "../lib/scene-plane";
 import { embryoPartitions, type EmbryoPartitionLevel } from "../lib/embryo-partitions";
 import { EmbryoPartitionControl } from "./EmbryoPartitionControl";
@@ -44,6 +45,7 @@ import {
 import { BrainScene } from "./BrainScene";
 import { CoordinateField } from "./CoordinateField";
 import { ThemeToggle } from "./ThemeToggle";
+import { LanguageToggle } from "./LanguageToggle";
 import { VasculatureControls } from "./VasculatureControls";
 import { useVasculature } from "../lib/use-vasculature";
 import type { VesselFilter } from "../lib/vasculature";
@@ -72,6 +74,7 @@ export function AtlasWorkspace({
   config: AtlasConfig;
   stageNavigation?: React.ReactNode;
 }) {
+  const { locale, t, text } = useI18n();
   const baseRegions = config.regions;
   const [initial] = useState(() => readWorkspaceRoute(config, location.search));
   const initialCircuit = initial.circuit;
@@ -156,16 +159,16 @@ export function AtlasWorkspace({
     return ids.size;
   }, [config.embryonic, data]);
   const sliceSourceLabel = config.embryonic
-    ? `Allen 发育图谱 · ${config.id} · ${embryoLevel === "fine" ? "精细分区" : "主要区室"}`
+    ? `${t("Allen 发育图谱", "Allen developmental atlas")} · ${config.id} · ${embryoLevel === "fine" ? text("精细分区") : text("主要区室")}`
     : slices.source === "allen"
       ? "Allen Institute · CCFv3"
-      : KIM_SOURCE_LABEL;
+      : text(KIM_SOURCE_LABEL);
   const sliceStructure = displayedSliceData
     ? structureAt(displayedSliceData, position)
     : undefined;
   const sliceProbeName = sliceStructure
-    ? `${sliceStructure.acronym} · ${sliceStructure.name}`
-    : "未标注位置";
+    ? `${sliceStructure.acronym} · ${text(sliceStructure.name)}`
+    : text("未标注位置");
   const regionDisplay = useRef<DisplaySettings>(displayDefaults(false));
   const workspace = useRef<HTMLElement>(null);
   const search = useRef<HTMLInputElement>(null);
@@ -179,12 +182,12 @@ export function AtlasWorkspace({
   }, [selected, panel]);
   const region = brainRegions.find((r) => r.id === selected) ?? baseRegions.find((r) => r.id === config.initialId)!;
   useEffect(() => {
-    document.title = `${region.name} · ${config.title}`;
+    document.title = `${text(region.name)} · ${text(config.title)}`;
     history.replaceState(null, "", workspaceUrl(location.href, {
       selected, circuitId: activeCircuit?.id, embryonic: config.embryonic,
       sliceSource: slices.source, embryoLevel, mapView,
     }));
-  }, [region.name, config.title, config.embryonic, selected, activeCircuit, slices.source, embryoLevel, mapView]);
+  }, [region.name, config.title, config.embryonic, selected, activeCircuit, slices.source, embryoLevel, mapView, text]);
   const whiteProbe = whiteMatterData && isWhiteMatterStructure(sliceStructure) ? sliceStructure : undefined;
   const currentStructure = whiteProbe ?? (displayedSliceData === data
     ? sliceStructure : data ? structureAt(data, position) : undefined);
@@ -198,8 +201,8 @@ export function AtlasWorkspace({
   );
   const probeRegion = brainRegions.find((r) => r.id === probeId);
   const probeName = currentStructure
-    ? `${currentStructure.acronym} · ${currentStructure.name}`
-    : "未标注位置";
+    ? `${currentStructure.acronym} · ${text(currentStructure.name)}`
+    : text("未标注位置");
   const showMobilePane = (pane: "catalog" | "viewer" | "details") => {
     setMobilePane(pane);
     if (pane === "catalog" || pane === "details") {
@@ -306,33 +309,30 @@ export function AtlasWorkspace({
           </span>
           <span className="brand-word">Mouse Brain Atlas</span>
         </a>
-        <nav className="atlas-navigation" aria-label="图谱页面">
-          <a href="/" aria-current={!config.embryonic ? "page" : undefined}>
-            成年小鼠
-          </a>
+        <nav className="atlas-navigation" aria-label={text("图谱页面")}>
+          <a href="/" aria-current={!config.embryonic ? "page" : undefined}>{text("成年小鼠")}</a>
           <a
             href="/embryo"
             aria-current={config.embryonic ? "page" : undefined}
-          >
-            胚胎小鼠
-          </a>
+          >{text("胚胎小鼠")}</a>
         </nav>
         <div className="header-actions">
         <a
           className="source-link"
-          aria-label="Allen Institute 数据，打开原始图谱"
+          aria-label={text("Allen Institute 数据，打开原始图谱")}
           href={config.sourceUrl}
           target="_blank"
           rel="noreferrer"
         >
-          <span className="source-link-full">Allen Institute 数据</span>
+          <span className="source-link-full">{text("Allen Institute 数据")}</span>
           <span className="source-link-short" aria-hidden="true">Allen</span>
           <ArrowUpRight size={15} />
         </a>
+        <LanguageToggle />
         <ThemeToggle />
         </div>
       </header>
-      <section aria-label="当前图谱">
+      <section aria-label={text("当前图谱")}>
       <div className="page-heading">
         <div>
           <span className="eyebrow">
@@ -340,14 +340,14 @@ export function AtlasWorkspace({
               ? "DEVELOPING MOUSE BRAIN ATLAS"
               : "ADULT MOUSE BRAIN ATLAS"}
           </span>
-          <h1>{config.title}</h1>
+          <h1>{text(config.title)}</h1>
         </div>
         <span className="dataset-badge">
           <Database size={14} /> {config.badge}{" "}
           <span className="badge-divider" />{" "}
           <span className="resolution-badge">
             {data?.spacing ?? config.resolutionUm} μm
-            {config.embryonic ? " 重采样" : " 体素"}
+            {config.embryonic ? text(" 重采样") : text(" 体素")}
           </span>
         </span>
       </div>
@@ -355,32 +355,26 @@ export function AtlasWorkspace({
       {config.embryonic && (
         <div className="atlas-notice">
           <Info size={16} />
-          <span>{config.description}</span>
+          <span>{text(config.description)}</span>
         </div>
       )}
       </section>
-      <nav className="mobile-workspace-nav" aria-label="工作区导航">
+      <nav className="mobile-workspace-nav" aria-label={text("工作区导航")}>
         <button
           aria-pressed={mobilePane === "catalog"}
           onClick={() => showMobilePane("catalog")}
         >
-          <PanelLeft size={17} />
-          脑区导览
-        </button>
+          <PanelLeft size={17} />{text("脑区导览")}</button>
         <button
           aria-pressed={mobilePane === "viewer"}
           onClick={() => showMobilePane("viewer")}
         >
-          <Box size={17} />
-          观察视图
-        </button>
+          <Box size={17} />{text("观察视图")}</button>
         <button
           aria-pressed={mobilePane === "details"}
           onClick={() => showMobilePane("details")}
         >
-          <BookOpen size={17} />
-          解说与文献
-        </button>
+          <BookOpen size={17} />{text("解说与文献")}</button>
       </nav>
       <main
         ref={workspace}
@@ -392,7 +386,7 @@ export function AtlasWorkspace({
       >
         <div className="visual-column">
           <div className="workspace-toolbar">
-            <span className="workspace-view-label"><Layers3 size={16} />三维探索 <small>让解剖关系变得可见</small></span>
+            <span className="workspace-view-label"><Layers3 size={16} />{text("三维探索 ")}<small>{text("让解剖关系变得可见")}</small></span>
             <button
               className="workspace-focus-toggle"
               type="button"
@@ -400,12 +394,12 @@ export function AtlasWorkspace({
               onClick={() => setFocusMode(!focusMode)}
             >
               {focusMode ? <Minimize2 size={16} /> : <Maximize2 size={16} />}
-              {focusMode ? "显示导览" : "展开画布"}
+              {focusMode ? text("显示导览") : text("展开画布")}
             </button>
           </div>
           <section
             className="viewer-panel"
-            aria-label="三维图谱"
+            aria-label={text("三维图谱")}
           >
             <div className="viewer-heading">
               <div className="selected-name">
@@ -414,8 +408,8 @@ export function AtlasWorkspace({
                   style={{ backgroundColor: region.color }}
                 />
                 <div className="selected-copy">
-                  <strong>{whiteSelected && !whiteMatterData ? "正在载入 PF 白质…" : region.name}</strong>
-                  <span>{whiteSelected && !whiteMatterData ? "PF / Kim v2" : region.englishName}</span>
+                  <strong>{whiteSelected && !whiteMatterData ? text("正在载入 PF 白质…") : text(region.name)}</strong>
+                  <span>{whiteSelected && !whiteMatterData ? "PF / Kim v2" : locale === "zh" ? region.englishName : region.acronym}</span>
                 </div>
                 <span className="selected-acronym">{whiteSelected && !whiteMatterData ? Math.abs(selected) : region.acronym}</span>
               </div>
@@ -427,9 +421,7 @@ export function AtlasWorkspace({
                   document.getElementById("linked-slices")?.scrollIntoView({ block: "start", behavior: "instant" });
                 }}
               >
-                <Crosshair size={15} />
-                定位切片
-              </button>
+                <Crosshair size={15} />{text("定位切片")}</button>
             </div>
             {data ? (
               <BrainScene
@@ -464,7 +456,7 @@ export function AtlasWorkspace({
                 onCircuitSelect={selectCircuitTarget}
                 onCircuitClear={clearCircuitTarget}
                 regions={brainRegions}
-                datasetLabel={whiteSelected ? "PF · Kim v2 白质" : config.badge}
+                datasetLabel={whiteSelected ? text("PF · Kim v2 白质") : config.badge}
                 whiteMatterData={whiteMatterData}
                 sliceData={config.embryonic ? displayedSliceData : whiteMatterData}
 
@@ -474,50 +466,46 @@ export function AtlasWorkspace({
                 {error ? (
                   <>
                     <Info size={28} />
-                    <h2>图谱未能载入</h2>
-                    <p>{error}</p>
+                    <h2>{text("图谱未能载入")}</h2>
+                    <p>{text(error)}</p>
                     <button
                       className="primary-button"
                       onClick={retry}
-                    >
-                      重新载入数据
-                    </button>
+                    >{text("重新载入数据")}</button>
                   </>
                 ) : (
                   <>
                     <span className="loader" />
-                    <h2>正在准备小鼠脑图谱</h2>
-                    <p>{loading}</p>
-                    <small>
-                      正在载入本阶段的参考体积与标注。数据来自 Allen Institute。
-                    </small>
+                    <h2>{text("正在准备小鼠脑图谱")}</h2>
+                    <p>{text(loading)}</p>
+                    <small>{text("正在载入本阶段的参考体积与标注。数据来自 Allen Institute。")}</small>
                   </>
                 )}
               </div>
             )}
             <div className="viewer-controls">
               {!activeCircuit && !whiteSelected && (
-                <div className="scene-mode-switch" role="group" aria-label="三维显示范围">
-                  <button aria-pressed={!isolateRegion} onClick={() => setIsolateRegion(false)}>分区探索</button>
-                  <button aria-pressed={isolateRegion} onClick={() => setIsolateRegion(true)}>只看选区</button>
+                <div className="scene-mode-switch" role="group" aria-label={text("三维显示范围")}>
+                  <button aria-pressed={!isolateRegion} onClick={() => setIsolateRegion(false)}>{text("分区探索")}</button>
+                  <button aria-pressed={isolateRegion} onClick={() => setIsolateRegion(true)}>{text("只看选区")}</button>
                 </div>
               )}
               <label className="scene-plane-field">
                 <Layers3 size={15} />
-                <span>切面</span>
-                <select aria-label="三维切面显示" value={planeDisplay} disabled={!data}
+                <span>{text("切面")}</span>
+                <select aria-label={text("三维切面显示")} value={planeDisplay} disabled={!data}
                   onChange={(event) => setPlaneDisplay(event.target.value as PlaneDisplay)}>
-                  <option value="off">不显示切面</option>
-                  <option value="transparent">显示切面（透明）</option>
-                  <option value="tissue">显示切面（组织图）</option>
-                  <option value="regions">显示切面（分区图）</option>
+                  <option value="off">{text("不显示切面")}</option>
+                  <option value="transparent">{text("显示切面（透明）")}</option>
+                  <option value="tissue">{text("显示切面（组织图）")}</option>
+                  <option value="regions">{text("显示切面（分区图）")}</option>
                 </select>
               </label>
               <div className="opacity-field">
-                <label htmlFor="opacity">外壳</label>
+                <label htmlFor="opacity">{text("外壳")}</label>
                 <input
                   id="opacity"
-                  aria-label="脑表面不透明度"
+                  aria-label={text("脑表面不透明度")}
                   type="range"
                   min=".05"
                   max=".8"
@@ -533,9 +521,7 @@ export function AtlasWorkspace({
                 disabled={!data}
                 onClick={restoreDisplay}
               >
-                <RotateCcw size={14} />
-                恢复显示
-              </button>
+                <RotateCcw size={14} />{text("恢复显示")}</button>
             </div>
             {!config.embryonic && <VasculatureControls
               enabled={showVessels} onEnabled={setShowVessels}
@@ -546,12 +532,11 @@ export function AtlasWorkspace({
           <section
             id="linked-slices"
             className="slices-section"
-            aria-label="三向切片"
+            aria-label={text("三向切片")}
           >
             <div className="section-heading">
               <h2>
-                <ScanLine size={16} />
-                正交切片<span>点击定位 · 放大查看细节</span>
+                <ScanLine size={16} />{text("正交切片")}<span>{text("点击定位 · 放大查看细节")}</span>
               </h2>
               <label className="check-field">
                 <input
@@ -559,9 +544,7 @@ export function AtlasWorkspace({
                   checked={overlay}
                   onChange={(e) => setOverlay(e.target.checked)}
                   disabled={!slices.data}
-                />
-                边界与名称
-              </label>
+                />{text("边界与名称")}</label>
             </div>
             <div className="slice-source-bar">
               {config.embryonic ? (
@@ -572,9 +555,9 @@ export function AtlasWorkspace({
                 />
               ) : (
                 <label className="slice-source-field">
-                  <span>切片图谱</span>
+                  <span>{text("切片图谱")}</span>
                   <select
-                    aria-label="切片图谱"
+                    aria-label={text("切片图谱")}
                     value={slices.source}
                     onChange={(e) => {
                       if (whiteSelected) setSelected(config.initialId);
@@ -586,7 +569,7 @@ export function AtlasWorkspace({
                     }}
                   >
                     <option value="allen">Allen Institute · CCFv3</option>
-                    <option value="paxinos-kim">{KIM_SOURCE_LABEL}</option>
+                    <option value="paxinos-kim">{text(KIM_SOURCE_LABEL)}</option>
                   </select>
                 </label>
               )}
@@ -596,8 +579,8 @@ export function AtlasWorkspace({
               />
               <span className="slice-coordinate-note">
                 {config.embryonic
-                  ? `Allen 发育图谱 · ${config.id} · 标注边界相对坐标`
-                  : "AP · Bregma 近似参考 / ML · 正中线"}
+                  ? `${t("Allen 发育图谱", "Allen developmental atlas")} · ${config.id} · ${text("标注边界相对坐标")}`
+                  : text("AP · Bregma 近似参考 / ML · 正中线")}
               </span>
             </div>
             <div className="slice-grid">
@@ -624,45 +607,39 @@ export function AtlasWorkspace({
                 : PLANE_ORDER.map((name) => (
                     <div key={name} className="slice-placeholder">
                       {slices.error
-                        ? "切片图谱未载入"
+                        ? text("切片图谱未载入")
                         : data
-                          ? "正在载入分区…"
-                          : "等待体数据载入"}
+                          ? text("正在载入分区…")
+                          : text("等待体数据载入")}
                     </div>
                   ))}
             </div>
             {!config.embryonic && slices.source === "allen" && data && (
               <div className="slice-source-detail">
-                <p>Allen CCFv3 · {allenLabelCount} 个原始分区标签，含皮层分层。导览与三维表面展示 {baseRegions.length} 个精选脑区。</p>
+                <p>Allen CCFv3 · {allenLabelCount}{text(" 个原始分区标签，含皮层分层。导览与三维表面展示 ")}{baseRegions.length}{text(" 个精选脑区。")}</p>
               </div>
             )}
             {config.embryonic && (
               <div className="slice-source-detail embryo-partition-note">
-                <p>{embryoPartitionData ? `${embryoLevel === "fine" ? embryoPartitionData.fineCount : embryoPartitionData.majorCount} 个${embryoLevel === "fine" ? "原始分区标签" : "区室及保留标签"}` : "正在载入发育分区…"} · 三维显示主要区室，细分边界见切片。</p>
-                <p>{config.id === "E18.5" ? "E18.5 原始标注较粗，不代表脑区减少。" : "分区按发育本体命名，不能直接等同于成年核团。"}单侧标注；40 μm 为重采样间距。</p>
+                <p>{embryoPartitionData ? `${embryoLevel === "fine" ? embryoPartitionData.fineCount : embryoPartitionData.majorCount}${t(" 个", " ")}${embryoLevel === "fine" ? text("原始分区标签") : text("区室及保留标签")}` : text("正在载入发育分区…")}{text(" · 三维显示主要区室，细分边界见切片。")}</p>
+                <p>{config.id === "E18.5" ? text("E18.5 原始标注较粗，不代表脑区减少。") : text("分区按发育本体命名，不能直接等同于成年核团。")}{text("单侧标注；40 μm 为重采样间距。")}</p>
               </div>
             )}
             {slices.source === "paxinos-kim" && (
               <div className="slice-source-detail">
-                <p>
-                  Kim v2 · 2024 修订，源自 FP 第 3 / 4 版分区，非第 5
-                  版原图。白质表面由同一 PF 标签体积重建；脑区表面与环路仍使用 Allen。
-                </p>
+                <p>{text("Kim v2 · 2024 修订，源自 FP 第 3 / 4 版分区，非第 5 版原图。白质表面由同一 PF 标签体积重建；脑区表面与环路仍使用 Allen。")}</p>
                 <p className="slice-source-probe" aria-live="polite">
                   {slices.error ? (
                     <>
-                      <span role="alert">分区加载失败：{slices.error}</span>{" "}
-                      <button className="text-button" onClick={slices.retry}>
-                        重试分区
-                      </button>
+                      <span role="alert">{text("分区加载失败：")}{text(slices.error)}</span>{" "}
+                      <button className="text-button" onClick={slices.retry}>{text("重试分区")}</button>
                     </>
                   ) : slices.data ? (
-                    <>
-                      PF 交点：<strong>{sliceProbeName}</strong>{whiteProbe && <span className="category-tag">白质 / 纤维束</span>}
-                      {whiteProbe && <button className="text-button" onClick={inspectProbe}>查看白质解说</button>}
+                    <>{text("PF 交点：")}<strong>{sliceProbeName}</strong>{whiteProbe && <span className="category-tag">{text("白质 / 纤维束")}</span>}
+                      {whiteProbe && <button className="text-button" onClick={inspectProbe}>{text("查看白质解说")}</button>}
                     </>
                   ) : (
-                    <span role="status">正在读取 Paxinos–Franklin 分区…</span>
+                    <span role="status">{text("正在读取 Paxinos–Franklin 分区…")}</span>
                   )}
                 </p>
               </div>
@@ -670,19 +647,17 @@ export function AtlasWorkspace({
             <div className="slice-contrast">
               <span>
                 {mapView
-                  ? "标签体积重切 · 放大可缩放并查全部分区"
-                  : `${config.templateLabel} · 点击切片移动交叉线`}
+                  ? text("标签体积重切 · 放大可缩放并查全部分区")
+                  : `${text(config.templateLabel)} · ${t("点击切片移动交叉线", "Click a slice to move the crosshair")}`}
               </span>
-              <label>
-                灰度窗宽
-                <input
+              <label>{text("灰度窗宽")}<input
                   type="range"
                   min={config.embryonic ? 60 : 150}
                   max={config.maxContrast}
                   step="1"
                   value={contrast}
                   onChange={(e) => setContrast(Number(e.target.value))}
-                  aria-label="切片灰度窗宽"
+                  aria-label={text("切片灰度窗宽")}
                   disabled={!slices.data || (mapView && planeDisplay !== "tissue")}
                 />
               </label>
@@ -690,16 +665,16 @@ export function AtlasWorkspace({
           </section>
           <section
             className="coordinate-bar"
-            aria-label={config.coordinateLabel}
+            aria-label={text(config.coordinateLabel)}
           >
             <div className="coordinate-title">
               <Crosshair size={17} />
               <div>
-                {config.coordinateLabel}
+                {text(config.coordinateLabel)}
                 <small>
                   {!config.embryonic
-                    ? "mm · ML 左负右正 / DV 为 CCF"
-                    : "mm · 前 / 背 / 内侧边界为零"}
+                    ? text("mm · ML 左负右正 / DV 为 CCF")
+                    : text("mm · 前 / 背 / 内侧边界为零")}
                 </small>
               </div>
             </div>
@@ -757,13 +732,13 @@ export function AtlasWorkspace({
             </div>
             <div className="current-structure">
               <span>
-                {whiteProbe ? "PF 交点白质结构" : config.embryonic ? "交点所在区域" : "Allen 交点所在区域"}
+                {whiteProbe ? text("PF 交点白质结构") : config.embryonic ? text("交点所在区域") : text("Allen 交点所在区域")}
               </span>
               <strong>
                 {config.embryonic || slices.source === "allen"
                   ? sliceProbeName
                   : probeRegion
-                    ? `${probeRegion.name} · ${currentStructure?.acronym}`
+                    ? `${text(probeRegion.name)} · ${currentStructure?.acronym}`
                     : probeName}
               </strong>
             </div>
@@ -773,12 +748,12 @@ export function AtlasWorkspace({
               onClick={inspectProbe}
               title={
                 probeRegion
-                  ? `查看${probeRegion.name}的解说`
-                  : "该位置没有已收录的脑区解说"
+                  ? t(`查看${probeRegion.name}的解说`, `Read about ${text(probeRegion.name)}`)
+                  : text("该位置没有已收录的脑区解说")
               }
             >
               <BookOpen size={15} />
-              <span>查看解说</span>
+              <span>{text("查看解说")}</span>
               <ArrowRight size={13} />
             </button>
           </section>
@@ -786,18 +761,15 @@ export function AtlasWorkspace({
             <p
               id="embryo-coordinate-help"
               className="slice-coordinate-note coordinate-help"
-            >
-              正中线未校准。0 位于相邻切片之间，输入 0 选择标注侧最近切片，
-              显示实际坐标：AP / ML −0.02 mm，DV +0.02 mm。
-            </p>
+            >{text("正中线未校准。0 位于相邻切片之间，输入 0 选择标注侧最近切片， 显示实际坐标：AP / ML −0.02 mm，DV +0.02 mm。")}</p>
           )}
         </div>
-        <aside className="inspector-panel" aria-label="导览与解说">
-          <div className="inspector-intro"><span className="eyebrow">BRAIN INDEX</span><h2>从一个脑区开始</h2><p>点击模型，或在这里查找。</p></div>
+        <aside className="inspector-panel" aria-label={text("导览与解说")}>
+          <div className="inspector-intro"><span className="eyebrow">BRAIN INDEX</span><h2>{text("从一个脑区开始")}</h2><p>{text("点击模型，或在这里查找。")}</p></div>
           <div
             className="inspector-navigation"
             role="group"
-            aria-label="侧栏内容"
+            aria-label={text("侧栏内容")}
           >
             <button
               type="button"
@@ -807,9 +779,7 @@ export function AtlasWorkspace({
                 setMobilePane("catalog");
               }}
             >
-              <PanelLeft size={16} />
-              脑区导览
-            </button>
+              <PanelLeft size={16} />{text("脑区导览")}</button>
             <button
               type="button"
               aria-pressed={inspectorView === "details"}
@@ -818,13 +788,11 @@ export function AtlasWorkspace({
                 setMobilePane("details");
               }}
             >
-              <BookOpen size={16} />
-              解说与文献
-            </button>
+              <BookOpen size={16} />{text("解说与文献")}</button>
           </div>
           <section
             className="region-sidebar"
-            aria-label="脑区目录"
+            aria-label={text("脑区目录")}
             hidden={inspectorView !== "catalog"}
           >
             <RegionBrowser
@@ -846,25 +814,25 @@ export function AtlasWorkspace({
               searchInputRef={search}
             />
             {!config.embryonic && slices.source === "allen" && (
-              <button className="catalog-source-action" onClick={() => slices.setSource("paxinos-kim")}>浏览 PF 白质结构 <ArrowRight size={14} /></button>
+              <button className="catalog-source-action" onClick={() => slices.setSource("paxinos-kim")}>{text("浏览 PF 白质结构 ")}<ArrowRight size={14} /></button>
             )}
             {!config.embryonic && slices.source === "paxinos-kim" && !whiteMatterData && (
               <div className="catalog-load-state" role={slices.error ? "alert" : "status"}>
-                {slices.error ? <>PF 白质未载入 <button onClick={slices.retry}>重试</button></> : "正在载入 PF 白质…"}
+                {slices.error ? <>{text("PF 白质未载入 ")}<button onClick={slices.retry}>{text("重试")}</button></> : text("正在载入 PF 白质…")}
               </div>
             )}
           </section>
           <section
             className="detail-panel"
-            aria-label="脑区信息"
+            aria-label={text("脑区信息")}
             hidden={inspectorView !== "details"}
           >
             {panel === "methods" ? (
-              <button className="detail-back-button" onClick={() => readPanel(activeCircuit ? "circuit" : "region")}>← 返回解说</button>
+              <button className="detail-back-button" onClick={() => readPanel(activeCircuit ? "circuit" : "region")}>{text("← 返回解说")}</button>
             ) : activeCircuit ? (
               <div className="detail-tabs">
-                <button aria-pressed={panel === "circuit"} onClick={() => setPanel("circuit")}>环路</button>
-                <button aria-pressed={panel === "region"} onClick={() => setPanel("region")}>所选结构</button>
+                <button aria-pressed={panel === "circuit"} onClick={() => setPanel("circuit")}>{text("环路")}</button>
+                <button aria-pressed={panel === "region"} onClick={() => setPanel("region")}>{text("所选结构")}</button>
               </div>
             ) : null}
             <div ref={detailContent} className="detail-content" tabIndex={-1}>
@@ -886,30 +854,30 @@ export function AtlasWorkspace({
                   }}
                 />
               ) : panel === "region" && whiteSelected && !whiteMatterData ? (
-                <p role={slices.error ? "alert" : "status"}>{slices.error ? `PF 白质解说未载入：${slices.error}` : "正在载入 PF 白质解说…"}</p>
+                <p role={slices.error ? "alert" : "status"}>{slices.error ? t(`PF 白质解说未载入：${slices.error}`, `PF white matter details could not be loaded: ${text(slices.error)}`) : text("正在载入 PF 白质解说…")}</p>
               ) : panel === "region" ? (
                 <article className="region-article" key={region.id}>
                   <div className="region-article-meta">
                     <span className="region-dot" style={{ backgroundColor: region.color }} />
-                    <span>{region.category}</span>
+                    <span>{text(region.category)}</span>
                     <span className="region-article-acronym">{region.acronym}</span>
                   </div>
-                  <h2>{region.name}</h2>
-                  <p className="english-name">{region.englishName}</p>
-                  <p className="region-summary">{region.summary}</p>
-                  <section className="region-function" aria-label={config.embryonic ? "发育解剖" : "主要功能"}>
-                    <h3>{config.embryonic ? "发育解剖" : "主要功能"}</h3>
-                    <p>{region.function}</p>
+                  <h2>{text(region.name)}</h2>
+                  {locale === "zh" && <p className="english-name">{region.englishName}</p>}
+                  <p className="region-summary">{text(region.summary)}</p>
+                  <section className="region-function" aria-label={config.embryonic ? text("发育解剖") : text("主要功能")}>
+                    <h3>{config.embryonic ? text("发育解剖") : text("主要功能")}</h3>
+                    <p>{text(region.function)}</p>
                   </section>
                   <details className="evidence-disclosure">
-                    <summary>证据与文献 <span>{region.references.length}</span></summary>
-                    <p className="evidence-text">{region.evidence}</p>
+                    <summary>{text("证据与文献 ")}<span>{region.references.length}</span></summary>
+                    <p className="evidence-text">{text(region.evidence)}</p>
                     <ol className="references">
                       {region.references.map((r, i) => <Reference key={r.url} reference={r} index={i} />)}
                     </ol>
                     <div className="region-source-meta">
                       <span>{whiteSelected ? "PF / Kim" : "Allen"} ID {Math.abs(region.id)}</span>
-                      <a href={whiteSelected ? KIM_SOURCE_URL : config.embryonic ? config.annotationUrl : `https://atlas.brain-map.org/atlas?atlas=1&structure=${region.id}`} target="_blank" rel="noreferrer">原始图谱 <ArrowUpRight size={13} /></a>
+                      <a href={whiteSelected ? KIM_SOURCE_URL : config.embryonic ? config.annotationUrl : `https://atlas.brain-map.org/atlas?atlas=1&structure=${region.id}`} target="_blank" rel="noreferrer">{text("原始图谱 ")}<ArrowUpRight size={13} /></a>
                     </div>
                   </details>
                 </article>
@@ -920,12 +888,12 @@ export function AtlasWorkspace({
                     <span>DATA & METHODS</span>
                   </div>
                   <h2>
-                    {config.embryonic ? "阶段数据与参考坐标" : "数据与坐标参考"}
+                    {config.embryonic ? text("阶段数据与参考坐标") : text("数据与坐标参考")}
                   </h2>
-                  <p className="region-summary">{config.description}</p>
+                  <p className="region-summary">{text(config.description)}</p>
                   <dl className="data-facts">
                     <div>
-                      <dt>体素间距</dt>
+                      <dt>{text("体素间距")}</dt>
                       <dd>
                         {data?.spacing ?? config.resolutionUm} ×{" "}
                         {data?.spacing ?? config.resolutionUm} ×{" "}
@@ -933,22 +901,22 @@ export function AtlasWorkspace({
                       </dd>
                     </div>
                     <div>
-                      <dt>体数据尺寸</dt>
-                      <dd>{data?.dimensions.join(" × ") ?? "载入后显示"}</dd>
+                      <dt>{text("体数据尺寸")}</dt>
+                      <dd>{data?.dimensions.join(" × ") ?? text("载入后显示")}</dd>
                     </div>
                     <div>
-                      <dt>坐标轴顺序</dt>
+                      <dt>{text("坐标轴顺序")}</dt>
                       <dd>AP / DV / ML</dd>
                     </div>
                     <div>
-                      <dt>正方向</dt>
-                      <dd>前 / 腹侧 / 右</dd>
+                      <dt>{text("正方向")}</dt>
+                      <dd>{text("前 / 腹侧 / 右")}</dd>
                     </div>
                   </dl>
-                  <h3 className="detail-section-heading">切片从哪里来</h3>
-                  <p className="evidence-text">{config.sliceNote}</p>
-                  <h3 className="detail-section-heading">坐标与精度</h3>
-                  <p className="evidence-text">{config.coordinateNote}</p>
+                  <h3 className="detail-section-heading">{text("切片从哪里来")}</h3>
+                  <p className="evidence-text">{text(config.sliceNote)}</p>
+                  <h3 className="detail-section-heading">{text("坐标与精度")}</h3>
+                  <p className="evidence-text">{text(config.coordinateNote)}</p>
                   {!config.embryonic && (
                     <>
                       <a
@@ -956,101 +924,73 @@ export function AtlasWorkspace({
                         href={BREGMA_REFERENCE_URL}
                         target="_blank"
                         rel="noreferrer"
-                      >
-                        IBL 的 Bregma 参考定义 <ArrowUpRight size={14} />
+                      >{text("IBL 的 Bregma 参考定义 ")}<ArrowUpRight size={14} />
                       </a>
-                      <h3 className="detail-section-heading">
-                        Paxinos–Franklin 切片选项
-                      </h3>
-                      <p className="evidence-text">
-                        分区图从标签体积生成浅色蒙版、边界和缩写，放大后可缩放、查看完整分区列表并定位。组织图使用同一
-                        Allen 平均模板。采用 Chon 等人的 Unified Mouse Brain
-                        Atlas，使用作者 2024 年 Kim v2 修订数据。其分区源自 FP
-                        第 3 版，并纳入第 4 版更新；它不是第 5
-                        版书籍的数字复刻。源数据的 20 μm
-                        网格由形状插值得到，本页按最近邻采样至 50
-                        μm，不增加解剖精度。白质目录、切片与三维表面均来自 Kim 标签，独立保存编号。白质表面只表示标注范围，不表示单根轴突、连接方向或纤维追踪结果。
-                      </p>
+                      <h3 className="detail-section-heading">{text("Paxinos–Franklin 切片选项")}</h3>
+                      <p className="evidence-text">{text("分区图从标签体积生成浅色蒙版、边界和缩写，放大后可缩放、查看完整分区列表并定位。组织图使用同一 Allen 平均模板。采用 Chon 等人的 Unified Mouse Brain Atlas，使用作者 2024 年 Kim v2 修订数据。其分区源自 FP 第 3 版，并纳入第 4 版更新；它不是第 5 版书籍的数字复刻。源数据的 20 μm 网格由形状插值得到，本页按最近邻采样至 50 μm，不增加解剖精度。白质目录、切片与三维表面均来自 Kim 标签，独立保存编号。白质表面只表示标注范围，不表示单根轴突、连接方向或纤维追踪结果。")}</p>
                       <div className="method-links">
                         <a
                           href={KIM_PAPER_URL}
                           target="_blank"
                           rel="noreferrer"
-                        >
-                          Chon 等，2019 · 图谱论文 <ArrowUpRight size={14} />
+                        >{text("Chon 等，2019 · 图谱论文 ")}<ArrowUpRight size={14} />
                         </a>
                         <a
                           href={KIM_SOURCE_URL}
                           target="_blank"
                           rel="noreferrer"
-                        >
-                          Kim v2 数据 · CC BY 4.0 <ArrowUpRight size={14} />
+                        >{text("Kim v2 数据 · CC BY 4.0 ")}<ArrowUpRight size={14} />
                         </a>
                         <a
                           href="https://creativecommons.org/licenses/by/4.0/"
                           target="_blank"
                           rel="noreferrer"
-                        >
-                          Kim 数据许可
-                        </a>
+                        >{text("Kim 数据许可")}</a>
                         <a
                           href={PAXINOS_BOOK_URL}
                           target="_blank"
                           rel="noreferrer"
-                        >
-                          Paxinos & Franklin 第 5 版 · 2019{" "}
+                        >{text("Paxinos & Franklin 第 5 版 · 2019")}{" "}
                           <ArrowUpRight size={14} />
                         </a>
                         <a
                           href="/data/kim-v2/manifest.json"
                           target="_blank"
                           rel="noreferrer"
-                        >
-                          Kim 数据转换与校验值
-                        </a>
+                        >{text("Kim 数据转换与校验值")}</a>
                       </div>
                     </>
                   )}
-                  <h3 className="detail-section-heading">脑区定位</h3>
-                  <p className="evidence-text">{config.focusNote}</p>
-                  <h3 className="detail-section-heading">数据使用</h3>
-                  <p className="evidence-text">
-                    Allen 模板、原始标注与网格遵循 Allen Institute 使用条款。
-                    {!config.embryonic &&
-                      "Kim v2 标注采用 CC BY 4.0，作者、论文、许可和本页转换方法列于上方。"}
-                    本项目不改变原始数据许可。
-                  </p>
-                  <h3 className="detail-section-heading">图谱论文</h3>
+                  <h3 className="detail-section-heading">{text("脑区定位")}</h3>
+                  <p className="evidence-text">{text(config.focusNote)}</p>
+                  <h3 className="detail-section-heading">{text("数据使用")}</h3>
+                  <p className="evidence-text">{text("Allen 模板、原始标注与网格遵循 Allen Institute 使用条款。")}{!config.embryonic &&
+                      text("Kim v2 标注采用 CC BY 4.0，作者、论文、许可和本页转换方法列于上方。")}{text("本项目不改变原始数据许可。")}</p>
+                  <h3 className="detail-section-heading">{text("图谱论文")}</h3>
                   <ol className="references">
                     {config.references.map((r, i) => (
                       <Reference key={r.url} reference={r} index={i} />
                     ))}
                   </ol>
                   <div className="method-links">
-                    <a href={config.sourceUrl} target="_blank" rel="noreferrer">
-                      Allen 体数据说明
-                      <ArrowUpRight size={14} />
+                    <a href={config.sourceUrl} target="_blank" rel="noreferrer">{text("Allen 体数据说明")}<ArrowUpRight size={14} />
                     </a>
                     <a
                       href="https://alleninstitute.org/legal/terms-of-use"
                       target="_blank"
                       rel="noreferrer"
-                    >
-                      Allen Institute 使用条款
-                      <ArrowUpRight size={14} />
+                    >{text("Allen Institute 使用条款")}<ArrowUpRight size={14} />
                     </a>
                     <a
                       href={config.manifestUrl}
                       target="_blank"
                       rel="noreferrer"
-                    >
-                      数据清单与校验值
-                      <ArrowUpRight size={14} />
+                    >{text("数据清单与校验值")}<ArrowUpRight size={14} />
                     </a>
                   </div>
                 </>
               )}
-              {panel !== "methods" && <button className="detail-methods-link" onClick={() => readPanel("methods")}><Database size={14} />数据来源与方法 <ArrowRight size={14} /></button>}
+              {panel !== "methods" && <button className="detail-methods-link" onClick={() => readPanel("methods")}><Database size={14} />{text("数据来源与方法 ")}<ArrowRight size={14} /></button>}
             </div>
           </section>
         </aside>
@@ -1084,10 +1024,9 @@ export function AtlasWorkspace({
       />
       <footer className="page-footer">
         <span>
-          <Check size={13} /> 数据来源：Allen Institute
-          {!config.embryonic && " · Kim Lab / Chon et al."}
+          <Check size={13} />{text(" 数据来源：Allen Institute")}{!config.embryonic && " · Kim Lab / Chon et al."}
         </span>
-        <span>参考 Neurotorium 交互设计 · 用于解剖学习与研究探索</span>
+        <span>{text("参考 Neurotorium 交互设计 · 用于解剖学习与研究探索")}</span>
       </footer>
     </div>
   );
