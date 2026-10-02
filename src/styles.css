@@ -846,6 +846,8 @@ select.category-select {
   right: 0;
   top: 35px;
   width: 260px;
+  max-height: min(440px, 65vh);
+  overflow-y: auto;
   background: white;
   border: 1px solid var(--border);
   border-radius: 10px;

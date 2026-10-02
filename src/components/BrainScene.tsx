@@ -1190,6 +1190,7 @@ export function BrainScene(props: Props) {
         <button
           type="button"
           disabled={!ready}
+          className="scene-zoom-in"
           aria-label={t("放大三维脑", "Zoom in on the 3D brain")}
           title={t("放大", "Zoom in")}
           onClick={() => api.current?.zoom(0.85)}
@@ -1199,6 +1200,7 @@ export function BrainScene(props: Props) {
         <button
           type="button"
           disabled={!ready}
+          className="scene-zoom-out"
           aria-label={t("缩小三维脑", "Zoom out of the 3D brain")}
           title={t("缩小", "Zoom out")}
           onClick={() => api.current?.zoom(1.15)}
@@ -1208,6 +1210,7 @@ export function BrainScene(props: Props) {
         <button
           type="button"
           disabled={!ready}
+          className="scene-reset-view"
           aria-label={t("重置三维视角", "Reset 3D view")}
           title={t("查看全脑（Home）", "View the whole brain (Home)")}
           onClick={() => {

@@ -16,6 +16,7 @@
 .circuit-edge-hit:focus-visible { stroke: color-mix(in srgb, var(--connection-color) 22%, transparent); outline: none; }
 .circuit-map-node { position: absolute; transform: translate(-50%, -50%); width: 27%; min-height: 46px; padding: 6px 4px; display: grid; gap: 2px; border: 1px solid var(--border); border-top: 3px solid var(--node-color); border-radius: 6px; background: var(--surface); color: var(--ink); text-align: center; }
 .circuit-map-node strong { font: 600 14px/1.3 var(--font-mono); }
+.circuit-map-node:active:not(:disabled) { transform: translate(-50%, -50%); }
 .circuit-map-node > span { font-size: 12px; line-height: 1.5; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .circuit-map-node > i { position: absolute; right: 4px; top: 4px; width: 4px; height: 4px; border-radius: 50%; background: var(--primary); }
 .circuit-map-node.emphasized, .circuit-map-node:hover, .circuit-map-node[aria-pressed="true"] { border-color: var(--primary); outline: 2px solid #256b6326; outline-offset: 2px; background: var(--selected); }
