@@ -10,6 +10,7 @@ from __future__ import annotations
 import argparse
 import concurrent.futures
 import datetime
+import gzip
 import json
 from pathlib import Path
 import subprocess
@@ -27,8 +28,12 @@ ONTOLOGY_URL = "https://api.brain-map.org/api/v2/structure_graph_download/17.jso
 DOCS = "https://brain-map.org/support/documentation/allen-developing-mouse-brain-reference-atlas"
 STAGES = {"E11.5": ("E11pt5", 1), "E13.5": ("E13pt5", 2), "E15.5": ("E15pt5", 3), "E18.5": ("E18pt5", 5)}
 REGION_IDS = [15739, 15569, 15622, 16211, 16309, 16375, 16509, 16650, 16751, 16809, 17092, 17220, 17352]
-BRAIN_ROOTS = [15566, 16649, 16808, 126651562, 126651722, 126651782]
+TISSUE_ROOTS = [15566, 16649, 16808]
+VENTRICLE_ROOTS = [126651562, 126651722, 126651782]
+BRAIN_ROOTS = TISSUE_ROOTS + VENTRICLE_ROOTS
 ROOT_ID = 15565
+HEMISPHERE = "Predominantly unilateral, incomplete source annotation; not mirrored"
+LIMITATIONS = "Single-specimen, stage-specific reconstruction. Annotation derives from spaced sagittal atlas drawings interpolated by Allen. Native reconstruction spacing and display sampling do not imply equally fine anatomical boundary accuracy. Source labels mainly cover the left side, with missing lateral and contralateral regions and some midline skew; this is not a complete hemisphere. No missing labels are inferred, mirrored or smoothed. No cross-stage pointwise registration or stereotaxic use."
 
 
 def save_json(path: Path, obj: object) -> None:
@@ -77,8 +82,13 @@ def read_volume(path: Path) -> tuple[np.ndarray, dict]:
 
 
 def pack_gzip(path: Path, raw: bytes, output_root: Path) -> dict:
-    return {"url": "/embryo/" + path.relative_to(output_root).as_posix(), "compression": "gzip",
-            **write_gzip(path, raw)}
+    if path.exists() and gzip.decompress(path.read_bytes()) == raw:
+        compressed = path.read_bytes()
+        info = {"bytes": len(compressed), "uncompressedBytes": len(raw),
+                "sha256": digest(compressed), "uncompressedSha256": digest(raw)}
+    else:
+        info = write_gzip(path, raw)
+    return {"url": "/embryo/" + path.relative_to(output_root).as_posix(), "compression": "gzip", **info}
 
 
 def pack_surface(mask: np.ndarray, path: Path, spacing: int, output_root: Path) -> dict:
@@ -94,6 +104,64 @@ def pack_surface(mask: np.ndarray, path: Path, spacing: int, output_root: Path) 
     info.update({"format": "allen-mesh-v1", "vertexCount": len(vertices), "triangleCount": len(faces),
                  "boundsUm": [[float(vertices[:, i].min()), float(vertices[:, i].max())] for i in range(3)]})
     return info
+
+
+def prepare_surfaces(annotation: np.ndarray, ontology: list[dict], stage_dir: Path,
+                     resolution: int, output_root: Path,
+                     expected_bounds: list[list[float]] | None = None) -> tuple[dict, list[dict], dict]:
+    by_id = {item["id"]: item for item in ontology}
+    tissue_ids = [item["id"] for item in ontology
+                  if any(root in item["structureIdPath"] for root in TISSUE_ROOTS)]
+    tissue_mask = np.isin(annotation, tissue_ids)
+    if expected_bounds is not None:
+        tissue_points = np.array(np.where(tissue_mask))[::-1]
+        bounds = [[float((axis.min() - 0.5) * resolution), float((axis.max() + 0.5) * resolution)] for axis in tissue_points]
+        if bounds != expected_bounds:
+            raise ValueError("Tissue surface would change the established coordinate origins")
+    root_mesh = pack_surface(tissue_mask, stage_dir / "meshes/root.bin.gz", resolution, output_root)
+    regions = []
+    represented = np.zeros(annotation.shape, dtype=np.uint8)
+    for identifier in REGION_IDS + VENTRICLE_ROOTS:
+        descendants = [item["id"] for item in ontology if identifier in item["structureIdPath"]]
+        mask = np.isin(annotation, descendants)
+        points = np.transpose(np.where(mask))[:, ::-1]
+        if not len(points):
+            continue
+        represented += mask
+        center = points.mean(axis=0)
+        focus = points[np.argmin(np.sum((points - center) ** 2, axis=1))].tolist()
+        regions.append({**by_id[identifier], "descendantIds": descendants,
+                        "anatomyKind": "ventricular-space" if identifier in VENTRICLE_ROOTS else "brain-tissue",
+                        "mesh": pack_surface(mask, stage_dir / f"meshes/{identifier}.bin.gz", resolution, output_root),
+                        "voxelCount": len(points), "volumeMm3": len(points) * (resolution / 1000) ** 3,
+                        "centroidVoxel": center.round(3).tolist(), "focusVoxel": focus,
+                        "boundsVoxel": [[int(points[:, i].min()), int(points[:, i].max())] for i in range(3)]})
+    if not np.array_equal(represented, (annotation > 0).astype(np.uint8)):
+        raise ValueError("Region meshes must cover every retained label exactly once")
+    coverage = {"brainTissueRoots": TISSUE_ROOTS, "ventricularRoots": VENTRICLE_ROOTS,
+                "retainedVoxelCount": int(np.count_nonzero(annotation)),
+                "brainTissueVoxelCount": int(np.count_nonzero(tissue_mask)),
+                "ventricularVoxelCount": int(np.count_nonzero(annotation)) - int(np.count_nonzero(tissue_mask)),
+                "rootMeshMeaning": "Brain tissue only; ventricular spaces are separate region meshes when labels are present."}
+    return root_mesh, regions, coverage
+
+
+def rebuild_surfaces(stage: str, args: argparse.Namespace, ontology: list[dict]) -> dict:
+    stage_dir = args.output / stage
+    manifest = json.loads((stage_dir / "manifest.json").read_text())
+    packed = (stage_dir / "annotation.uint32.gz").read_bytes()
+    if digest(packed) != manifest["annotation"]["sha256"]:
+        raise ValueError(f"{stage}: packaged annotation hash mismatch")
+    annotation = np.frombuffer(gzip.decompress(packed), dtype="<u4").reshape(manifest["dimensions"][::-1])
+    root_mesh, regions, coverage = prepare_surfaces(annotation, ontology, stage_dir, manifest["resolutionUm"], args.output,
+                                                    expected_bounds=manifest["rootMesh"]["boundsUm"])
+    manifest.update({"rootMesh": root_mesh, "regions": regions, "meshCoverage": coverage, "hemisphere": HEMISPHERE})
+    manifest["provenance"].update({"limitations": LIMITATIONS,
+                                    "annotationLimitationsReferenceUrl": "https://elifesciences.org/articles/61408"})
+    save_json(stage_dir / "manifest.json", manifest)
+    print(f"{stage}: {len(regions)} source-derived meshes; {coverage['brainTissueVoxelCount']} tissue and {coverage['ventricularVoxelCount']} ventricular voxels", flush=True)
+    return {"stage": stage, "manifest": "/embryo/" + stage + "/manifest.json", "dimensions": manifest["dimensions"],
+            "resolutionUm": manifest["resolutionUm"], "regionIds": [region["id"] for region in regions]}
 
 
 def prepare_stage(stage: str, args: argparse.Namespace, ontology: list[dict], sources: dict) -> dict:
@@ -126,33 +194,19 @@ def prepare_stage(stage: str, args: argparse.Namespace, ontology: list[dict], so
     template_info.update({"dtype": "uint16", "range": [int(template.min()), int(template.max())], "displayWindow": [0, 230]})
     annotation_info = pack_gzip(stage_dir / "annotation.uint32.gz", annotation.tobytes(), args.output)
     annotation_info.update({"dtype": "uint32", "backgroundId": 0, "presentStructureCount": len(np.unique(annotation)) - 1})
-    root_mesh = pack_surface(annotation > 0, stage_dir / "meshes/root.bin.gz", args.resolution, args.output)
-    regions = []
-    for identifier in REGION_IDS:
-        descendants = [item["id"] for item in ontology if identifier in item["structureIdPath"]]
-        mask = np.isin(annotation, descendants)
-        points = np.transpose(np.where(mask))[:, ::-1]
-        if not len(points):
-            continue
-        center = points.mean(axis=0)
-        focus = points[np.argmin(np.sum((points - center) ** 2, axis=1))].tolist()
-        regions.append({**by_id[identifier], "descendantIds": descendants,
-                        "mesh": pack_surface(mask, stage_dir / f"meshes/{identifier}.bin.gz", args.resolution, args.output),
-                        "voxelCount": len(points), "volumeMm3": len(points) * (args.resolution / 1000) ** 3,
-                        "centroidVoxel": center.round(3).tolist(), "focusVoxel": focus,
-                        "boundsVoxel": [[int(points[:, i].min()), int(points[:, i].max())] for i in range(3)]})
+    root_mesh, regions, coverage = prepare_surfaces(annotation, ontology, stage_dir, args.resolution, args.output)
     native_origin = np.array(list(map(float, annotation_header["Offset"].split())))
     origin_um = (start[::-1] * native_spacing[::-1] + native_origin).tolist()
     manifest = {
         "schemaVersion": 1, "atlas": "Allen Developing Mouse Brain Atlas, DevMouse2012", "stage": stage,
         "referenceSpaceId": reference_space, "rootId": ROOT_ID, "dimensions": dims, "resolutionUm": args.resolution,
         "axisOrder": ["AP", "DV", "ML"], "orientation": "PIR", "voxelOrder": "AP-fastest",
-        "hemisphere": "Official unilateral annotation only; not mirrored",
+        "hemisphere": HEMISPHERE,
         "coordinateSpace": "Stage-specific cropped reference, not adult CCF or Bregma",
         "cropOffsetNativeVoxel": start[::-1].tolist(), "originUmInNativeReference": origin_um,
         "template": template_info, "annotation": annotation_info,
         "ontology": {"url": "/embryo/ontology.json", "structureCount": len(ontology), "graphId": 17},
-        "rootMesh": root_mesh, "regions": regions,
+        "rootMesh": root_mesh, "regions": regions, "meshCoverage": coverage,
         "meshFormat": {"name": "allen-mesh-v1", "endian": "little", "compression": "gzip",
                        "header": "uint32 vertexCount, uint32 triangleCount",
                        "vertices": "float32 AP,DV,ML in cropped-local micrometers",
@@ -166,7 +220,8 @@ def prepare_stage(stage: str, args: argparse.Namespace, ontology: list[dict], so
             "processing": f"Crop official brain and brain-ventricle labels; omit spinal cord/body/tract-only labels. Resample grayscale with trilinear interpolation and labels with nearest neighbour onto a {args.resolution} micrometer isotropic grid. Preserve grayscale polarity and the native 0-255 intensity scale, promote uint8 to uint16 and set voxels outside retained labels to zero. No synthetic or mirrored tissue.",
             "brainMaskRoots": BRAIN_ROOTS,
             "orientationNote": "Allen documentation explicitly defines these raw reference volumes as PIR, +x posterior, +y inferior, +z right. We preserve raw axis order. Original MetaImage headers contain AnatomicalOrientation=RAI and identity TransformMatrix; that header token is retained for audit rather than used to override the documented raw array convention.",
-            "limitations": "Single-specimen, stage-specific reconstruction. Annotation derives from spaced sagittal atlas drawings interpolated by Allen. Native reconstruction spacing and 40 micrometer display sampling do not imply equally fine anatomical boundary accuracy. Only the source annotated hemisphere is shown; no cross-stage pointwise registration or stereotaxic use.",
+            "limitations": LIMITATIONS,
+            "annotationLimitationsReferenceUrl": "https://elifesciences.org/articles/61408",
             "documentationUrl": DOCS, "termsUrl": "https://alleninstitute.org/legal/terms-of-use",
             "citationPolicyUrl": "https://alleninstitute.org/citation-policy/",
             "reference": {"authors": "Thompson CL, Ng L, Menon V, et al.", "year": 2014,
@@ -186,7 +241,15 @@ def main() -> None:
     parser.add_argument("--output", type=Path, default=Path(__file__).resolve().parents[1] / "public/embryo")
     parser.add_argument("--resolution", type=int, default=40, choices=[40, 80])
     parser.add_argument("--stages", nargs="+", choices=STAGES, default=list(STAGES))
+    parser.add_argument("--meshes-only", action="store_true", help="Rebuild surfaces from hash-verified packaged annotation; preserve volumes and coordinates")
     args = parser.parse_args()
+    if args.meshes_only:
+        ontology = json.loads((args.output / "ontology.json").read_text())
+        updates = {stage: rebuild_surfaces(stage, args, ontology) for stage in args.stages}
+        index = json.loads((args.output / "index.json").read_text())
+        index["stages"] = [updates.get(stage["stage"], stage) for stage in index["stages"]]
+        save_json(args.output / "index.json", index)
+        return
     args.cache.mkdir(parents=True, exist_ok=True)
     jobs = [(ONTOLOGY_URL, args.cache / "structure_graph_17.json")]
     for stage in args.stages:

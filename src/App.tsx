@@ -62,7 +62,7 @@ export default function App() {
     coordinateNote:
       "AP 以该阶段标注脑部的最前边界为零，前正后负；DV 以最背侧边界为零，向腹侧增加，不表示当前位置的脑表面深度；ML 以单侧标注内侧边界为零，向右增加，尚未校准解剖正中线。三个零点均取自该阶段标注表面的包围边界，不是官方解剖定位点或手术定位点。零平面位于相邻切片之间，输入 0 选择标注侧最近切片，显示实际坐标。40 μm 是重采样间距，不代表边界精度。原始采样和裁剪偏移保存在数据清单中。各时点不是同一只动物的纵向扫描，也没有加载跨时点配准；相同读数不代表同一解剖位置，更不能与成年 CCF 或 Bregma 坐标对应。",
     focusNote:
-      "只显示真实标注覆盖的一侧脑组织。选择发育分区后，定位点落在该阶段的有效标签内。相同分区名称不能直接推断成年期功能；三维边界的精细程度受原始切片和采样间距限制。",
+      "源标注以单侧为主且局部不完整，缺失部分保留为空。选择发育分区后，定位点落在该阶段的有效标签内。脑组织与脑室腔分别显示；三维边界保留原始标签，不镜像补全或平滑推算。",
     sourceUrl: stage.sourceUrl,
     annotationUrl: "https://developingmouse.brain-map.org/static/atlas",
   };
@@ -74,7 +74,7 @@ export default function App() {
         <section className="development-timeline" aria-label={text("选择胚胎发育阶段")}>
           <div className="timeline-intro">
             <strong>{text("胚胎发育阶段")}</strong>
-            <span>{text("独立参考标本 · 单侧标注")}</span>
+            <span>{t("独立标本 · 单侧为主，标注不完整", "Separate specimens · mostly unilateral, incomplete labels")}</span>
           </div>
           <nav aria-label={text("发育时点")}>
             {embryoStages.map((s) => (

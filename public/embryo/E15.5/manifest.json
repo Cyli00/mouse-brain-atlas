@@ -17,7 +17,7 @@
   ],
   "orientation": "PIR",
   "voxelOrder": "AP-fastest",
-  "hemisphere": "Official unilateral annotation only; not mirrored",
+  "hemisphere": "Predominantly unilateral, incomplete source annotation; not mirrored",
   "coordinateSpace": "Stage-specific cropped reference, not adult CCF or Bregma",
   "cropOffsetNativeVoxel": [
     176,
@@ -603,6 +603,7 @@
         16209,
         16210
       ],
+      "anatomyKind": "brain-tissue",
       "mesh": {
         "url": "/embryo/E15.5/meshes/15739.bin.gz",
         "compression": "gzip",
@@ -726,6 +727,7 @@
         15620,
         15621
       ],
+      "anatomyKind": "brain-tissue",
       "mesh": {
         "url": "/embryo/E15.5/meshes/15569.bin.gz",
         "compression": "gzip",
@@ -910,6 +912,7 @@
         15736,
         15737
       ],
+      "anatomyKind": "brain-tissue",
       "mesh": {
         "url": "/embryo/E15.5/meshes/15622.bin.gz",
         "compression": "gzip",
@@ -1075,6 +1078,7 @@
         16306,
         16307
       ],
+      "anatomyKind": "brain-tissue",
       "mesh": {
         "url": "/embryo/E15.5/meshes/16211.bin.gz",
         "compression": "gzip",
@@ -1212,6 +1216,7 @@
         16373,
         16374
       ],
+      "anatomyKind": "brain-tissue",
       "mesh": {
         "url": "/embryo/E15.5/meshes/16309.bin.gz",
         "compression": "gzip",
@@ -1419,6 +1424,7 @@
         16507,
         16508
       ],
+      "anatomyKind": "brain-tissue",
       "mesh": {
         "url": "/embryo/E15.5/meshes/16375.bin.gz",
         "compression": "gzip",
@@ -1634,6 +1640,7 @@
         16647,
         16648
       ],
+      "anatomyKind": "brain-tissue",
       "mesh": {
         "url": "/embryo/E15.5/meshes/16509.bin.gz",
         "compression": "gzip",
@@ -1806,6 +1813,7 @@
         16749,
         16750
       ],
+      "anatomyKind": "brain-tissue",
       "mesh": {
         "url": "/embryo/E15.5/meshes/16650.bin.gz",
         "compression": "gzip",
@@ -1941,6 +1949,7 @@
         16806,
         16807
       ],
+      "anatomyKind": "brain-tissue",
       "mesh": {
         "url": "/embryo/E15.5/meshes/16751.bin.gz",
         "compression": "gzip",
@@ -2353,6 +2362,7 @@
         112892339,
         112892341
       ],
+      "anatomyKind": "brain-tissue",
       "mesh": {
         "url": "/embryo/E15.5/meshes/16809.bin.gz",
         "compression": "gzip",
@@ -2589,6 +2599,7 @@
         112892359,
         112892361
       ],
+      "anatomyKind": "brain-tissue",
       "mesh": {
         "url": "/embryo/E15.5/meshes/17092.bin.gz",
         "compression": "gzip",
@@ -2830,6 +2841,7 @@
         112892379,
         112892381
       ],
+      "anatomyKind": "brain-tissue",
       "mesh": {
         "url": "/embryo/E15.5/meshes/17220.bin.gz",
         "compression": "gzip",
@@ -3293,6 +3305,7 @@
         112892435,
         112892437
       ],
+      "anatomyKind": "brain-tissue",
       "mesh": {
         "url": "/embryo/E15.5/meshes/17352.bin.gz",
         "compression": "gzip",
@@ -3430,7 +3443,7 @@
       126651782
     ],
     "orientationNote": "Allen documentation explicitly defines these raw reference volumes as PIR, +x posterior, +y inferior, +z right. We preserve raw axis order. Original MetaImage headers contain AnatomicalOrientation=RAI and identity TransformMatrix; that header token is retained for audit rather than used to override the documented raw array convention.",
-    "limitations": "Single-specimen, stage-specific reconstruction. Annotation derives from spaced sagittal atlas drawings interpolated by Allen. Native reconstruction spacing and 40 micrometer display sampling do not imply equally fine anatomical boundary accuracy. Only the source annotated hemisphere is shown; no cross-stage pointwise registration or stereotaxic use.",
+    "limitations": "Single-specimen, stage-specific reconstruction. Annotation derives from spaced sagittal atlas drawings interpolated by Allen. Native reconstruction spacing and display sampling do not imply equally fine anatomical boundary accuracy. Source labels mainly cover the left side, with missing lateral and contralateral regions and some midline skew; this is not a complete hemisphere. No missing labels are inferred, mirrored or smoothed. No cross-stage pointwise registration or stereotaxic use.",
     "documentationUrl": "https://brain-map.org/support/documentation/allen-developing-mouse-brain-reference-atlas",
     "termsUrl": "https://alleninstitute.org/legal/terms-of-use",
     "citationPolicyUrl": "https://alleninstitute.org/citation-policy/",
@@ -3439,6 +3452,23 @@
       "year": 2014,
       "title": "A high-resolution spatiotemporal atlas of gene expression of the developing mouse brain",
       "url": "https://doi.org/10.1016/j.neuron.2014.05.033"
-    }
+    },
+    "annotationLimitationsReferenceUrl": "https://elifesciences.org/articles/61408"
+  },
+  "meshCoverage": {
+    "brainTissueRoots": [
+      15566,
+      16649,
+      16808
+    ],
+    "ventricularRoots": [
+      126651562,
+      126651722,
+      126651782
+    ],
+    "retainedVoxelCount": 308794,
+    "brainTissueVoxelCount": 308794,
+    "ventricularVoxelCount": 0,
+    "rootMeshMeaning": "Brain tissue only; ventricular spaces are separate region meshes when labels are present."
   }
 }

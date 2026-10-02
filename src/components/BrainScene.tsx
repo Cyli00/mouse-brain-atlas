@@ -55,6 +55,8 @@ type Props = {
   onCircuitClear?: () => void;
   regions?: BrainRegion[];
   datasetLabel?: string;
+  coverageNote?: string;
+  showCavities?: boolean;
 };
 type SceneAPI = {
   update: (p: Props) => void;
@@ -437,6 +439,7 @@ export function BrainScene(props: Props) {
               side: THREE.DoubleSide,
             }));
             mesh.userData.regionId = entry.id;
+            mesh.userData.surfaceRole = entry.surfaceRole;
             atlasMeshes.set(entry.id, mesh);
             scene.add(mesh);
             update(latest.current);
@@ -479,6 +482,7 @@ export function BrainScene(props: Props) {
       marker.visible = planesVisible;
       atlasMeshes.forEach((mesh, id) => {
         mesh.visible = !p.circuit && !p.isolateRegion && p.selected > 0 &&
+          (mesh.userData.surfaceRole !== "cavity" || !!p.showCavities) &&
           !(region && region.userData.regionId === id);
         const material = mesh.material as THREE.MeshStandardMaterial;
         const transparent = !!p.vasculature || texturedPlanes;
@@ -1086,6 +1090,7 @@ export function BrainScene(props: Props) {
       props.vasculature,
       props.vesselFilter,
       props.vesselsAboveOnly,
+      props.showCavities,
     ],
   );
   return (
@@ -1098,7 +1103,8 @@ export function BrainScene(props: Props) {
       <div className="scene-caption">
         <span className="eyebrow">ANATOMY STUDIO</span>
         <span>{text(props.datasetLabel ?? "Allen CCFv3")}</span>
-        <span className="scene-coverage">{props.circuit ? t(`${props.circuit.nodeIds.length} 个环路节点`, `${props.circuit.nodeIds.length} circuit regions`) : props.selected < 0 ? t("当前白质结构", "Selected white matter structure") : t(`${props.regions?.filter((r) => r.id > 0 && props.data.meshes[String(r.id)]).length ?? 0} 个导览脑区`, `${props.regions?.filter((r) => r.id > 0 && props.data.meshes[String(r.id)]).length ?? 0} featured regions`)}</span>
+        {props.coverageNote && <span className="scene-coverage">{props.coverageNote}</span>}
+        <span className="scene-coverage">{props.circuit ? t(`${props.circuit.nodeIds.length} 个环路节点`, `${props.circuit.nodeIds.length} circuit regions`) : props.selected < 0 ? t("当前白质结构", "Selected white matter structure") : t(`${props.regions?.filter((r) => r.id > 0 && props.data.meshes[String(r.id)]).length ?? 0} 个导览结构`, `${props.regions?.filter((r) => r.id > 0 && props.data.meshes[String(r.id)]).length ?? 0} featured structures`)}</span>
       </div>
       {hovered && hoveredRegion && !props.circuit && (
         <div className="scene-hover-label" style={{

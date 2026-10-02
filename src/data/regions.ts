@@ -21,6 +21,7 @@ export type BrainRegion = {
   evidence: string;
   references: BrainReference[];
   evidenceScope?: "anatomy";
+  surfaceRole?: "cavity";
 };
 
 export const atlasReferences: BrainReference[] = [

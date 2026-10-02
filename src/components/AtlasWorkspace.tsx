@@ -76,6 +76,8 @@ export function AtlasWorkspace({
 }) {
   const { locale, t, text } = useI18n();
   const baseRegions = config.regions;
+  const hasCavities = baseRegions.some((region) => region.surfaceRole === "cavity");
+  const [showCavities, setShowCavities] = useState(false);
   const [initial] = useState(() => readWorkspaceRoute(config, location.search));
   const initialCircuit = initial.circuit;
   const [selected, setSelected] = useState(initial.selectedId);
@@ -297,6 +299,7 @@ export function AtlasWorkspace({
     setShowVessels(false);
     setVesselFilter("all");
     setVesselsAboveOnly(false);
+    setShowCavities(false);
   };
   return (
     <div
@@ -429,6 +432,8 @@ export function AtlasWorkspace({
                 mlZeroUm={mlZeroUm}
                 dvZeroUm={dvZeroUm}
                 data={data}
+                coverageNote={config.embryonic ? t("单侧为主 · 源标注不完整", "Mostly unilateral · incomplete source labels") : undefined}
+                showCavities={showCavities}
                 vasculature={config.embryonic ? null : vessels.data}
                 vesselFilter={vesselFilter}
                 vesselsAboveOnly={vesselsAboveOnly}
@@ -516,6 +521,11 @@ export function AtlasWorkspace({
                 />
                 <span>{Math.round(opacity * 100)}%</span>
               </div>
+              {hasCavities && <label className="check-field">
+                <input type="checkbox" checked={showCavities} disabled={!data}
+                  onChange={(event) => setShowCavities(event.target.checked)} />
+                {t("显示脑室腔", "Show ventricular cavities")}
+              </label>}
               <button
                 className="text-button reset-button"
                 disabled={!data}
@@ -623,7 +633,8 @@ export function AtlasWorkspace({
             {config.embryonic && (
               <div className="slice-source-detail embryo-partition-note">
                 <p>{embryoPartitionData ? `${embryoLevel === "fine" ? embryoPartitionData.fineCount : embryoPartitionData.majorCount}${t(" 个", " ")}${embryoLevel === "fine" ? text("原始分区标签") : text("区室及保留标签")}` : text("正在载入发育分区…")}{text(" · 三维显示主要区室，细分边界见切片。")}</p>
-                <p>{config.id === "E18.5" ? text("E18.5 原始标注较粗，不代表脑区减少。") : text("分区按发育本体命名，不能直接等同于成年核团。")}{text("单侧标注；40 μm 为重采样间距。")}</p>
+                <p>{config.id === "E18.5" ? text("E18.5 原始标注较粗，不代表脑区减少。") : text("分区按发育本体命名，不能直接等同于成年核团。")}{t("源标注以单侧为主，局部不完整；40 μm 为重采样间距。", "Source labels are mostly unilateral and locally incomplete; 40 μm is the resampling interval.")}</p>
+                <p>{hasCavities ? t("脑室腔独立显示，可用“显示脑室腔”开关查看；选中脑室时显示该腔室。", "Ventricular cavities are separate surfaces. Use “Show ventricular cavities” to reveal them; selecting a cavity always shows it.") : t("该阶段的打包标注没有独立脑室标签，未推算脑室模型。", "This stage has no separate ventricular labels in the packaged annotation, so no cavity model is inferred.")}</p>
               </div>
             )}
             {slices.source === "paxinos-kim" && (

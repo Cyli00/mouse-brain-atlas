@@ -183,6 +183,22 @@ export const embryoRegions: BrainRegion[] = regionText.map(
   }),
 );
 
+export const embryoVentricleIds = new Set([126651562, 126651722, 126651782]);
+
+export const embryoVentricleRegions: BrainRegion[] = [
+  { id: 126651562, acronym: "v_F", name: "前脑脑室腔", englishName: "ventricles, forebrain", color: "#C35C2E" },
+  { id: 126651722, acronym: "v_M", name: "中脑脑室腔", englishName: "ventricles, midbrain", color: "#17B317" },
+  { id: 126651782, acronym: "v_H", name: "后脑脑室腔", englishName: "ventricles, hindbrain", color: "#EA37FF" },
+].map((region) => ({
+  ...region,
+  surfaceRole: "cavity" as const,
+  category: "脑室腔",
+  summary: "模型由 Allen DevMouse2012 的脑室标签及其子级标签生成，表示脑室腔的范围。脑室腔与脑组织分别显示，边界保留来源标注。",
+  function: "检查来源标注中的脑室腔及其与脑组织的空间关系。",
+  evidence: "当前打包数据只有 E11.5 含这组脑室标签；其他阶段未生成脑室模型。缺少标签不表示该阶段没有脑室。",
+  references: embryoReferences,
+}));
+
 export type EmbryoStage = {
   id: string;
   title: string;
@@ -246,7 +262,7 @@ export const embryoStages: EmbryoStage[] = [
   manifestUrl: `/embryo/${stage.id}/manifest.json`,
   resolutionUm: 40,
   initialId: 15739,
-  regions: embryoRegions,
+  regions: stage.id === "E11.5" ? [...embryoRegions, ...embryoVentricleRegions] : embryoRegions,
   referenceDrawingSourceUrl:
     "https://developingmouse.brain-map.org/static/atlas",
   sourceUrl: "https://developingmouse.brain-map.org/static/atlas",

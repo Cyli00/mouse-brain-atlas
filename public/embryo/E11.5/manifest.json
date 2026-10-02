@@ -17,7 +17,7 @@
   ],
   "orientation": "PIR",
   "voxelOrder": "AP-fastest",
-  "hemisphere": "Official unilateral annotation only; not mirrored",
+  "hemisphere": "Predominantly unilateral, incomplete source annotation; not mirrored",
   "coordinateSpace": "Stage-specific cropped reference, not adult CCF or Bregma",
   "cropOffsetNativeVoxel": [
     103,
@@ -65,13 +65,13 @@
   "rootMesh": {
     "url": "/embryo/E11.5/meshes/root.bin.gz",
     "compression": "gzip",
-    "bytes": 305075,
-    "uncompressedBytes": 1012832,
-    "sha256": "df1cac4292b0332e4a1471066b36d17e5bd7dddbe3e64f9abceb457e9c9887ff",
-    "uncompressedSha256": "f5fe16d722ccd8ebb6b656b3fc1f61188011869a670ba0701b6ad1e908659583",
+    "bytes": 463078,
+    "uncompressedBytes": 1533188,
+    "sha256": "0923f6cc1213f71bee275a42eac7fff42125c7a279b2fb4458e48b2c5f06eafc",
+    "uncompressedSha256": "c5a08263de96cada73801e935324dfe1dcbd36b52b63bbd1ac8c4a1be0c3b56e",
     "format": "allen-mesh-v1",
-    "vertexCount": 28102,
-    "triangleCount": 56300,
+    "vertexCount": 42059,
+    "triangleCount": 85706,
     "boundsUm": [
       [
         60.0,
@@ -603,6 +603,7 @@
         16209,
         16210
       ],
+      "anatomyKind": "brain-tissue",
       "mesh": {
         "url": "/embryo/E11.5/meshes/15739.bin.gz",
         "compression": "gzip",
@@ -726,6 +727,7 @@
         15620,
         15621
       ],
+      "anatomyKind": "brain-tissue",
       "mesh": {
         "url": "/embryo/E11.5/meshes/15569.bin.gz",
         "compression": "gzip",
@@ -910,6 +912,7 @@
         15736,
         15737
       ],
+      "anatomyKind": "brain-tissue",
       "mesh": {
         "url": "/embryo/E11.5/meshes/15622.bin.gz",
         "compression": "gzip",
@@ -1075,6 +1078,7 @@
         16306,
         16307
       ],
+      "anatomyKind": "brain-tissue",
       "mesh": {
         "url": "/embryo/E11.5/meshes/16211.bin.gz",
         "compression": "gzip",
@@ -1212,6 +1216,7 @@
         16373,
         16374
       ],
+      "anatomyKind": "brain-tissue",
       "mesh": {
         "url": "/embryo/E11.5/meshes/16309.bin.gz",
         "compression": "gzip",
@@ -1419,6 +1424,7 @@
         16507,
         16508
       ],
+      "anatomyKind": "brain-tissue",
       "mesh": {
         "url": "/embryo/E11.5/meshes/16375.bin.gz",
         "compression": "gzip",
@@ -1634,6 +1640,7 @@
         16647,
         16648
       ],
+      "anatomyKind": "brain-tissue",
       "mesh": {
         "url": "/embryo/E11.5/meshes/16509.bin.gz",
         "compression": "gzip",
@@ -1806,6 +1813,7 @@
         16749,
         16750
       ],
+      "anatomyKind": "brain-tissue",
       "mesh": {
         "url": "/embryo/E11.5/meshes/16650.bin.gz",
         "compression": "gzip",
@@ -1941,6 +1949,7 @@
         16806,
         16807
       ],
+      "anatomyKind": "brain-tissue",
       "mesh": {
         "url": "/embryo/E11.5/meshes/16751.bin.gz",
         "compression": "gzip",
@@ -2353,6 +2362,7 @@
         112892339,
         112892341
       ],
+      "anatomyKind": "brain-tissue",
       "mesh": {
         "url": "/embryo/E11.5/meshes/16809.bin.gz",
         "compression": "gzip",
@@ -2589,6 +2599,7 @@
         112892359,
         112892361
       ],
+      "anatomyKind": "brain-tissue",
       "mesh": {
         "url": "/embryo/E11.5/meshes/17092.bin.gz",
         "compression": "gzip",
@@ -2830,6 +2841,7 @@
         112892379,
         112892381
       ],
+      "anatomyKind": "brain-tissue",
       "mesh": {
         "url": "/embryo/E11.5/meshes/17220.bin.gz",
         "compression": "gzip",
@@ -3293,6 +3305,7 @@
         112892435,
         112892437
       ],
+      "anatomyKind": "brain-tissue",
       "mesh": {
         "url": "/embryo/E11.5/meshes/17352.bin.gz",
         "compression": "gzip",
@@ -3341,6 +3354,324 @@
         ],
         [
           10,
+          34
+        ]
+      ]
+    },
+    {
+      "id": 126651562,
+      "acronym": "v_F",
+      "name": "ventricles, forebrain",
+      "color": "#C35C2E",
+      "parentId": 126651558,
+      "structureIdPath": [
+        15564,
+        126651558,
+        126651562
+      ],
+      "descendantIds": [
+        126651562,
+        126651566,
+        126651570,
+        126651574,
+        126651578,
+        126651582,
+        126651586,
+        126651590,
+        126651594,
+        126651598,
+        126651602,
+        126651606,
+        126651610,
+        126651614,
+        126651618,
+        126651622,
+        126651626,
+        126651630,
+        126651634,
+        126651638,
+        126651642,
+        126651646,
+        126651650,
+        126651654,
+        126651658,
+        126651662,
+        126651666,
+        126651670,
+        126651674,
+        126651678,
+        126651682,
+        126651686,
+        126651690,
+        126651694,
+        126651698,
+        126651702,
+        126651706,
+        126651710,
+        126651714,
+        126651718
+      ],
+      "anatomyKind": "ventricular-space",
+      "mesh": {
+        "url": "/embryo/E11.5/meshes/126651562.bin.gz",
+        "compression": "gzip",
+        "bytes": 93168,
+        "uncompressedBytes": 318764,
+        "sha256": "011a3e94f888eea1a4077fdad8540c2380fb0c36a08bfd7e6f2aefadaa16b780",
+        "uncompressedSha256": "21b90314955e33e2e297ca9e395f729ba1e890b8add1714026fd46f6251504af",
+        "format": "allen-mesh-v1",
+        "vertexCount": 8849,
+        "triangleCount": 17714,
+        "boundsUm": [
+          [
+            220.0,
+            2380.0
+          ],
+          [
+            140.0,
+            2260.0
+          ],
+          [
+            60.0,
+            1380.0
+          ]
+        ]
+      },
+      "voxelCount": 18508,
+      "volumeMm3": 1.1845120000000002,
+      "centroidVoxel": [
+        30.37,
+        32.565,
+        26.606
+      ],
+      "focusVoxel": [
+        30,
+        33,
+        28
+      ],
+      "boundsVoxel": [
+        [
+          6,
+          59
+        ],
+        [
+          4,
+          56
+        ],
+        [
+          2,
+          34
+        ]
+      ]
+    },
+    {
+      "id": 126651722,
+      "acronym": "v_M",
+      "name": "ventricles, midbrain",
+      "color": "#17B317",
+      "parentId": 126651558,
+      "structureIdPath": [
+        15564,
+        126651558,
+        126651722
+      ],
+      "descendantIds": [
+        126651722,
+        126651726,
+        126651730,
+        126651734,
+        126651738,
+        126651742,
+        126651746,
+        126651750,
+        126651754,
+        126651758,
+        126651762,
+        126651766,
+        126651770,
+        126651774,
+        126651778
+      ],
+      "anatomyKind": "ventricular-space",
+      "mesh": {
+        "url": "/embryo/E11.5/meshes/126651722.bin.gz",
+        "compression": "gzip",
+        "bytes": 36542,
+        "uncompressedBytes": 121904,
+        "sha256": "6e2cc6f5a7511607937375d2021ce1bf0c3990e50435c0c0d1f86b20f2378d30",
+        "uncompressedSha256": "2b7fd668ad7d3794d3f6f90cabc36e5df295fc08dc059db30a843336db6181fd",
+        "format": "allen-mesh-v1",
+        "vertexCount": 3382,
+        "triangleCount": 6776,
+        "boundsUm": [
+          [
+            1860.0,
+            3060.0
+          ],
+          [
+            180.0,
+            1220.0
+          ],
+          [
+            500.0,
+            1380.0
+          ]
+        ]
+      },
+      "voxelCount": 5097,
+      "volumeMm3": 0.32620800000000005,
+      "centroidVoxel": [
+        62.445,
+        16.717,
+        25.328
+      ],
+      "focusVoxel": [
+        62,
+        17,
+        25
+      ],
+      "boundsVoxel": [
+        [
+          47,
+          76
+        ],
+        [
+          5,
+          30
+        ],
+        [
+          13,
+          34
+        ]
+      ]
+    },
+    {
+      "id": 126651782,
+      "acronym": "v_H",
+      "name": "ventricles, hindbrain",
+      "color": "#EA37FF",
+      "parentId": 126651558,
+      "structureIdPath": [
+        15564,
+        126651558,
+        126651782
+      ],
+      "descendantIds": [
+        126651782,
+        126651786,
+        126651790,
+        126651794,
+        126651798,
+        126651802,
+        126651806,
+        126651810,
+        126651814,
+        126651818,
+        126651822,
+        126651826,
+        126651830,
+        126651834,
+        126651838,
+        126651842,
+        126651846,
+        126651850,
+        126651854,
+        126651858,
+        126651862,
+        126651866,
+        126651870,
+        126651874,
+        126651878,
+        126651882,
+        126651886,
+        126651890,
+        126651894,
+        126651898,
+        126651902,
+        126651906,
+        126651910,
+        126651914,
+        126651918,
+        126651922,
+        126651926,
+        126651930,
+        126651934,
+        126651938,
+        126651942,
+        126651946,
+        126651950,
+        126651954,
+        126651958,
+        126651962,
+        126651966,
+        126651970,
+        126651974,
+        126651978,
+        126651982,
+        126651986,
+        126651990,
+        126651994,
+        126651998,
+        126652002,
+        126652006,
+        126652010,
+        126652014,
+        126652018,
+        126652022,
+        126652026,
+        126652030,
+        126652034,
+        126652038
+      ],
+      "anatomyKind": "ventricular-space",
+      "mesh": {
+        "url": "/embryo/E11.5/meshes/126651782.bin.gz",
+        "compression": "gzip",
+        "bytes": 105521,
+        "uncompressedBytes": 350204,
+        "sha256": "16e79f1fa3b438058525d01deb8f03c73c16e1f98bb3b2e3b2887124458d17a7",
+        "uncompressedSha256": "2948ba111aa9c3dfba79235c9e0aaf2fccfe91656252f2d863aafedd0d298cfe",
+        "format": "allen-mesh-v1",
+        "vertexCount": 9717,
+        "triangleCount": 19466,
+        "boundsUm": [
+          [
+            2100.0,
+            3620.0
+          ],
+          [
+            820.0,
+            4700.0
+          ],
+          [
+            60.0,
+            1380.0
+          ]
+        ]
+      },
+      "voxelCount": 21477,
+      "volumeMm3": 1.3745280000000002,
+      "centroidVoxel": [
+        73.434,
+        55.91,
+        22.277
+      ],
+      "focusVoxel": [
+        73,
+        56,
+        22
+      ],
+      "boundsVoxel": [
+        [
+          53,
+          90
+        ],
+        [
+          21,
+          117
+        ],
+        [
+          2,
           34
         ]
       ]
@@ -3430,7 +3761,7 @@
       126651782
     ],
     "orientationNote": "Allen documentation explicitly defines these raw reference volumes as PIR, +x posterior, +y inferior, +z right. We preserve raw axis order. Original MetaImage headers contain AnatomicalOrientation=RAI and identity TransformMatrix; that header token is retained for audit rather than used to override the documented raw array convention.",
-    "limitations": "Single-specimen, stage-specific reconstruction. Annotation derives from spaced sagittal atlas drawings interpolated by Allen. Native reconstruction spacing and 40 micrometer display sampling do not imply equally fine anatomical boundary accuracy. Only the source annotated hemisphere is shown; no cross-stage pointwise registration or stereotaxic use.",
+    "limitations": "Single-specimen, stage-specific reconstruction. Annotation derives from spaced sagittal atlas drawings interpolated by Allen. Native reconstruction spacing and display sampling do not imply equally fine anatomical boundary accuracy. Source labels mainly cover the left side, with missing lateral and contralateral regions and some midline skew; this is not a complete hemisphere. No missing labels are inferred, mirrored or smoothed. No cross-stage pointwise registration or stereotaxic use.",
     "documentationUrl": "https://brain-map.org/support/documentation/allen-developing-mouse-brain-reference-atlas",
     "termsUrl": "https://alleninstitute.org/legal/terms-of-use",
     "citationPolicyUrl": "https://alleninstitute.org/citation-policy/",
@@ -3439,6 +3770,23 @@
       "year": 2014,
       "title": "A high-resolution spatiotemporal atlas of gene expression of the developing mouse brain",
       "url": "https://doi.org/10.1016/j.neuron.2014.05.033"
-    }
+    },
+    "annotationLimitationsReferenceUrl": "https://elifesciences.org/articles/61408"
+  },
+  "meshCoverage": {
+    "brainTissueRoots": [
+      15566,
+      16649,
+      16808
+    ],
+    "ventricularRoots": [
+      126651562,
+      126651722,
+      126651782
+    ],
+    "retainedVoxelCount": 86275,
+    "brainTissueVoxelCount": 41193,
+    "ventricularVoxelCount": 45082,
+    "rootMeshMeaning": "Brain tissue only; ventricular spaces are separate region meshes when labels are present."
   }
 }

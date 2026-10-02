@@ -1,6 +1,7 @@
 import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import test from "node:test";
+import { embryoRegions } from "../src/data/embryo";
 import { loadAtlas, PLANES, type PlaneName } from "../src/lib/atlas";
 import { embryoPartitions } from "../src/lib/embryo-partitions";
 import { segmentSlice } from "../src/lib/slice-segmentation";
@@ -18,10 +19,9 @@ test("embryo partition levels preserve stage labels, tissue masks and ventricula
   try {
     for (const [stage, count] of [["E11.5", 222], ["E13.5", 657], ["E15.5", 693], ["E18.5", 71]] as const) {
       await t.test(stage, async () => {
-        const manifest = JSON.parse(await readFile(new URL(`embryo/${stage}/manifest.json`, root), "utf8"));
         const data = await loadAtlas(new AbortController().signal, () => {}, `/embryo/${stage}/manifest.json`);
         const originalLabels = data.annotation.slice();
-        const majorIds = new Set<number>(manifest.regions.map((r: { id: number }) => r.id));
+        const majorIds = new Set(embryoRegions.map((region) => region.id));
         const partition = embryoPartitions(data, majorIds);
         assert.equal(partition.fine, data);
         assert.equal(partition.fineCount, count);
