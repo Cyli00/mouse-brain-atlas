@@ -10,7 +10,13 @@ export default defineConfig({
         embryo: resolve(import.meta.dirname, "embryo/index.html"),
       },
       output: {
-        manualChunks: { three: ["three"], react: ["react", "react-dom"] },
+        manualChunks: {
+          three: ["three"],
+          react: ["react", "react-dom"],
+          translations: ["content", "interface", "viewer", "white-matter"].map(
+            (name) => resolve(import.meta.dirname, `src/locales/${name}.en.ts`),
+          ),
+        },
       },
     },
   },
