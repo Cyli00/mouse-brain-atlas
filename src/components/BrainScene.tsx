@@ -1133,7 +1133,7 @@ export function BrainScene(props: Props) {
             <button onClick={props.onLocateSlices}><Crosshair size={15} />{t("定位切片", "Locate in slices")}</button>
           </div>
           <button className="scene-read-more" onClick={() => { setDetailsOpen(false); props.onReadRegion(); }}>
-            {t("功能、证据与文献", "Function, evidence and references")} <ArrowUpRight size={16} />
+            {selectedRegion.evidenceScope === "anatomy" || props.data.manifest.stage ? t("解剖、证据与文献", "Anatomy, evidence and references") : t("功能、证据与文献", "Function, evidence and references")} <ArrowUpRight size={16} />
           </button>
         </section>
       )}

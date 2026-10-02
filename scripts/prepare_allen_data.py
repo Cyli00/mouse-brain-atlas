@@ -9,6 +9,7 @@ from __future__ import annotations
 import argparse
 import array
 import concurrent.futures
+from collections import Counter
 import datetime
 import gzip
 import json
@@ -32,8 +33,8 @@ def save_json(path: Path, value: object) -> None:
     path.write_text(json.dumps(value, ensure_ascii=False, indent=2) + "\n")
 
 
-def download(url: str, destination: Path) -> dict:
-    if not destination.exists():
+def download(url: str, destination: Path, *, refresh: bool = False) -> dict:
+    if refresh or not destination.exists():
         part = destination.with_suffix(destination.suffix + ".part")
         subprocess.run(
             ["curl", "--fail", "--location", "--silent", "--show-error", "--retry", "2",
@@ -101,15 +102,18 @@ def pack_mesh(source: Path, output: Path) -> dict:
         if not fields:
             continue
         if fields[0] == "v":
+            assert len(fields) >= 4, f"Incomplete vertex in {source.name}"
             vertices.extend(float(value) for value in fields[1:4])
         elif fields[0] == "f":
             face = [int(value.split("/")[0]) - 1 for value in fields[1:]]
+            assert len(face) >= 3, f"Incomplete face in {source.name}"
             assert all(value >= 0 for value in face)
             for index in range(1, len(face) - 1):
                 triangles.extend([face[0], face[index], face[index + 1]])
     vertex_count = len(vertices) // 3
     triangle_count = len(triangles) // 3
     assert vertex_count and triangle_count
+    assert all(math.isfinite(value) for value in vertices)
     assert max(triangles) < vertex_count
     bounds = [[min(vertices[axis::3]), max(vertices[axis::3])] for axis in range(3)]
     if sys.byteorder != "little":
@@ -124,12 +128,145 @@ def pack_mesh(source: Path, output: Path) -> dict:
     return details
 
 
+def prepare_regions(region_ids: list[int], ontology: list[dict], annotation: array.array,
+                    dims: list[int], resolution: int, meshes: dict[int, dict]) -> list[dict]:
+    by_id = {item["id"]: item for item in ontology}
+    # Aggregate through the ontology so parent regions include all of their layers/subregions.
+    voxel_groups = {identifier: [] for identifier in region_ids}
+    region_membership = {
+        item["id"]: [identifier for identifier in region_ids if identifier in item["structureIdPath"]]
+        for item in ontology
+    }
+    for index, identifier in enumerate(annotation):
+        for parent in region_membership.get(identifier, []):
+            ap = index % dims[0]
+            dv = index // dims[0] % dims[1]
+            ml = index // (dims[0] * dims[1])
+            voxel_groups[parent].append((ap, dv, ml))
+
+    regions = []
+    for identifier in region_ids:
+        voxels = voxel_groups[identifier]
+        assert voxels, f"Region {identifier} has no labeled voxels"
+        centroid = [sum(point[axis] for point in voxels) / len(voxels) for axis in range(3)]
+        left = [point for point in voxels if point[2] < dims[2] / 2]
+        focus_pool = left or voxels
+        focus_center = [sum(point[axis] for point in focus_pool) / len(focus_pool) for axis in range(3)]
+        # A bilateral centroid can fall outside the region; choose an actual labeled voxel.
+        focus = min(focus_pool, key=lambda point: sum((point[axis] - focus_center[axis]) ** 2 for axis in range(3)))
+        regions.append({
+            **by_id[identifier], "mesh": meshes[identifier],
+            "descendantIds": [item["id"] for item in ontology if identifier in item["structureIdPath"]],
+            "voxelCount": len(voxels), "volumeMm3": len(voxels) * (resolution / 1000) ** 3,
+            "centroidVoxel": [round(value, 3) for value in centroid],
+            "centroidUm": [round(value * resolution, 3) for value in centroid],
+            "focusVoxel": list(focus), "focusUm": [value * resolution for value in focus],
+            "boundsVoxel": [[min(point[axis] for point in voxels), max(point[axis] for point in voxels)] for axis in range(3)],
+            "alignment": {
+                "meshAnnotationExtentMaxDifferenceUm": round(max(
+                    abs(meshes[identifier]["boundsUm"][axis][side] -
+                        (min(point[axis] for point in voxels) if side == 0 else max(point[axis] for point in voxels)) * resolution)
+                    for axis in range(3) for side in range(2)
+                ), 3),
+                "note": "The official smoothed mesh is not an exact isosurface of the coarser annotation. Extent differences are reported, not corrected by moving or stretching the mesh.",
+            },
+        })
+
+    return regions
+
+
+def cortical_coverage(region_ids: list[int], ontology: list[dict], annotation: array.array) -> list[dict]:
+    by_id = {item["id"]: item for item in ontology}
+    counts = Counter(annotation)
+    reports = []
+    for root_id in [315, 695]:
+        selected = [identifier for identifier in region_ids if root_id in by_id[identifier]["structureIdPath"]]
+        selected_set = set(selected)
+        labels = {label: count for label, count in counts.items()
+                  if label and root_id in by_id[label]["structureIdPath"]}
+        memberships = {label: selected_set.intersection(by_id[label]["structureIdPath"]) for label in labels}
+        missing = [label for label, parents in memberships.items() if not parents]
+        overlaps = [label for label, parents in memberships.items() if len(parents) > 1]
+        assert not overlaps, f"Overlapping cortical regions: {overlaps}"
+        if root_id == 315:
+            assert not missing, f"Isocortex labels without a mesh region: {missing}"
+        total = sum(labels.values())
+        covered = total - sum(labels[label] for label in missing)
+        reports.append({
+            "rootId": root_id, "acronym": by_id[root_id]["acronym"],
+            "regionIds": selected, "annotationVoxelCount": total,
+            "coveredVoxelCount": covered, "coverageFraction": covered / total,
+            "overlapVoxelCount": 0,
+            "uncoveredLabels": [{"id": label, "acronym": by_id[label]["acronym"],
+                                 "name": by_id[label]["name"], "voxelCount": labels[label]}
+                                for label in sorted(missing)],
+        })
+    return reports
+
+
+def extend_regions(args: argparse.Namespace, region_catalog: list[dict]) -> None:
+    manifest = json.loads((args.output / "manifest.json").read_text())
+    assert manifest["resolutionUm"] == args.resolution
+    assert manifest["annotationVersion"] == "ccf_2017"
+    ontology = json.loads((args.output / "ontology.json").read_text())
+    source_path = args.cache / "structure_graph_1.json"
+    source = download(ONTOLOGY_URL, source_path)
+    recorded = next(item for item in manifest["provenance"]["sources"] if item["url"] == ONTOLOGY_URL)
+    assert source["sha256"] == recorded["sha256"], "Official ontology has changed; review before extending"
+    assert flatten_ontology(source_path) == ontology
+    by_id = {item["id"]: item for item in ontology}
+    region_ids = [item["id"] for item in region_catalog]
+    previous = {item["id"]: item for item in manifest["regions"]}
+    assert set(previous).issubset(region_ids), "Extension cannot remove existing regions"
+    for item in region_catalog:
+        assert item["id"] in by_id, f"Unknown Allen structure: {item}"
+        assert all(item[key] == by_id[item["id"]][key] for key in ["id", "acronym", "name"])
+    for asset in [manifest["template"], manifest["annotation"], manifest["rootMesh"],
+                  *[item["mesh"] for item in previous.values()]]:
+        packed = (args.output / asset["url"].removeprefix("/data/")).read_bytes()
+        assert len(packed) == asset["bytes"]
+        assert sha256(packed) == asset["sha256"]
+        raw = gzip.decompress(packed)
+        assert len(raw) == asset["uncompressedBytes"]
+        assert sha256(raw) == asset["uncompressedSha256"]
+    annotation = array.array("I", gzip.decompress(
+        (args.output / manifest["annotation"]["url"].removeprefix("/data/")).read_bytes()))
+    if sys.byteorder != "little":
+        annotation.byteswap()
+    assert len(annotation) == math.prod(manifest["dimensions"])
+    assert not (set(annotation) - set(by_id) - {0})
+    coverage = cortical_coverage(region_ids, ontology, annotation)
+    added_ids = [identifier for identifier in region_ids if identifier not in previous]
+    if not added_ids and region_ids == list(previous) and manifest.get("corticalCoverage") == coverage:
+        print("Catalog and cortical coverage already match; no assets or metadata changed")
+        return
+    jobs = [(f"{BASE}/annotation/ccf_2017/structure_meshes/{identifier}.obj", args.cache / f"{identifier}.obj")
+            for identifier in added_ids]
+    with concurrent.futures.ThreadPoolExecutor(max_workers=4) as executor:
+        # OBJ has no structure ID field; fetch each new ID from its official URL instead of trusting a named cache file.
+        sources = list(executor.map(lambda job: download(*job, refresh=True), jobs))
+    meshes = {identifier: pack_mesh(args.cache / f"{identifier}.obj", args.output / "meshes" / f"{identifier}.bin.gz")
+              for identifier in added_ids}
+    previous.update({item["id"]: item for item in prepare_regions(
+        added_ids, ontology, annotation, manifest["dimensions"], args.resolution, meshes)})
+    manifest["regions"] = [previous[identifier] for identifier in region_ids]
+    manifest["regionCatalog"]["regionCount"] = len(region_ids)
+    manifest["corticalCoverage"] = coverage
+    manifest["provenance"]["sources"].extend(sources)
+    manifest["preparedAt"] = datetime.datetime.now(datetime.timezone.utc).isoformat()
+    save_json(args.output / "manifest.json", manifest)
+    save_json(args.output / "adult-region-ids.json", region_catalog)
+    print(f"Added {len(added_ids)} official meshes; preserved all existing volume and mesh assets")
+
+
 def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--resolution", type=int, choices=[25, 50, 100], default=50)
     parser.add_argument("--cache", type=Path, default=Path(tempfile.gettempdir()) / "mouse-brain-allen-source")
     parser.add_argument("--output", type=Path, default=Path(__file__).resolve().parents[1] / "public/data")
     parser.add_argument("--regions", type=Path, default=DEFAULT_REGION_CATALOG)
+    parser.add_argument("--extend-regions", action="store_true",
+                        help="Append catalog regions using verified existing volumes; download only new meshes and the ontology")
     args = parser.parse_args()
     region_catalog = json.loads(args.regions.read_text())
     region_ids = [item["id"] for item in region_catalog]
@@ -137,6 +274,9 @@ def main() -> None:
     assert all(isinstance(identifier, int) and identifier > 0 for identifier in region_ids)
     args.cache.mkdir(parents=True, exist_ok=True)
     args.output.mkdir(parents=True, exist_ok=True)
+    if args.extend_regions:
+        extend_regions(args, region_catalog)
+        return
     jobs = [
         (f"{BASE}/average_template/average_template_{args.resolution}.nrrd", args.cache / f"average_template_{args.resolution}.nrrd"),
         (f"{BASE}/annotation/ccf_2017/annotation_{args.resolution}.nrrd", args.cache / f"annotation_{args.resolution}.nrrd"),
@@ -171,51 +311,12 @@ def main() -> None:
     template_asset.update({"dtype": "uint16", "range": [min(template), max(template)], "displayWindow": [0, 350]})
     annotation_asset.update({"dtype": "uint32", "backgroundId": 0, "presentStructureCount": len(set(annotation) - {0})})
 
-    # Aggregate through the ontology so parent regions include all of their layers/subregions.
-    voxel_groups = {identifier: [] for identifier in region_ids}
-    region_membership = {
-        item["id"]: [identifier for identifier in region_ids if identifier in item["structureIdPath"]]
-        for item in ontology
-    }
-    for index, identifier in enumerate(annotation):
-        for parent in region_membership.get(identifier, []):
-            ap = index % dims[0]
-            dv = index // dims[0] % dims[1]
-            ml = index // (dims[0] * dims[1])
-            voxel_groups[parent].append((ap, dv, ml))
-
     meshes = {}
     for identifier in [ROOT_ID] + region_ids:
         meshes[identifier] = pack_mesh(args.cache / f"{identifier}.obj", args.output / "meshes" / f"{identifier}.bin.gz")
         print(f"Mesh {identifier}: {meshes[identifier]['vertexCount']:,} vertices, {meshes[identifier]['bytes']:,} compressed bytes", flush=True)
 
-    regions = []
-    for identifier in region_ids:
-        voxels = voxel_groups[identifier]
-        assert voxels, f"Region {identifier} has no labeled voxels"
-        centroid = [sum(point[axis] for point in voxels) / len(voxels) for axis in range(3)]
-        left = [point for point in voxels if point[2] < dims[2] / 2]
-        focus_pool = left or voxels
-        focus_center = [sum(point[axis] for point in focus_pool) / len(focus_pool) for axis in range(3)]
-        # A bilateral centroid can fall outside the region; choose an actual labeled voxel.
-        focus = min(focus_pool, key=lambda point: sum((point[axis] - focus_center[axis]) ** 2 for axis in range(3)))
-        regions.append({
-            **by_id[identifier], "mesh": meshes[identifier],
-            "descendantIds": [item["id"] for item in ontology if identifier in item["structureIdPath"]],
-            "voxelCount": len(voxels), "volumeMm3": len(voxels) * (args.resolution / 1000) ** 3,
-            "centroidVoxel": [round(value, 3) for value in centroid],
-            "centroidUm": [round(value * args.resolution, 3) for value in centroid],
-            "focusVoxel": list(focus), "focusUm": [value * args.resolution for value in focus],
-            "boundsVoxel": [[min(point[axis] for point in voxels), max(point[axis] for point in voxels)] for axis in range(3)],
-            "alignment": {
-                "meshAnnotationExtentMaxDifferenceUm": round(max(
-                    abs(meshes[identifier]["boundsUm"][axis][side] -
-                        (min(point[axis] for point in voxels) if side == 0 else max(point[axis] for point in voxels)) * args.resolution)
-                    for axis in range(3) for side in range(2)
-                ), 3),
-                "note": "The official smoothed mesh is not an exact isosurface of the coarser annotation. Extent differences are reported, not corrected by moving or stretching the mesh.",
-            },
-        })
+    regions = prepare_regions(region_ids, ontology, annotation, dims, args.resolution, meshes)
 
     manifest = {
         "schemaVersion": 1,
@@ -234,6 +335,7 @@ def main() -> None:
         "ontology": {"url": "/data/ontology.json", "structureCount": len(ontology), "sourceUrl": ONTOLOGY_URL},
         "rootMesh": meshes[ROOT_ID], "regions": regions,
         "regionCatalog": {"url": "/data/adult-region-ids.json", "regionCount": len(regions)},
+        "corticalCoverage": cortical_coverage(region_ids, ontology, annotation),
         "meshFormat": {
             "name": "allen-mesh-v1", "endian": "little", "compression": "gzip",
             "header": "uint32 vertexCount, uint32 triangleCount",

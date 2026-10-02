@@ -617,6 +617,7 @@ export function AtlasWorkspace({
             {!config.embryonic && slices.source === "allen" && data && (
               <div className="slice-source-detail">
                 <p>Allen CCFv3 · {allenLabelCount}{text(" 个原始分区标签，含皮层分层。导览与三维表面展示 ")}{baseRegions.length}{text(" 个精选脑区。")}</p>
+                <p>{t("新皮层主要区域完整覆盖当前标注。嗅区与海马中仅标到父级的部分保留在切片中，不推定细分归属。", "The major isocortical regions cover all current isocortical labels. Olfactory and hippocampal voxels labeled only at a parent level remain in the slices without an inferred subdivision.")}</p>
               </div>
             )}
             {config.embryonic && (
@@ -865,8 +866,8 @@ export function AtlasWorkspace({
                   <h2>{text(region.name)}</h2>
                   {locale === "zh" && <p className="english-name">{region.englishName}</p>}
                   <p className="region-summary">{text(region.summary)}</p>
-                  <section className="region-function" aria-label={config.embryonic ? text("发育解剖") : text("主要功能")}>
-                    <h3>{config.embryonic ? text("发育解剖") : text("主要功能")}</h3>
+                  <section className="region-function" aria-label={config.embryonic ? text("发育解剖") : region.evidenceScope === "anatomy" ? t("解剖定位", "Anatomical context") : text("主要功能")}>
+                    <h3>{config.embryonic ? text("发育解剖") : region.evidenceScope === "anatomy" ? t("解剖定位", "Anatomical context") : text("主要功能")}</h3>
                     <p>{text(region.function)}</p>
                   </section>
                   <details className="evidence-disclosure">

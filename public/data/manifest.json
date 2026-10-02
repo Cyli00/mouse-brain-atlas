@@ -2,7 +2,7 @@
   "schemaVersion": 1,
   "dataset": "Allen Mouse Brain Common Coordinate Framework v3",
   "annotationVersion": "ccf_2017",
-  "preparedAt": "2026-09-26T07:47:21.615057+00:00",
+  "preparedAt": "2026-10-02T16:47:29.074752+00:00",
   "resolutionUm": 50,
   "dimensions": [
     264,
@@ -6267,11 +6267,3882 @@
         "meshAnnotationExtentMaxDifferenceUm": 49.05,
         "note": "The official smoothed mesh is not an exact isosurface of the coarser annotation. Extent differences are reported, not corrected by moving or stretching the mesh."
       }
+    },
+    {
+      "id": 184,
+      "acronym": "FRP",
+      "name": "Frontal pole, cerebral cortex",
+      "color": "#268F45",
+      "parentId": 315,
+      "structureIdPath": [
+        997,
+        8,
+        567,
+        688,
+        695,
+        315,
+        184
+      ],
+      "mesh": {
+        "url": "/data/meshes/184.bin.gz",
+        "compression": "gzip",
+        "bytes": 20607,
+        "uncompressedBytes": 40880,
+        "sha256": "3e76a406012297004dbd22219c8537bc928ad80c38436957f1f95750bbf68df7",
+        "uncompressedSha256": "b8aaf5c699124b525ed9cd69eaf8a77f83362cf930ee40ac56e7681ae26aaf0d",
+        "format": "allen-mesh-v1",
+        "vertexCount": 1138,
+        "triangleCount": 2268,
+        "boundsUm": [
+          [
+            1811.9000244140625,
+            3389.1298828125
+          ],
+          [
+            2335.75,
+            3175.239990234375
+          ],
+          [
+            3887.52001953125,
+            7490.6298828125
+          ]
+        ]
+      },
+      "descendantIds": [
+        184,
+        68,
+        667,
+        526157192,
+        526157196,
+        526322264
+      ],
+      "voxelCount": 7746,
+      "volumeMm3": 0.9682500000000003,
+      "centroidVoxel": [
+        45.389,
+        55.478,
+        113.878
+      ],
+      "centroidUm": [
+        2269.475,
+        2773.909,
+        5693.881
+      ],
+      "focusVoxel": [
+        45,
+        55,
+        91
+      ],
+      "focusUm": [
+        2250,
+        2750,
+        4550
+      ],
+      "boundsVoxel": [
+        [
+          37,
+          69
+        ],
+        [
+          46,
+          64
+        ],
+        [
+          78,
+          150
+        ]
+      ],
+      "alignment": {
+        "meshAnnotationExtentMaxDifferenceUm": 60.87,
+        "note": "The official smoothed mesh is not an exact isosurface of the coarser annotation. Extent differences are reported, not corrected by moving or stretching the mesh."
+      }
+    },
+    {
+      "id": 993,
+      "acronym": "MOs",
+      "name": "Secondary motor area",
+      "color": "#1F9D5A",
+      "parentId": 500,
+      "structureIdPath": [
+        997,
+        8,
+        567,
+        688,
+        695,
+        315,
+        500,
+        993
+      ],
+      "mesh": {
+        "url": "/data/meshes/993.bin.gz",
+        "compression": "gzip",
+        "bytes": 112132,
+        "uncompressedBytes": 227792,
+        "sha256": "12e21f2e07bf8590a357029b91b7229d834cb4e0f51523ed686f52fd02cce0b4",
+        "uncompressedSha256": "93e1fbec62556aa19fb3627297d29fe26a4c9c3f03df82178df0c24ab354be6e",
+        "format": "allen-mesh-v1",
+        "vertexCount": 6330,
+        "triangleCount": 12652,
+        "boundsUm": [
+          [
+            1939.239990234375,
+            6409.259765625
+          ],
+          [
+            490.5320129394531,
+            3799.47998046875
+          ],
+          [
+            2796.77001953125,
+            8586.25
+          ]
+        ]
+      },
+      "descendantIds": [
+        993,
+        656,
+        962,
+        767,
+        1021,
+        1085
+      ],
+      "voxelCount": 104829,
+      "volumeMm3": 13.103625000000003,
+      "centroidVoxel": [
+        72.128,
+        42.136,
+        113.865
+      ],
+      "centroidUm": [
+        3606.393,
+        2106.815,
+        5693.229
+      ],
+      "focusVoxel": [
+        72,
+        42,
+        87
+      ],
+      "focusUm": [
+        3600,
+        2100,
+        4350
+      ],
+      "boundsVoxel": [
+        [
+          39,
+          129
+        ],
+        [
+          10,
+          76
+        ],
+        [
+          56,
+          172
+        ]
+      ],
+      "alignment": {
+        "meshAnnotationExtentMaxDifferenceUm": 40.74,
+        "note": "The official smoothed mesh is not an exact isosurface of the coarser annotation. Extent differences are reported, not corrected by moving or stretching the mesh."
+      }
+    },
+    {
+      "id": 378,
+      "acronym": "SSs",
+      "name": "Supplemental somatosensory area",
+      "color": "#188064",
+      "parentId": 453,
+      "structureIdPath": [
+        997,
+        8,
+        567,
+        688,
+        695,
+        315,
+        453,
+        378
+      ],
+      "mesh": {
+        "url": "/data/meshes/378.bin.gz",
+        "compression": "gzip",
+        "bytes": 80251,
+        "uncompressedBytes": 161876,
+        "sha256": "03750e4d46868aef8ea565cbb0a9cf3b89666ab38bfb9b907d9ca8988813c239",
+        "uncompressedSha256": "34aa18320c3b4b49555bd149e02640934c572856828ed507f6008a44f6edd607",
+        "format": "allen-mesh-v1",
+        "vertexCount": 4499,
+        "triangleCount": 8990,
+        "boundsUm": [
+          [
+            4226.43994140625,
+            7920.919921875
+          ],
+          [
+            1473.8800048828125,
+            4404.83984375
+          ],
+          [
+            649.0759887695312,
+            10734.2001953125
+          ]
+        ]
+      },
+      "descendantIds": [
+        378,
+        873,
+        806,
+        1035,
+        1090,
+        862,
+        893
+      ],
+      "voxelCount": 72212,
+      "volumeMm3": 9.026500000000002,
+      "centroidVoxel": [
+        122.132,
+        67.033,
+        113.784
+      ],
+      "centroidUm": [
+        6106.599,
+        3351.63,
+        5689.2
+      ],
+      "focusVoxel": [
+        122,
+        67,
+        31
+      ],
+      "focusUm": [
+        6100,
+        3350,
+        1550
+      ],
+      "boundsVoxel": [
+        [
+          84,
+          159
+        ],
+        [
+          29,
+          88
+        ],
+        [
+          13,
+          215
+        ]
+      ],
+      "alignment": {
+        "meshAnnotationExtentMaxDifferenceUm": 29.08,
+        "note": "The official smoothed mesh is not an exact isosurface of the coarser annotation. Extent differences are reported, not corrected by moving or stretching the mesh."
+      }
+    },
+    {
+      "id": 1057,
+      "acronym": "GU",
+      "name": "Gustatory areas",
+      "color": "#009C75",
+      "parentId": 315,
+      "structureIdPath": [
+        997,
+        8,
+        567,
+        688,
+        695,
+        315,
+        1057
+      ],
+      "mesh": {
+        "url": "/data/meshes/1057.bin.gz",
+        "compression": "gzip",
+        "bytes": 28481,
+        "uncompressedBytes": 58052,
+        "sha256": "1be4863403e98f35983a542175d75f0197eb8694e643cd50a023afb27714efbb",
+        "uncompressedSha256": "440387629d68e42e0d98280d5375b9a366c26f10f8e2c921c21629a0f3ad3054",
+        "format": "allen-mesh-v1",
+        "vertexCount": 1615,
+        "triangleCount": 3222,
+        "boundsUm": [
+          [
+            3537.330078125,
+            5853.72021484375
+          ],
+          [
+            3923.6201171875,
+            4975.5498046875
+          ],
+          [
+            1047.4599609375,
+            10327.7998046875
+          ]
+        ]
+      },
+      "descendantIds": [
+        1057,
+        36,
+        180,
+        148,
+        187,
+        638,
+        662
+      ],
+      "voxelCount": 14100,
+      "volumeMm3": 1.7625000000000004,
+      "centroidVoxel": [
+        93.212,
+        89.324,
+        113.843
+      ],
+      "centroidUm": [
+        4660.592,
+        4466.181,
+        5692.149
+      ],
+      "focusVoxel": [
+        93,
+        89,
+        39
+      ],
+      "focusUm": [
+        4650,
+        4450,
+        1950
+      ],
+      "boundsVoxel": [
+        [
+          70,
+          118
+        ],
+        [
+          79,
+          100
+        ],
+        [
+          21,
+          207
+        ]
+      ],
+      "alignment": {
+        "meshAnnotationExtentMaxDifferenceUm": 46.28,
+        "note": "The official smoothed mesh is not an exact isosurface of the coarser annotation. Extent differences are reported, not corrected by moving or stretching the mesh."
+      }
+    },
+    {
+      "id": 677,
+      "acronym": "VISC",
+      "name": "Visceral area",
+      "color": "#11AD83",
+      "parentId": 315,
+      "structureIdPath": [
+        997,
+        8,
+        567,
+        688,
+        695,
+        315,
+        677
+      ],
+      "mesh": {
+        "url": "/data/meshes/677.bin.gz",
+        "compression": "gzip",
+        "bytes": 30698,
+        "uncompressedBytes": 63056,
+        "sha256": "2f46f7d6bc5fb80c68680cd32b4d0ba82254e5dc93dd9d4624ca00ac5dbf0916",
+        "uncompressedSha256": "ef9616c65f3b1381580c6abf4770f95c1fa5386c86b0afb65f2b6ef1f4a5e64d",
+        "format": "allen-mesh-v1",
+        "vertexCount": 1754,
+        "triangleCount": 3500,
+        "boundsUm": [
+          [
+            4800.830078125,
+            7118.56005859375
+          ],
+          [
+            3743.300048828125,
+            4961.81005859375
+          ],
+          [
+            618.885986328125,
+            10758.400390625
+          ]
+        ]
+      },
+      "descendantIds": [
+        677,
+        897,
+        1106,
+        1010,
+        1058,
+        857,
+        849
+      ],
+      "voxelCount": 18770,
+      "volumeMm3": 2.3462500000000004,
+      "centroidVoxel": [
+        126.047,
+        89.087,
+        113.85
+      ],
+      "centroidUm": [
+        6302.352,
+        4454.347,
+        5692.52
+      ],
+      "focusVoxel": [
+        126,
+        89,
+        25
+      ],
+      "focusUm": [
+        6300,
+        4450,
+        1250
+      ],
+      "boundsVoxel": [
+        [
+          94,
+          143
+        ],
+        [
+          74,
+          99
+        ],
+        [
+          13,
+          215
+        ]
+      ],
+      "alignment": {
+        "meshAnnotationExtentMaxDifferenceUm": 100.83,
+        "note": "The official smoothed mesh is not an exact isosurface of the coarser annotation. Extent differences are reported, not corrected by moving or stretching the mesh."
+      }
+    },
+    {
+      "id": 1011,
+      "acronym": "AUDd",
+      "name": "Dorsal auditory area",
+      "color": "#019399",
+      "parentId": 247,
+      "structureIdPath": [
+        997,
+        8,
+        567,
+        688,
+        695,
+        315,
+        247,
+        1011
+      ],
+      "mesh": {
+        "url": "/data/meshes/1011.bin.gz",
+        "compression": "gzip",
+        "bytes": 23476,
+        "uncompressedBytes": 46532,
+        "sha256": "0fcb9283d31a022d15245534fe2c6fadc7509b5e64b67c6064df4044b877c82a",
+        "uncompressedSha256": "e1ee58e0fde1fb4dace30267bd52f21835f0b924b6feaa48b3c6533ce6b71689",
+        "format": "allen-mesh-v1",
+        "vertexCount": 1295,
+        "triangleCount": 2582,
+        "boundsUm": [
+          [
+            6913.89013671875,
+            8129.0498046875
+          ],
+          [
+            1577.1300048828125,
+            3227.9599609375
+          ],
+          [
+            782.0479736328125,
+            10592.7001953125
+          ]
+        ]
+      },
+      "descendantIds": [
+        1011,
+        527,
+        600,
+        678,
+        252,
+        156,
+        243,
+        480149230,
+        480149234,
+        480149238,
+        480149242,
+        480149246,
+        480149250,
+        480149254
+      ],
+      "voxelCount": 9736,
+      "volumeMm3": 1.2170000000000003,
+      "centroidVoxel": [
+        150.849,
+        48.509,
+        113.584
+      ],
+      "centroidUm": [
+        7542.471,
+        2425.467,
+        5679.216
+      ],
+      "focusVoxel": [
+        151,
+        49,
+        29
+      ],
+      "focusUm": [
+        7550,
+        2450,
+        1450
+      ],
+      "boundsVoxel": [
+        [
+          138,
+          163
+        ],
+        [
+          31,
+          65
+        ],
+        [
+          15,
+          212
+        ]
+      ],
+      "alignment": {
+        "meshAnnotationExtentMaxDifferenceUm": 32.048,
+        "note": "The official smoothed mesh is not an exact isosurface of the coarser annotation. Extent differences are reported, not corrected by moving or stretching the mesh."
+      }
+    },
+    {
+      "id": 1027,
+      "acronym": "AUDpo",
+      "name": "Posterior auditory area",
+      "color": "#019399",
+      "parentId": 247,
+      "structureIdPath": [
+        997,
+        8,
+        567,
+        688,
+        695,
+        315,
+        247,
+        1027
+      ],
+      "mesh": {
+        "url": "/data/meshes/1027.bin.gz",
+        "compression": "gzip",
+        "bytes": 15074,
+        "uncompressedBytes": 29576,
+        "sha256": "21623588c3e2990994e53653c272432ba382f7a79dd86f886c6db3df63584f32",
+        "uncompressedSha256": "5995884c0e8532dd0a42082058b60ba9476a473584d97e0abd431edc29b47c3d",
+        "format": "allen-mesh-v1",
+        "vertexCount": 824,
+        "triangleCount": 1640,
+        "boundsUm": [
+          [
+            7983.72998046875,
+            8840.5498046875
+          ],
+          [
+            1709.300048828125,
+            3014.510009765625
+          ],
+          [
+            855.7940063476562,
+            10516.7998046875
+          ]
+        ]
+      },
+      "descendantIds": [
+        1027,
+        696,
+        643,
+        759,
+        791,
+        249,
+        456
+      ],
+      "voxelCount": 4885,
+      "volumeMm3": 0.6106250000000002,
+      "centroidVoxel": [
+        168.345,
+        45.86,
+        113.415
+      ],
+      "centroidUm": [
+        8417.257,
+        2292.999,
+        5670.747
+      ],
+      "focusVoxel": [
+        168,
+        46,
+        29
+      ],
+      "focusUm": [
+        8400,
+        2300,
+        1450
+      ],
+      "boundsVoxel": [
+        [
+          159,
+          177
+        ],
+        [
+          33,
+          61
+        ],
+        [
+          16,
+          211
+        ]
+      ],
+      "alignment": {
+        "meshAnnotationExtentMaxDifferenceUm": 59.3,
+        "note": "The official smoothed mesh is not an exact isosurface of the coarser annotation. Extent differences are reported, not corrected by moving or stretching the mesh."
+      }
+    },
+    {
+      "id": 1018,
+      "acronym": "AUDv",
+      "name": "Ventral auditory area",
+      "color": "#019399",
+      "parentId": 247,
+      "structureIdPath": [
+        997,
+        8,
+        567,
+        688,
+        695,
+        315,
+        247,
+        1018
+      ],
+      "mesh": {
+        "url": "/data/meshes/1018.bin.gz",
+        "compression": "gzip",
+        "bytes": 27411,
+        "uncompressedBytes": 54704,
+        "sha256": "6d5dc6fa7e404deacbaf75a164708e2b0fe97a1fdc54000ece08fed564159f34",
+        "uncompressedSha256": "f5f40336b00f9667edfd761a6ebb5e9612cb4a9a19205f865e34fa8e5b2d47c0",
+        "format": "allen-mesh-v1",
+        "vertexCount": 1522,
+        "triangleCount": 3036,
+        "boundsUm": [
+          [
+            6915.08984375,
+            8841.66015625
+          ],
+          [
+            2711.260009765625,
+            3808.06005859375
+          ],
+          [
+            516.1589965820312,
+            10862.2998046875
+          ]
+        ]
+      },
+      "descendantIds": [
+        1018,
+        959,
+        755,
+        990,
+        1023,
+        520,
+        598
+      ],
+      "voxelCount": 14589,
+      "volumeMm3": 1.8236250000000005,
+      "centroidVoxel": [
+        155.904,
+        67.986,
+        113.552
+      ],
+      "centroidUm": [
+        7795.219,
+        3399.311,
+        5677.586
+      ],
+      "focusVoxel": [
+        156,
+        68,
+        21
+      ],
+      "focusUm": [
+        7800,
+        3400,
+        1050
+      ],
+      "boundsVoxel": [
+        [
+          138,
+          177
+        ],
+        [
+          53,
+          76
+        ],
+        [
+          11,
+          217
+        ]
+      ],
+      "alignment": {
+        "meshAnnotationExtentMaxDifferenceUm": 61.26,
+        "note": "The official smoothed mesh is not an exact isosurface of the coarser annotation. Extent differences are reported, not corrected by moving or stretching the mesh."
+      }
+    },
+    {
+      "id": 402,
+      "acronym": "VISal",
+      "name": "Anterolateral visual area",
+      "color": "#08858C",
+      "parentId": 669,
+      "structureIdPath": [
+        997,
+        8,
+        567,
+        688,
+        695,
+        315,
+        669,
+        402
+      ],
+      "mesh": {
+        "url": "/data/meshes/402.bin.gz",
+        "compression": "gzip",
+        "bytes": 13863,
+        "uncompressedBytes": 27344,
+        "sha256": "0837050188857a7f2ebb2f20bb43cdc6aab8581c58017e0bb6a39d62e226d67e",
+        "uncompressedSha256": "a6fa5a46d41c846e76f32718bb9b604c7d55002dde22347837379e26f1c50931",
+        "format": "allen-mesh-v1",
+        "vertexCount": 762,
+        "triangleCount": 1516,
+        "boundsUm": [
+          [
+            7849.77978515625,
+            8603.51953125
+          ],
+          [
+            1101.550048828125,
+            2230.719970703125
+          ],
+          [
+            1456.25,
+            9907.7802734375
+          ]
+        ]
+      },
+      "descendantIds": [
+        402,
+        1074,
+        905,
+        1114,
+        233,
+        601,
+        649
+      ],
+      "voxelCount": 6047,
+      "volumeMm3": 0.7558750000000002,
+      "centroidVoxel": [
+        165.108,
+        33.5,
+        113.404
+      ],
+      "centroidUm": [
+        8255.391,
+        1674.996,
+        5670.192
+      ],
+      "focusVoxel": [
+        165,
+        33,
+        40
+      ],
+      "focusUm": [
+        8250,
+        1650,
+        2000
+      ],
+      "boundsVoxel": [
+        [
+          157,
+          172
+        ],
+        [
+          21,
+          45
+        ],
+        [
+          29,
+          199
+        ]
+      ],
+      "alignment": {
+        "meshAnnotationExtentMaxDifferenceUm": 51.55,
+        "note": "The official smoothed mesh is not an exact isosurface of the coarser annotation. Extent differences are reported, not corrected by moving or stretching the mesh."
+      }
+    },
+    {
+      "id": 394,
+      "acronym": "VISam",
+      "name": "Anteromedial visual area",
+      "color": "#08858C",
+      "parentId": 669,
+      "structureIdPath": [
+        997,
+        8,
+        567,
+        688,
+        695,
+        315,
+        669,
+        394
+      ],
+      "mesh": {
+        "url": "/data/meshes/394.bin.gz",
+        "compression": "gzip",
+        "bytes": 15004,
+        "uncompressedBytes": 29000,
+        "sha256": "71a59f88f20fae862171914f1e8e0c48d7e4c29e68c3811e3d90fd80dd1e60b3",
+        "uncompressedSha256": "cca2a2cfee6de24f3efb878cf13657d47052b9ae3036bc70bdb7571c8a3d70eb",
+        "format": "allen-mesh-v1",
+        "vertexCount": 808,
+        "triangleCount": 1608,
+        "boundsUm": [
+          [
+            7139.02001953125,
+            8078.330078125
+          ],
+          [
+            238.98399353027344,
+            1234.780029296875
+          ],
+          [
+            3337.6201171875,
+            8023.39013671875
+          ]
+        ]
+      },
+      "descendantIds": [
+        394,
+        281,
+        1066,
+        401,
+        433,
+        1046,
+        441
+      ],
+      "voxelCount": 6325,
+      "volumeMm3": 0.7906250000000001,
+      "centroidVoxel": [
+        153.33,
+        14.559,
+        113.91
+      ],
+      "centroidUm": [
+        7666.482,
+        727.953,
+        5695.478
+      ],
+      "focusVoxel": [
+        153,
+        15,
+        81
+      ],
+      "focusUm": [
+        7650,
+        750,
+        4050
+      ],
+      "boundsVoxel": [
+        [
+          142,
+          162
+        ],
+        [
+          5,
+          25
+        ],
+        [
+          65,
+          162
+        ]
+      ],
+      "alignment": {
+        "meshAnnotationExtentMaxDifferenceUm": 87.62,
+        "note": "The official smoothed mesh is not an exact isosurface of the coarser annotation. Extent differences are reported, not corrected by moving or stretching the mesh."
+      }
+    },
+    {
+      "id": 409,
+      "acronym": "VISl",
+      "name": "Lateral visual area",
+      "color": "#08858C",
+      "parentId": 669,
+      "structureIdPath": [
+        997,
+        8,
+        567,
+        688,
+        695,
+        315,
+        669,
+        409
+      ],
+      "mesh": {
+        "url": "/data/meshes/409.bin.gz",
+        "compression": "gzip",
+        "bytes": 20577,
+        "uncompressedBytes": 40772,
+        "sha256": "740373fe59f9bd53cb53f31545874fa6276824be495b3c7f75d48f7c4f0175b7",
+        "uncompressedSha256": "6b39d7c5674b01dbb0508c1cc577469d4e1c858ee2e499d239e4d65862e45ffe",
+        "format": "allen-mesh-v1",
+        "vertexCount": 1135,
+        "triangleCount": 2262,
+        "boundsUm": [
+          [
+            8438.1904296875,
+            9951.009765625
+          ],
+          [
+            1156.3800048828125,
+            2467.050048828125
+          ],
+          [
+            1628.75,
+            9742.3798828125
+          ]
+        ]
+      },
+      "descendantIds": [
+        409,
+        421,
+        973,
+        573,
+        613,
+        74,
+        121
+      ],
+      "voxelCount": 9808,
+      "volumeMm3": 1.2260000000000002,
+      "centroidVoxel": [
+        181.907,
+        36.818,
+        113.764
+      ],
+      "centroidUm": [
+        9095.356,
+        1840.885,
+        5688.209
+      ],
+      "focusVoxel": [
+        182,
+        37,
+        42
+      ],
+      "focusUm": [
+        9100,
+        1850,
+        2100
+      ],
+      "boundsVoxel": [
+        [
+          169,
+          200
+        ],
+        [
+          22,
+          50
+        ],
+        [
+          32,
+          195
+        ]
+      ],
+      "alignment": {
+        "meshAnnotationExtentMaxDifferenceUm": 56.38,
+        "note": "The official smoothed mesh is not an exact isosurface of the coarser annotation. Extent differences are reported, not corrected by moving or stretching the mesh."
+      }
+    },
+    {
+      "id": 425,
+      "acronym": "VISpl",
+      "name": "Posterolateral visual area",
+      "color": "#08858C",
+      "parentId": 669,
+      "structureIdPath": [
+        997,
+        8,
+        567,
+        688,
+        695,
+        315,
+        669,
+        425
+      ],
+      "mesh": {
+        "url": "/data/meshes/425.bin.gz",
+        "compression": "gzip",
+        "bytes": 15247,
+        "uncompressedBytes": 30296,
+        "sha256": "8ab239e296c1f4f2e33785338cadfdea82e90f2a70cfabee443b58416f4b8134",
+        "uncompressedSha256": "69e8a8bb5da2ff863add0229502222fec1ebca11e1c5f0a3b4685138072cb7a6",
+        "format": "allen-mesh-v1",
+        "vertexCount": 844,
+        "triangleCount": 1680,
+        "boundsUm": [
+          [
+            9487.150390625,
+            10359.5
+          ],
+          [
+            1840.2900390625,
+            2598.39990234375
+          ],
+          [
+            1780.550048828125,
+            9587.080078125
+          ]
+        ]
+      },
+      "descendantIds": [
+        425,
+        750,
+        269,
+        869,
+        902,
+        377,
+        393
+      ],
+      "voxelCount": 6376,
+      "volumeMm3": 0.7970000000000002,
+      "centroidVoxel": [
+        200.115,
+        44.044,
+        113.809
+      ],
+      "centroidUm": [
+        10005.732,
+        2202.196,
+        5690.464
+      ],
+      "focusVoxel": [
+        200,
+        44,
+        49
+      ],
+      "focusUm": [
+        10000,
+        2200,
+        2450
+      ],
+      "boundsVoxel": [
+        [
+          189,
+          207
+        ],
+        [
+          36,
+          53
+        ],
+        [
+          35,
+          193
+        ]
+      ],
+      "alignment": {
+        "meshAnnotationExtentMaxDifferenceUm": 62.92,
+        "note": "The official smoothed mesh is not an exact isosurface of the coarser annotation. Extent differences are reported, not corrected by moving or stretching the mesh."
+      }
+    },
+    {
+      "id": 533,
+      "acronym": "VISpm",
+      "name": "posteromedial visual area",
+      "color": "#08858C",
+      "parentId": 669,
+      "structureIdPath": [
+        997,
+        8,
+        567,
+        688,
+        695,
+        315,
+        669,
+        533
+      ],
+      "mesh": {
+        "url": "/data/meshes/533.bin.gz",
+        "compression": "gzip",
+        "bytes": 19553,
+        "uncompressedBytes": 37712,
+        "sha256": "bf1adf940d64b5480cccfbd2cf159b1e5a71ba813b0f6fcbb70efd6bdd09d764",
+        "uncompressedSha256": "e999ca6b2884d05e881b7388be614135b42a9058d17e160ddfd2bce7de3d33c8",
+        "format": "allen-mesh-v1",
+        "vertexCount": 1050,
+        "triangleCount": 2092,
+        "boundsUm": [
+          [
+            7782.58984375,
+            9490.26953125
+          ],
+          [
+            239.9739990234375,
+            1251.06005859375
+          ],
+          [
+            3340.25,
+            8030.6298828125
+          ]
+        ]
+      },
+      "descendantIds": [
+        533,
+        805,
+        41,
+        501,
+        565,
+        257,
+        469
+      ],
+      "voxelCount": 8332,
+      "volumeMm3": 1.0415000000000003,
+      "centroidVoxel": [
+        167.843,
+        14.164,
+        113.972
+      ],
+      "centroidUm": [
+        8392.175,
+        708.221,
+        5698.584
+      ],
+      "focusVoxel": [
+        168,
+        14,
+        80
+      ],
+      "focusUm": [
+        8400,
+        700,
+        4000
+      ],
+      "boundsVoxel": [
+        [
+          156,
+          191
+        ],
+        [
+          5,
+          26
+        ],
+        [
+          66,
+          162
+        ]
+      ],
+      "alignment": {
+        "meshAnnotationExtentMaxDifferenceUm": 69.37,
+        "note": "The official smoothed mesh is not an exact isosurface of the coarser annotation. Extent differences are reported, not corrected by moving or stretching the mesh."
+      }
+    },
+    {
+      "id": 312782574,
+      "acronym": "VISli",
+      "name": "Laterointermediate area",
+      "color": "#08858C",
+      "parentId": 669,
+      "structureIdPath": [
+        997,
+        8,
+        567,
+        688,
+        695,
+        315,
+        669,
+        312782574
+      ],
+      "mesh": {
+        "url": "/data/meshes/312782574.bin.gz",
+        "compression": "gzip",
+        "bytes": 12313,
+        "uncompressedBytes": 24392,
+        "sha256": "9c87acb27478214557f34b24995eac9ad96796757d67a315cdde660686dee05d",
+        "uncompressedSha256": "e64f62365f200f9f5dd5a3381e6f5d93d837e78e5c78af5615173ed885136707",
+        "format": "allen-mesh-v1",
+        "vertexCount": 680,
+        "triangleCount": 1352,
+        "boundsUm": [
+          [
+            8524.3896484375,
+            9649.6904296875
+          ],
+          [
+            1645.7099609375,
+            2600.080078125
+          ],
+          [
+            1427.510009765625,
+            9950.0595703125
+          ]
+        ]
+      },
+      "descendantIds": [
+        312782574,
+        312782578,
+        312782582,
+        312782586,
+        312782590,
+        312782594,
+        312782598
+      ],
+      "voxelCount": 3938,
+      "volumeMm3": 0.49225000000000013,
+      "centroidVoxel": [
+        181.093,
+        42.711,
+        113.472
+      ],
+      "centroidUm": [
+        9054.672,
+        2135.551,
+        5673.578
+      ],
+      "focusVoxel": [
+        181,
+        43,
+        36
+      ],
+      "focusUm": [
+        9050,
+        2150,
+        1800
+      ],
+      "boundsVoxel": [
+        [
+          170,
+          194
+        ],
+        [
+          32,
+          53
+        ],
+        [
+          28,
+          199
+        ]
+      ],
+      "alignment": {
+        "meshAnnotationExtentMaxDifferenceUm": 50.31,
+        "note": "The official smoothed mesh is not an exact isosurface of the coarser annotation. Extent differences are reported, not corrected by moving or stretching the mesh."
+      }
+    },
+    {
+      "id": 312782628,
+      "acronym": "VISpor",
+      "name": "Postrhinal area",
+      "color": "#08858C",
+      "parentId": 669,
+      "structureIdPath": [
+        997,
+        8,
+        567,
+        688,
+        695,
+        315,
+        669,
+        312782628
+      ],
+      "mesh": {
+        "url": "/data/meshes/312782628.bin.gz",
+        "compression": "gzip",
+        "bytes": 21721,
+        "uncompressedBytes": 42896,
+        "sha256": "a719008014eb1abbf519b3404254759c82c6f433226670f5ce9c7249fdf948f8",
+        "uncompressedSha256": "ed9d7dabaf8fae908f468ed823f8b32110d24ec098696de053e10e572dbc3cc6",
+        "format": "allen-mesh-v1",
+        "vertexCount": 1194,
+        "triangleCount": 2380,
+        "boundsUm": [
+          [
+            9021.150390625,
+            10237.400390625
+          ],
+          [
+            2064.89990234375,
+            3462.570068359375
+          ],
+          [
+            922.3989868164062,
+            10452.5
+          ]
+        ]
+      },
+      "descendantIds": [
+        312782628,
+        312782632,
+        312782636,
+        312782640,
+        312782644,
+        312782648,
+        312782652
+      ],
+      "voxelCount": 10238,
+      "volumeMm3": 1.2797500000000004,
+      "centroidVoxel": [
+        191.364,
+        54.667,
+        113.618
+      ],
+      "centroidUm": [
+        9568.192,
+        2733.341,
+        5680.904
+      ],
+      "focusVoxel": [
+        191,
+        55,
+        31
+      ],
+      "focusUm": [
+        9550,
+        2750,
+        1550
+      ],
+      "boundsVoxel": [
+        [
+          180,
+          206
+        ],
+        [
+          41,
+          71
+        ],
+        [
+          18,
+          210
+        ]
+      ],
+      "alignment": {
+        "meshAnnotationExtentMaxDifferenceUm": 87.43,
+        "note": "The official smoothed mesh is not an exact isosurface of the coarser annotation. Extent differences are reported, not corrected by moving or stretching the mesh."
+      }
+    },
+    {
+      "id": 31,
+      "acronym": "ACA",
+      "name": "Anterior cingulate area",
+      "color": "#40A666",
+      "parentId": 315,
+      "structureIdPath": [
+        997,
+        8,
+        567,
+        688,
+        695,
+        315,
+        31
+      ],
+      "mesh": {
+        "url": "/data/meshes/31.bin.gz",
+        "compression": "gzip",
+        "bytes": 60864,
+        "uncompressedBytes": 124112,
+        "sha256": "119a7e9ee2f2cb08a696ebb51b58123f37c7ec664afc3ecc225bc3e48cefd504",
+        "uncompressedSha256": "04b9e65dcbb5621866f5d472e1f555fcf3b15d48d7ae84dd37fd1ee4b35249d8",
+        "format": "allen-mesh-v1",
+        "vertexCount": 3450,
+        "triangleCount": 6892,
+        "boundsUm": [
+          [
+            2547.840087890625,
+            6262.06982421875
+          ],
+          [
+            903.3499755859375,
+            3684.949951171875
+          ],
+          [
+            4572.7099609375,
+            6803.14990234375
+          ]
+        ]
+      },
+      "descendantIds": [
+        31,
+        572,
+        1053,
+        739,
+        179,
+        227,
+        39,
+        935,
+        211,
+        1015,
+        919,
+        927,
+        48,
+        588,
+        296,
+        772,
+        810,
+        819
+      ],
+      "voxelCount": 44276,
+      "volumeMm3": 5.534500000000001,
+      "centroidVoxel": [
+        92.259,
+        43.456,
+        113.901
+      ],
+      "centroidUm": [
+        4612.93,
+        2172.811,
+        5695.026
+      ],
+      "focusVoxel": [
+        92,
+        44,
+        106
+      ],
+      "focusUm": [
+        4600,
+        2200,
+        5300
+      ],
+      "boundsVoxel": [
+        [
+          50,
+          126
+        ],
+        [
+          18,
+          74
+        ],
+        [
+          91,
+          136
+        ]
+      ],
+      "alignment": {
+        "meshAnnotationExtentMaxDifferenceUm": 47.84,
+        "note": "The official smoothed mesh is not an exact isosurface of the coarser annotation. Extent differences are reported, not corrected by moving or stretching the mesh."
+      }
+    },
+    {
+      "id": 714,
+      "acronym": "ORB",
+      "name": "Orbital area",
+      "color": "#248A5E",
+      "parentId": 315,
+      "structureIdPath": [
+        997,
+        8,
+        567,
+        688,
+        695,
+        315,
+        714
+      ],
+      "mesh": {
+        "url": "/data/meshes/714.bin.gz",
+        "compression": "gzip",
+        "bytes": 54768,
+        "uncompressedBytes": 112124,
+        "sha256": "37e7237e3c9bc1f96320717599140c89f2d5e6818d97ddb09a5f6aea0b2cc790",
+        "uncompressedSha256": "7cb352760c823e1232c438077355c26eb479eeea0b04990bae55facb45964c1a",
+        "format": "allen-mesh-v1",
+        "vertexCount": 3117,
+        "triangleCount": 6226,
+        "boundsUm": [
+          [
+            1921.530029296875,
+            3810.639892578125
+          ],
+          [
+            2762.949951171875,
+            4721.3798828125
+          ],
+          [
+            3577.820068359375,
+            7801.85009765625
+          ]
+        ]
+      },
+      "descendantIds": [
+        714,
+        264,
+        492,
+        352,
+        476,
+        516,
+        723,
+        448,
+        412,
+        630,
+        440,
+        488,
+        731,
+        484,
+        524,
+        582,
+        620,
+        910,
+        527696977,
+        738,
+        746,
+        969,
+        288,
+        1125,
+        608,
+        680
+      ],
+      "voxelCount": 47262,
+      "volumeMm3": 5.907750000000002,
+      "centroidVoxel": [
+        57.219,
+        74.134,
+        113.91
+      ],
+      "centroidUm": [
+        2860.95,
+        3706.702,
+        5695.513
+      ],
+      "focusVoxel": [
+        57,
+        74,
+        93
+      ],
+      "focusUm": [
+        2850,
+        3700,
+        4650
+      ],
+      "boundsVoxel": [
+        [
+          38,
+          76
+        ],
+        [
+          55,
+          95
+        ],
+        [
+          72,
+          156
+        ]
+      ],
+      "alignment": {
+        "meshAnnotationExtentMaxDifferenceUm": 28.62,
+        "note": "The official smoothed mesh is not an exact isosurface of the coarser annotation. Extent differences are reported, not corrected by moving or stretching the mesh."
+      }
+    },
+    {
+      "id": 95,
+      "acronym": "AI",
+      "name": "Agranular insular area",
+      "color": "#219866",
+      "parentId": 315,
+      "structureIdPath": [
+        997,
+        8,
+        567,
+        688,
+        695,
+        315,
+        95
+      ],
+      "mesh": {
+        "url": "/data/meshes/95.bin.gz",
+        "compression": "gzip",
+        "bytes": 89362,
+        "uncompressedBytes": 183440,
+        "sha256": "db512af580127b90669c4e06ad92309ccdb772fc015cfdfc8e3ef02a4aefb96f",
+        "uncompressedSha256": "76cbd0949295fbac9aa2adee7e9cd09f1e2542b16650c4541a67e1af457b7218",
+        "format": "allen-mesh-v1",
+        "vertexCount": 5098,
+        "triangleCount": 10188,
+        "boundsUm": [
+          [
+            2039.56005859375,
+            7189.8701171875
+          ],
+          [
+            3297.0400390625,
+            5528.080078125
+          ],
+          [
+            713.5750122070312,
+            10663.7998046875
+          ]
+        ]
+      },
+      "descendantIds": [
+        95,
+        104,
+        996,
+        328,
+        1101,
+        783,
+        831,
+        111,
+        120,
+        163,
+        344,
+        314,
+        355,
+        119,
+        704,
+        694,
+        800,
+        675,
+        699
+      ],
+      "voxelCount": 63176,
+      "volumeMm3": 7.897000000000002,
+      "centroidVoxel": [
+        85.859,
+        93.373,
+        113.774
+      ],
+      "centroidUm": [
+        4292.964,
+        4668.646,
+        5688.683
+      ],
+      "focusVoxel": [
+        86,
+        93,
+        51
+      ],
+      "focusUm": [
+        4300,
+        4650,
+        2550
+      ],
+      "boundsVoxel": [
+        [
+          41,
+          144
+        ],
+        [
+          66,
+          111
+        ],
+        [
+          14,
+          213
+        ]
+      ],
+      "alignment": {
+        "meshAnnotationExtentMaxDifferenceUm": 21.92,
+        "note": "The official smoothed mesh is not an exact isosurface of the coarser annotation. Extent differences are reported, not corrected by moving or stretching the mesh."
+      }
+    },
+    {
+      "id": 254,
+      "acronym": "RSP",
+      "name": "Retrosplenial area",
+      "color": "#1AA698",
+      "parentId": 315,
+      "structureIdPath": [
+        997,
+        8,
+        567,
+        688,
+        695,
+        315,
+        254
+      ],
+      "mesh": {
+        "url": "/data/meshes/254.bin.gz",
+        "compression": "gzip",
+        "bytes": 97078,
+        "uncompressedBytes": 191828,
+        "sha256": "70cacf1be4b7addef9a07685dd44684ade55c42d12d08b9fcf1e550d17ea57aa",
+        "uncompressedSha256": "81b2f67bc327a38cd90c9b4b1f394292aa6a3e7f798214383802ecdae8b27ac5",
+        "format": "allen-mesh-v1",
+        "vertexCount": 5331,
+        "triangleCount": 10654,
+        "boundsUm": [
+          [
+            6018.58984375,
+            10295.2998046875
+          ],
+          [
+            156.58999633789062,
+            2370.18994140625
+          ],
+          [
+            2994.419921875,
+            8388.5400390625
+          ]
+        ]
+      },
+      "descendantIds": [
+        254,
+        894,
+        671,
+        965,
+        774,
+        906,
+        279,
+        480149258,
+        480149262,
+        480149266,
+        480149270,
+        480149274,
+        480149278,
+        480149282,
+        480149286,
+        480149290,
+        480149294,
+        480149298,
+        480149302,
+        480149306,
+        480149310,
+        480149314,
+        480149318,
+        480149322,
+        480149326,
+        480149330,
+        480149334,
+        480149338,
+        879,
+        442,
+        434,
+        545,
+        610,
+        274,
+        330,
+        886,
+        542,
+        606,
+        430,
+        687,
+        590,
+        622
+      ],
+      "voxelCount": 83846,
+      "volumeMm3": 10.480750000000002,
+      "centroidVoxel": [
+        159.066,
+        19.918,
+        113.896
+      ],
+      "centroidUm": [
+        7953.312,
+        995.879,
+        5694.799
+      ],
+      "focusVoxel": [
+        159,
+        20,
+        98
+      ],
+      "focusUm": [
+        7950,
+        1000,
+        4900
+      ],
+      "boundsVoxel": [
+        [
+          121,
+          206
+        ],
+        [
+          4,
+          49
+        ],
+        [
+          59,
+          169
+        ]
+      ],
+      "alignment": {
+        "meshAnnotationExtentMaxDifferenceUm": 79.81,
+        "note": "The official smoothed mesh is not an exact isosurface of the coarser annotation. Extent differences are reported, not corrected by moving or stretching the mesh."
+      }
+    },
+    {
+      "id": 22,
+      "acronym": "PTLp",
+      "name": "Posterior parietal association areas",
+      "color": "#009FAC",
+      "parentId": 315,
+      "structureIdPath": [
+        997,
+        8,
+        567,
+        688,
+        695,
+        315,
+        22
+      ],
+      "mesh": {
+        "url": "/data/meshes/22.bin.gz",
+        "compression": "gzip",
+        "bytes": 35800,
+        "uncompressedBytes": 71732,
+        "sha256": "7a0bb346986e759e211f4edd6bbe4e263c3511b04e8b3c26ac6a170f2c1556ed",
+        "uncompressedSha256": "72f43839f2729eb593ba55c6d90401253aa4dd1db76042c82b0903cdf3a7b8f3",
+        "format": "allen-mesh-v1",
+        "vertexCount": 1995,
+        "triangleCount": 3982,
+        "boundsUm": [
+          [
+            6717.4599609375,
+            8348.0498046875
+          ],
+          [
+            316.7690124511719,
+            1885.25
+          ],
+          [
+            1873.0899658203125,
+            9493.830078125
+          ]
+        ]
+      },
+      "descendantIds": [
+        22,
+        532,
+        241,
+        635,
+        683,
+        308,
+        340,
+        312782546,
+        312782550,
+        312782554,
+        312782558,
+        312782562,
+        312782566,
+        312782570,
+        417,
+        312782604,
+        312782608,
+        312782612,
+        312782616,
+        312782620,
+        312782624
+      ],
+      "voxelCount": 19606,
+      "volumeMm3": 2.4507500000000007,
+      "centroidVoxel": [
+        149.563,
+        20.393,
+        113.813
+      ],
+      "centroidUm": [
+        7478.142,
+        1019.644,
+        5690.653
+      ],
+      "focusVoxel": [
+        150,
+        20,
+        65
+      ],
+      "focusUm": [
+        7500,
+        1000,
+        3250
+      ],
+      "boundsVoxel": [
+        [
+          134,
+          167
+        ],
+        [
+          7,
+          39
+        ],
+        [
+          36,
+          191
+        ]
+      ],
+      "alignment": {
+        "meshAnnotationExtentMaxDifferenceUm": 73.09,
+        "note": "The official smoothed mesh is not an exact isosurface of the coarser annotation. Extent differences are reported, not corrected by moving or stretching the mesh."
+      }
+    },
+    {
+      "id": 541,
+      "acronym": "TEa",
+      "name": "Temporal association areas",
+      "color": "#15B0B3",
+      "parentId": 315,
+      "structureIdPath": [
+        997,
+        8,
+        567,
+        688,
+        695,
+        315,
+        541
+      ],
+      "mesh": {
+        "url": "/data/meshes/541.bin.gz",
+        "compression": "gzip",
+        "bytes": 44607,
+        "uncompressedBytes": 88544,
+        "sha256": "99354dd89dbc029ab2faaf8c1e87d1922aa601054684af68c56e1addd28509e5",
+        "uncompressedSha256": "2a58e4d86951b4200e14473749d0fe7d5de74d06818e8484a8033b06f6d81e92",
+        "format": "allen-mesh-v1",
+        "vertexCount": 2462,
+        "triangleCount": 4916,
+        "boundsUm": [
+          [
+            6941.52001953125,
+            9433.400390625
+          ],
+          [
+            1804.6500244140625,
+            4439.75
+          ],
+          [
+            516.291015625,
+            10860.7001953125
+          ]
+        ]
+      },
+      "descendantIds": [
+        541,
+        97,
+        1127,
+        234,
+        289,
+        729,
+        786
+      ],
+      "voxelCount": 24814,
+      "volumeMm3": 3.101750000000001,
+      "centroidVoxel": [
+        165.581,
+        69.189,
+        113.56
+      ],
+      "centroidUm": [
+        8279.054,
+        3459.426,
+        5678.018
+      ],
+      "focusVoxel": [
+        167,
+        72,
+        23
+      ],
+      "focusUm": [
+        8350,
+        3600,
+        1150
+      ],
+      "boundsVoxel": [
+        [
+          139,
+          189
+        ],
+        [
+          35,
+          89
+        ],
+        [
+          11,
+          217
+        ]
+      ],
+      "alignment": {
+        "meshAnnotationExtentMaxDifferenceUm": 54.65,
+        "note": "The official smoothed mesh is not an exact isosurface of the coarser annotation. Extent differences are reported, not corrected by moving or stretching the mesh."
+      }
+    },
+    {
+      "id": 922,
+      "acronym": "PERI",
+      "name": "Perirhinal area",
+      "color": "#0E9684",
+      "parentId": 315,
+      "structureIdPath": [
+        997,
+        8,
+        567,
+        688,
+        695,
+        315,
+        922
+      ],
+      "mesh": {
+        "url": "/data/meshes/922.bin.gz",
+        "compression": "gzip",
+        "bytes": 23835,
+        "uncompressedBytes": 46568,
+        "sha256": "07ac77d1835c0e8403f0b32adb2bc3a261d2272f7ca693c0b5f750196e6a3840",
+        "uncompressedSha256": "50d32498956e0c3e16fc2956f0de14c4b3108fa2a45e0b370acbbdc9d150d1f6",
+        "format": "allen-mesh-v1",
+        "vertexCount": 1296,
+        "triangleCount": 2584,
+        "boundsUm": [
+          [
+            6992.3798828125,
+            9525.7001953125
+          ],
+          [
+            3408.169921875,
+            5204.10986328125
+          ],
+          [
+            642.6209716796875,
+            10742.7001953125
+          ]
+        ]
+      },
+      "descendantIds": [
+        922,
+        540,
+        888,
+        692,
+        335,
+        368
+      ],
+      "voxelCount": 6337,
+      "volumeMm3": 0.7921250000000002,
+      "centroidVoxel": [
+        164.554,
+        90.12,
+        113.674
+      ],
+      "centroidUm": [
+        8227.71,
+        4506.012,
+        5683.723
+      ],
+      "focusVoxel": [
+        165,
+        90,
+        21
+      ],
+      "focusUm": [
+        8250,
+        4500,
+        1050
+      ],
+      "boundsVoxel": [
+        [
+          140,
+          191
+        ],
+        [
+          68,
+          105
+        ],
+        [
+          13,
+          215
+        ]
+      ],
+      "alignment": {
+        "meshAnnotationExtentMaxDifferenceUm": 45.89,
+        "note": "The official smoothed mesh is not an exact isosurface of the coarser annotation. Extent differences are reported, not corrected by moving or stretching the mesh."
+      }
+    },
+    {
+      "id": 895,
+      "acronym": "ECT",
+      "name": "Ectorhinal area",
+      "color": "#0D9F91",
+      "parentId": 315,
+      "structureIdPath": [
+        997,
+        8,
+        567,
+        688,
+        695,
+        315,
+        895
+      ],
+      "mesh": {
+        "url": "/data/meshes/895.bin.gz",
+        "compression": "gzip",
+        "bytes": 29629,
+        "uncompressedBytes": 60032,
+        "sha256": "8e36c0cc826d1d0f4e67078442ff48db2e420220d7723adcab9e8f15d46765aa",
+        "uncompressedSha256": "8be20e901750c21edc5b9d9360c543e45e8012c3806eb2ad99d947a052c610b2",
+        "format": "allen-mesh-v1",
+        "vertexCount": 1670,
+        "triangleCount": 3332,
+        "boundsUm": [
+          [
+            6951.3701171875,
+            9488.4697265625
+          ],
+          [
+            3212.5,
+            4899.52978515625
+          ],
+          [
+            575.843017578125,
+            10795.0
+          ]
+        ]
+      },
+      "descendantIds": [
+        895,
+        836,
+        427,
+        988,
+        977,
+        1045
+      ],
+      "voxelCount": 13718,
+      "volumeMm3": 1.7147500000000004,
+      "centroidVoxel": [
+        160.676,
+        85.931,
+        113.722
+      ],
+      "centroidUm": [
+        8033.777,
+        4296.556,
+        5686.102
+      ],
+      "focusVoxel": [
+        161,
+        86,
+        22
+      ],
+      "focusUm": [
+        8050,
+        4300,
+        1100
+      ],
+      "boundsVoxel": [
+        [
+          139,
+          190
+        ],
+        [
+          64,
+          98
+        ],
+        [
+          12,
+          216
+        ]
+      ],
+      "alignment": {
+        "meshAnnotationExtentMaxDifferenceUm": 24.157,
+        "note": "The official smoothed mesh is not an exact isosurface of the coarser annotation. Extent differences are reported, not corrected by moving or stretching the mesh."
+      }
+    },
+    {
+      "id": 151,
+      "acronym": "AOB",
+      "name": "Accessory olfactory bulb",
+      "color": "#9DF0D2",
+      "parentId": 698,
+      "structureIdPath": [
+        997,
+        8,
+        567,
+        688,
+        695,
+        698,
+        151
+      ],
+      "mesh": {
+        "url": "/data/meshes/151.bin.gz",
+        "compression": "gzip",
+        "bytes": 12904,
+        "uncompressedBytes": 25364,
+        "sha256": "b430f6f34c39e565fdb7807e79d58f9b9bd038d98ad2cf0b83e6a5e35faf3a22",
+        "uncompressedSha256": "cdf8bb5b69e5c7e2148f375366451204eca40dc9d6e7464dd00a9d4ebfd8c486",
+        "format": "allen-mesh-v1",
+        "vertexCount": 707,
+        "triangleCount": 1406,
+        "boundsUm": [
+          [
+            1380.27001953125,
+            2387.52001953125
+          ],
+          [
+            3118.659912109375,
+            4198.27978515625
+          ],
+          [
+            4183.56005859375,
+            7189.93017578125
+          ]
+        ]
+      },
+      "descendantIds": [
+        151,
+        188,
+        196,
+        204
+      ],
+      "voxelCount": 5211,
+      "volumeMm3": 0.6513750000000001,
+      "centroidVoxel": [
+        38.39,
+        73.238,
+        113.869
+      ],
+      "centroidUm": [
+        1919.516,
+        3661.908,
+        5693.447
+      ],
+      "focusVoxel": [
+        38,
+        73,
+        91
+      ],
+      "focusUm": [
+        1900,
+        3650,
+        4550
+      ],
+      "boundsVoxel": [
+        [
+          28,
+          48
+        ],
+        [
+          62,
+          84
+        ],
+        [
+          83,
+          145
+        ]
+      ],
+      "alignment": {
+        "meshAnnotationExtentMaxDifferenceUm": 60.07,
+        "note": "The official smoothed mesh is not an exact isosurface of the coarser annotation. Extent differences are reported, not corrected by moving or stretching the mesh."
+      }
+    },
+    {
+      "id": 159,
+      "acronym": "AON",
+      "name": "Anterior olfactory nucleus",
+      "color": "#54BF94",
+      "parentId": 698,
+      "structureIdPath": [
+        997,
+        8,
+        567,
+        688,
+        695,
+        698,
+        159
+      ],
+      "mesh": {
+        "url": "/data/meshes/159.bin.gz",
+        "compression": "gzip",
+        "bytes": 56773,
+        "uncompressedBytes": 115424,
+        "sha256": "4da566144b76cd54ddce84a145795f1dd93d485b59e1fdf5489cbccee51dc235",
+        "uncompressedSha256": "a5c87a005cf89228f88ae200b049462a3d28ea16a4201ff75c12f564b346c565",
+        "format": "allen-mesh-v1",
+        "vertexCount": 3206,
+        "triangleCount": 6412,
+        "boundsUm": [
+          [
+            1854.489990234375,
+            3729.81005859375
+          ],
+          [
+            4013.0400390625,
+            6419.669921875
+          ],
+          [
+            3570.969970703125,
+            7796.2900390625
+          ]
+        ]
+      },
+      "descendantIds": [
+        159,
+        167,
+        175,
+        183,
+        191,
+        199,
+        160,
+        168
+      ],
+      "voxelCount": 38973,
+      "volumeMm3": 4.871625000000001,
+      "centroidVoxel": [
+        56.252,
+        103.108,
+        113.87
+      ],
+      "centroidUm": [
+        2812.618,
+        5155.402,
+        5693.516
+      ],
+      "focusVoxel": [
+        56,
+        103,
+        92
+      ],
+      "focusUm": [
+        2800,
+        5150,
+        4600
+      ],
+      "boundsVoxel": [
+        [
+          37,
+          75
+        ],
+        [
+          80,
+          129
+        ],
+        [
+          71,
+          156
+        ]
+      ],
+      "alignment": {
+        "meshAnnotationExtentMaxDifferenceUm": 30.33,
+        "note": "The official smoothed mesh is not an exact isosurface of the coarser annotation. Extent differences are reported, not corrected by moving or stretching the mesh."
+      }
+    },
+    {
+      "id": 589,
+      "acronym": "TT",
+      "name": "Taenia tecta",
+      "color": "#62D09F",
+      "parentId": 698,
+      "structureIdPath": [
+        997,
+        8,
+        567,
+        688,
+        695,
+        698,
+        589
+      ],
+      "mesh": {
+        "url": "/data/meshes/589.bin.gz",
+        "compression": "gzip",
+        "bytes": 24756,
+        "uncompressedBytes": 49388,
+        "sha256": "1a975beb339d32f78553e909f69af91218ef72f49b1ebe0f3e83690a48ddecc9",
+        "uncompressedSha256": "1878b772f612ce4cf3be0c1eb7d695c75a25a5275451e8c399d1678a49607285",
+        "format": "allen-mesh-v1",
+        "vertexCount": 1373,
+        "triangleCount": 2742,
+        "boundsUm": [
+          [
+            2567.840087890625,
+            4112.27001953125
+          ],
+          [
+            3946.81005859375,
+            6546.14990234375
+          ],
+          [
+            4799.66015625,
+            6577.85009765625
+          ]
+        ]
+      },
+      "descendantIds": [
+        589,
+        597,
+        297,
+        1034,
+        1042,
+        1050,
+        1059,
+        605,
+        306,
+        1067,
+        1075,
+        1082
+      ],
+      "voxelCount": 11565,
+      "volumeMm3": 1.4456250000000004,
+      "centroidVoxel": [
+        65.689,
+        108.919,
+        113.901
+      ],
+      "centroidUm": [
+        3284.475,
+        5445.953,
+        5695.037
+      ],
+      "focusVoxel": [
+        66,
+        109,
+        108
+      ],
+      "focusUm": [
+        3300,
+        5450,
+        5400
+      ],
+      "boundsVoxel": [
+        [
+          52,
+          82
+        ],
+        [
+          78,
+          131
+        ],
+        [
+          96,
+          132
+        ]
+      ],
+      "alignment": {
+        "meshAnnotationExtentMaxDifferenceUm": 46.81,
+        "note": "The official smoothed mesh is not an exact isosurface of the coarser annotation. Extent differences are reported, not corrected by moving or stretching the mesh."
+      }
+    },
+    {
+      "id": 814,
+      "acronym": "DP",
+      "name": "Dorsal peduncular area",
+      "color": "#A4DAA4",
+      "parentId": 698,
+      "structureIdPath": [
+        997,
+        8,
+        567,
+        688,
+        695,
+        698,
+        814
+      ],
+      "mesh": {
+        "url": "/data/meshes/814.bin.gz",
+        "compression": "gzip",
+        "bytes": 12127,
+        "uncompressedBytes": 24104,
+        "sha256": "7f0157f6646a26de273401ea41cc64943d18d764d204ad976668ea4ba20aa03b",
+        "uncompressedSha256": "b20e1ea2f7e2f0f9d570736cf31f34a1a33c5ce9d0a99431c7d61733cb3e0c9d",
+        "format": "allen-mesh-v1",
+        "vertexCount": 672,
+        "triangleCount": 1336,
+        "boundsUm": [
+          [
+            3164.489990234375,
+            4094.8798828125
+          ],
+          [
+            3581.830078125,
+            4798.2099609375
+          ],
+          [
+            4910.740234375,
+            6470.27978515625
+          ]
+        ]
+      },
+      "descendantIds": [
+        814,
+        496,
+        535,
+        360,
+        646,
+        267
+      ],
+      "voxelCount": 3951,
+      "volumeMm3": 0.4938750000000001,
+      "centroidVoxel": [
+        72.909,
+        85.71,
+        113.861
+      ],
+      "centroidUm": [
+        3645.432,
+        4285.497,
+        5693.027
+      ],
+      "focusVoxel": [
+        73,
+        86,
+        107
+      ],
+      "focusUm": [
+        3650,
+        4300,
+        5350
+      ],
+      "boundsVoxel": [
+        [
+          64,
+          82
+        ],
+        [
+          71,
+          96
+        ],
+        [
+          98,
+          130
+        ]
+      ],
+      "alignment": {
+        "meshAnnotationExtentMaxDifferenceUm": 35.51,
+        "note": "The official smoothed mesh is not an exact isosurface of the coarser annotation. Extent differences are reported, not corrected by moving or stretching the mesh."
+      }
+    },
+    {
+      "id": 961,
+      "acronym": "PIR",
+      "name": "Piriform area",
+      "color": "#6ACBBA",
+      "parentId": 698,
+      "structureIdPath": [
+        997,
+        8,
+        567,
+        688,
+        695,
+        698,
+        961
+      ],
+      "mesh": {
+        "url": "/data/meshes/961.bin.gz",
+        "compression": "gzip",
+        "bytes": 121272,
+        "uncompressedBytes": 248312,
+        "sha256": "05f3ee5b03c1e7a56908b3bbdb21336b2c4bb7543f11915b9436f8c17808e74e",
+        "uncompressedSha256": "4bf2c103e915d1b0838329b04f1f0e0f0987f61623026a12149cb22b92515383",
+        "format": "allen-mesh-v1",
+        "vertexCount": 6900,
+        "triangleCount": 13792,
+        "boundsUm": [
+          [
+            2953.429931640625,
+            8334.8798828125
+          ],
+          [
+            4349.81005859375,
+            7378.740234375
+          ],
+          [
+            973.0130004882812,
+            10404.400390625
+          ]
+        ]
+      },
+      "descendantIds": [
+        961,
+        152,
+        276,
+        284,
+        291
+      ],
+      "voxelCount": 92575,
+      "volumeMm3": 11.571875000000002,
+      "centroidVoxel": [
+        112.275,
+        121.037,
+        113.908
+      ],
+      "centroidUm": [
+        5613.726,
+        6051.869,
+        5695.405
+      ],
+      "focusVoxel": [
+        112,
+        121,
+        47
+      ],
+      "focusUm": [
+        5600,
+        6050,
+        2350
+      ],
+      "boundsVoxel": [
+        [
+          59,
+          166
+        ],
+        [
+          87,
+          148
+        ],
+        [
+          20,
+          208
+        ]
+      ],
+      "alignment": {
+        "meshAnnotationExtentMaxDifferenceUm": 34.88,
+        "note": "The official smoothed mesh is not an exact isosurface of the coarser annotation. Extent differences are reported, not corrected by moving or stretching the mesh."
+      }
+    },
+    {
+      "id": 619,
+      "acronym": "NLOT",
+      "name": "Nucleus of the lateral olfactory tract",
+      "color": "#95E4C8",
+      "parentId": 698,
+      "structureIdPath": [
+        997,
+        8,
+        567,
+        688,
+        695,
+        698,
+        619
+      ],
+      "mesh": {
+        "url": "/data/meshes/619.bin.gz",
+        "compression": "gzip",
+        "bytes": 7005,
+        "uncompressedBytes": 14096,
+        "sha256": "c1af316134c1bcc70ae86939625bdae715884829fa0fa300ab5c7cf1b9081933",
+        "uncompressedSha256": "e9a106f1d498b7d18bcecac35664c72c6db48cffae533a62f738023fa6a90196",
+        "format": "allen-mesh-v1",
+        "vertexCount": 394,
+        "triangleCount": 780,
+        "boundsUm": [
+          [
+            5800.8701171875,
+            6315.8798828125
+          ],
+          [
+            6502.7900390625,
+            7340.22998046875
+          ],
+          [
+            3314.919921875,
+            8070.35009765625
+          ]
+        ]
+      },
+      "descendantIds": [
+        619,
+        392,
+        260,
+        268,
+        1139
+      ],
+      "voxelCount": 2548,
+      "volumeMm3": 0.31850000000000006,
+      "centroidVoxel": [
+        121.157,
+        138.252,
+        114.064
+      ],
+      "centroidUm": [
+        6057.849,
+        6912.618,
+        5703.199
+      ],
+      "focusVoxel": [
+        121,
+        138,
+        72
+      ],
+      "focusUm": [
+        6050,
+        6900,
+        3600
+      ],
+      "boundsVoxel": [
+        [
+          116,
+          126
+        ],
+        [
+          130,
+          147
+        ],
+        [
+          67,
+          161
+        ]
+      ],
+      "alignment": {
+        "meshAnnotationExtentMaxDifferenceUm": 35.08,
+        "note": "The official smoothed mesh is not an exact isosurface of the coarser annotation. Extent differences are reported, not corrected by moving or stretching the mesh."
+      }
+    },
+    {
+      "id": 631,
+      "acronym": "COA",
+      "name": "Cortical amygdalar area",
+      "color": "#61E7B7",
+      "parentId": 698,
+      "structureIdPath": [
+        997,
+        8,
+        567,
+        688,
+        695,
+        698,
+        631
+      ],
+      "mesh": {
+        "url": "/data/meshes/631.bin.gz",
+        "compression": "gzip",
+        "bytes": 44175,
+        "uncompressedBytes": 89732,
+        "sha256": "524c190fd18c10480bc394cf83b5680bdd6cb8db078539ce8f73e9c400b137fa",
+        "uncompressedSha256": "25b36e328f11b29efbd0e38cda305ce5b0b1a66447702050df86b70a909640c9",
+        "format": "allen-mesh-v1",
+        "vertexCount": 2495,
+        "triangleCount": 4982,
+        "boundsUm": [
+          [
+            5529.83984375,
+            9000.16015625
+          ],
+          [
+            6202.0,
+            7499.2001953125
+          ],
+          [
+            2132.580078125,
+            9246.509765625
+          ]
+        ]
+      },
+      "descendantIds": [
+        631,
+        639,
+        192,
+        200,
+        208,
+        647,
+        655,
+        584,
+        376,
+        216,
+        224,
+        232,
+        663,
+        592,
+        383,
+        240,
+        248,
+        256
+      ],
+      "voxelCount": 26115,
+      "volumeMm3": 3.2643750000000007,
+      "centroidVoxel": [
+        150.225,
+        137.045,
+        113.867
+      ],
+      "centroidUm": [
+        7511.264,
+        6852.273,
+        5693.36
+      ],
+      "focusVoxel": [
+        150,
+        137,
+        58
+      ],
+      "focusUm": [
+        7500,
+        6850,
+        2900
+      ],
+      "boundsVoxel": [
+        [
+          111,
+          181
+        ],
+        [
+          124,
+          150
+        ],
+        [
+          43,
+          185
+        ]
+      ],
+      "alignment": {
+        "meshAnnotationExtentMaxDifferenceUm": 49.84,
+        "note": "The official smoothed mesh is not an exact isosurface of the coarser annotation. Extent differences are reported, not corrected by moving or stretching the mesh."
+      }
+    },
+    {
+      "id": 788,
+      "acronym": "PAA",
+      "name": "Piriform-amygdalar area",
+      "color": "#59DAAB",
+      "parentId": 698,
+      "structureIdPath": [
+        997,
+        8,
+        567,
+        688,
+        695,
+        698,
+        788
+      ],
+      "mesh": {
+        "url": "/data/meshes/788.bin.gz",
+        "compression": "gzip",
+        "bytes": 23993,
+        "uncompressedBytes": 48656,
+        "sha256": "c96dc234bdac7e52285b02f42ed4bb8e4bccd943c3fbe2f8bc229d3823760f01",
+        "uncompressedSha256": "0ea2e45736634da198d840a3890130aeae8a27b4d8b889938f4dec6bc0389a64",
+        "format": "allen-mesh-v1",
+        "vertexCount": 1354,
+        "triangleCount": 2700,
+        "boundsUm": [
+          [
+            5474.39013671875,
+            7914.5498046875
+          ],
+          [
+            6404.56005859375,
+            7536.669921875
+          ],
+          [
+            1810.969970703125,
+            9566.9296875
+          ]
+        ]
+      },
+      "descendantIds": [
+        788,
+        400,
+        408,
+        416,
+        424
+      ],
+      "voxelCount": 9575,
+      "volumeMm3": 1.1968750000000004,
+      "centroidVoxel": [
+        135.527,
+        142.925,
+        113.96
+      ],
+      "centroidUm": [
+        6776.339,
+        7146.256,
+        5698.0
+      ],
+      "focusVoxel": [
+        136,
+        143,
+        49
+      ],
+      "focusUm": [
+        6800,
+        7150,
+        2450
+      ],
+      "boundsVoxel": [
+        [
+          109,
+          158
+        ],
+        [
+          128,
+          150
+        ],
+        [
+          36,
+          192
+        ]
+      ],
+      "alignment": {
+        "meshAnnotationExtentMaxDifferenceUm": 36.67,
+        "note": "The official smoothed mesh is not an exact isosurface of the coarser annotation. Extent differences are reported, not corrected by moving or stretching the mesh."
+      }
+    },
+    {
+      "id": 566,
+      "acronym": "TR",
+      "name": "Postpiriform transition area",
+      "color": "#A8ECD3",
+      "parentId": 698,
+      "structureIdPath": [
+        997,
+        8,
+        567,
+        688,
+        695,
+        698,
+        566
+      ],
+      "mesh": {
+        "url": "/data/meshes/566.bin.gz",
+        "compression": "gzip",
+        "bytes": 21055,
+        "uncompressedBytes": 41672,
+        "sha256": "1f9748cab5bcccec50268c5b85f126dc300c3573e04569ca8d3f513dc5dd10cf",
+        "uncompressedSha256": "52283c726f731c38d4577907f0d5a3ba6b8bf11e9d65f4874b5db43550ebdb44",
+        "format": "allen-mesh-v1",
+        "vertexCount": 1160,
+        "triangleCount": 2312,
+        "boundsUm": [
+          [
+            7910.759765625,
+            8894.3203125
+          ],
+          [
+            5667.18017578125,
+            7080.93017578125
+          ],
+          [
+            1054.81005859375,
+            10315.7001953125
+          ]
+        ]
+      },
+      "descendantIds": [
+        566,
+        517,
+        1140,
+        1141,
+        1142
+      ],
+      "voxelCount": 10985,
+      "volumeMm3": 1.3731250000000004,
+      "centroidVoxel": [
+        169.118,
+        124.628,
+        113.955
+      ],
+      "centroidUm": [
+        8455.922,
+        6231.42,
+        5697.747
+      ],
+      "focusVoxel": [
+        169,
+        125,
+        37
+      ],
+      "focusUm": [
+        8450,
+        6250,
+        1850
+      ],
+      "boundsVoxel": [
+        [
+          159,
+          177
+        ],
+        [
+          114,
+          142
+        ],
+        [
+          21,
+          207
+        ]
+      ],
+      "alignment": {
+        "meshAnnotationExtentMaxDifferenceUm": 44.32,
+        "note": "The official smoothed mesh is not an exact isosurface of the coarser annotation. Extent differences are reported, not corrected by moving or stretching the mesh."
+      }
+    },
+    {
+      "id": 423,
+      "acronym": "CA2",
+      "name": "Field CA2",
+      "color": "#7ED04B",
+      "parentId": 375,
+      "structureIdPath": [
+        997,
+        8,
+        567,
+        688,
+        695,
+        1089,
+        1080,
+        375,
+        423
+      ],
+      "mesh": {
+        "url": "/data/meshes/423.bin.gz",
+        "compression": "gzip",
+        "bytes": 35521,
+        "uncompressedBytes": 73376,
+        "sha256": "5ebcb2b601c7ad98c1dc8ec733ccf976d14fa8327c4de22e0a5f97c9f797b88e",
+        "uncompressedSha256": "e600d192082516d9f24ff12574272971e1907d650874ad05aba77f6edc1358b2",
+        "format": "allen-mesh-v1",
+        "vertexCount": 2044,
+        "triangleCount": 4070,
+        "boundsUm": [
+          [
+            6293.66015625,
+            8316.2001953125
+          ],
+          [
+            1954.449951171875,
+            5870.0
+          ],
+          [
+            1822.8800048828125,
+            9554.26953125
+          ]
+        ]
+      },
+      "descendantIds": [
+        423,
+        431,
+        438,
+        446,
+        454
+      ],
+      "voxelCount": 3791,
+      "volumeMm3": 0.4738750000000001,
+      "centroidVoxel": [
+        149.783,
+        66.014,
+        113.269
+      ],
+      "centroidUm": [
+        7489.159,
+        3300.686,
+        5663.466
+      ],
+      "focusVoxel": [
+        158,
+        57,
+        55
+      ],
+      "focusUm": [
+        7900,
+        2850,
+        2750
+      ],
+      "boundsVoxel": [
+        [
+          125,
+          168
+        ],
+        [
+          39,
+          119
+        ],
+        [
+          36,
+          192
+        ]
+      ],
+      "alignment": {
+        "meshAnnotationExtentMaxDifferenceUm": 83.8,
+        "note": "The official smoothed mesh is not an exact isosurface of the coarser annotation. Extent differences are reported, not corrected by moving or stretching the mesh."
+      }
+    },
+    {
+      "id": 982,
+      "acronym": "FC",
+      "name": "Fasciola cinerea",
+      "color": "#7ED04B",
+      "parentId": 1080,
+      "structureIdPath": [
+        997,
+        8,
+        567,
+        688,
+        695,
+        1089,
+        1080,
+        982
+      ],
+      "mesh": {
+        "url": "/data/meshes/982.bin.gz",
+        "compression": "gzip",
+        "bytes": 3472,
+        "uncompressedBytes": 7004,
+        "sha256": "0935883a1b72834933e1d09d2c09d3d5160fd76fca78e6c20f4ef59bc958baaf",
+        "uncompressedSha256": "540943bd6b84081c8b2eabc7d615822ffb4bc01cd77fe95f56e8bf9338629a23",
+        "format": "allen-mesh-v1",
+        "vertexCount": 197,
+        "triangleCount": 386,
+        "boundsUm": [
+          [
+            6758.35009765625,
+            7644.0
+          ],
+          [
+            2079.070068359375,
+            2379.469970703125
+          ],
+          [
+            5458.0400390625,
+            5926.35009765625
+          ]
+        ]
+      },
+      "descendantIds": [
+        982
+      ],
+      "voxelCount": 496,
+      "volumeMm3": 0.06200000000000001,
+      "centroidVoxel": [
+        142.792,
+        44.595,
+        113.921
+      ],
+      "centroidUm": [
+        7139.617,
+        2229.738,
+        5696.069
+      ],
+      "focusVoxel": [
+        143,
+        45,
+        111
+      ],
+      "focusUm": [
+        7150,
+        2250,
+        5550
+      ],
+      "boundsVoxel": [
+        [
+          135,
+          154
+        ],
+        [
+          41,
+          48
+        ],
+        [
+          109,
+          119
+        ]
+      ],
+      "alignment": {
+        "meshAnnotationExtentMaxDifferenceUm": 56.0,
+        "note": "The official smoothed mesh is not an exact isosurface of the coarser annotation. Extent differences are reported, not corrected by moving or stretching the mesh."
+      }
+    },
+    {
+      "id": 19,
+      "acronym": "IG",
+      "name": "Induseum griseum",
+      "color": "#7ED04B",
+      "parentId": 1080,
+      "structureIdPath": [
+        997,
+        8,
+        567,
+        688,
+        695,
+        1089,
+        1080,
+        19
+      ],
+      "mesh": {
+        "url": "/data/meshes/19.bin.gz",
+        "compression": "gzip",
+        "bytes": 7443,
+        "uncompressedBytes": 15152,
+        "sha256": "0b7bf33993d8892b3d740ca791312a4abf5ba7424cb4df42fb9c9e457374f52c",
+        "uncompressedSha256": "f83f27904abc6e1a9092f187e97ddadb11fd75e6ae9c7757cd6656950a7fa441",
+        "format": "allen-mesh-v1",
+        "vertexCount": 424,
+        "triangleCount": 838,
+        "boundsUm": [
+          [
+            4100.4599609375,
+            6068.6298828125
+          ],
+          [
+            2125.14990234375,
+            4111.009765625
+          ],
+          [
+            5534.0,
+            5840.97021484375
+          ]
+        ]
+      },
+      "descendantIds": [
+        19
+      ],
+      "voxelCount": 960,
+      "volumeMm3": 0.12000000000000002,
+      "centroidVoxel": [
+        96.983,
+        58.15,
+        113.904
+      ],
+      "centroidUm": [
+        4849.167,
+        2907.5,
+        5695.208
+      ],
+      "focusVoxel": [
+        97,
+        58,
+        112
+      ],
+      "focusUm": [
+        4850,
+        2900,
+        5600
+      ],
+      "boundsVoxel": [
+        [
+          82,
+          124
+        ],
+        [
+          42,
+          84
+        ],
+        [
+          110,
+          117
+        ]
+      ],
+      "alignment": {
+        "meshAnnotationExtentMaxDifferenceUm": 131.37,
+        "note": "The official smoothed mesh is not an exact isosurface of the coarser annotation. Extent differences are reported, not corrected by moving or stretching the mesh."
+      }
+    },
+    {
+      "id": 843,
+      "acronym": "PAR",
+      "name": "Parasubiculum",
+      "color": "#72D569",
+      "parentId": 822,
+      "structureIdPath": [
+        997,
+        8,
+        567,
+        688,
+        695,
+        1089,
+        822,
+        843
+      ],
+      "mesh": {
+        "url": "/data/meshes/843.bin.gz",
+        "compression": "gzip",
+        "bytes": 23203,
+        "uncompressedBytes": 46640,
+        "sha256": "dfa029ea00c8b8f98c76f935ba917050ee354585ecf683bb8d561430e1eb8489",
+        "uncompressedSha256": "db744aefc29f08bfdb6aff43a0162843456a5c9eb67dc169017c51ba8c9edeec",
+        "format": "allen-mesh-v1",
+        "vertexCount": 1298,
+        "triangleCount": 2588,
+        "boundsUm": [
+          [
+            9349.4501953125,
+            10377.2998046875
+          ],
+          [
+            2355.56005859375,
+            5251.27001953125
+          ],
+          [
+            1807.0999755859375,
+            9537.9501953125
+          ]
+        ]
+      },
+      "descendantIds": [
+        843,
+        10693,
+        10694,
+        10695
+      ],
+      "voxelCount": 7486,
+      "volumeMm3": 0.9357500000000002,
+      "centroidVoxel": [
+        194.856,
+        71.32,
+        113.861
+      ],
+      "centroidUm": [
+        9742.793,
+        3566.003,
+        5693.067
+      ],
+      "focusVoxel": [
+        195,
+        71,
+        56
+      ],
+      "focusUm": [
+        9750,
+        3550,
+        2800
+      ],
+      "boundsVoxel": [
+        [
+          187,
+          207
+        ],
+        [
+          47,
+          106
+        ],
+        [
+          35,
+          192
+        ]
+      ],
+      "alignment": {
+        "meshAnnotationExtentMaxDifferenceUm": 62.05,
+        "note": "The official smoothed mesh is not an exact isosurface of the coarser annotation. Extent differences are reported, not corrected by moving or stretching the mesh."
+      }
+    },
+    {
+      "id": 1037,
+      "acronym": "POST",
+      "name": "Postsubiculum",
+      "color": "#48C83C",
+      "parentId": 822,
+      "structureIdPath": [
+        997,
+        8,
+        567,
+        688,
+        695,
+        1089,
+        822,
+        1037
+      ],
+      "mesh": {
+        "url": "/data/meshes/1037.bin.gz",
+        "compression": "gzip",
+        "bytes": 21259,
+        "uncompressedBytes": 42104,
+        "sha256": "8039e0bf7564863750620f80a9cee65d247908eabb2fadd54461bad7f85ca039",
+        "uncompressedSha256": "3206658031ba78f5457b56c64df250b97485bc3c3eec030276c8ea333585e7b3",
+        "format": "allen-mesh-v1",
+        "vertexCount": 1172,
+        "triangleCount": 2336,
+        "boundsUm": [
+          [
+            8328.3798828125,
+            9689.0400390625
+          ],
+          [
+            1537.6099853515625,
+            2728.47998046875
+          ],
+          [
+            2852.35009765625,
+            8522.7001953125
+          ]
+        ]
+      },
+      "descendantIds": [
+        1037,
+        10696,
+        10697,
+        10698
+      ],
+      "voxelCount": 8596,
+      "volumeMm3": 1.0745000000000002,
+      "centroidVoxel": [
+        183.374,
+        43.484,
+        113.87
+      ],
+      "centroidUm": [
+        9168.695,
+        2174.209,
+        5693.503
+      ],
+      "focusVoxel": [
+        183,
+        43,
+        72
+      ],
+      "focusUm": [
+        9150,
+        2150,
+        3600
+      ],
+      "boundsVoxel": [
+        [
+          166,
+          193
+        ],
+        [
+          30,
+          54
+        ],
+        [
+          57,
+          171
+        ]
+      ],
+      "alignment": {
+        "meshAnnotationExtentMaxDifferenceUm": 39.04,
+        "note": "The official smoothed mesh is not an exact isosurface of the coarser annotation. Extent differences are reported, not corrected by moving or stretching the mesh."
+      }
+    },
+    {
+      "id": 1084,
+      "acronym": "PRE",
+      "name": "Presubiculum",
+      "color": "#59B947",
+      "parentId": 822,
+      "structureIdPath": [
+        997,
+        8,
+        567,
+        688,
+        695,
+        1089,
+        822,
+        1084
+      ],
+      "mesh": {
+        "url": "/data/meshes/1084.bin.gz",
+        "compression": "gzip",
+        "bytes": 19621,
+        "uncompressedBytes": 39188,
+        "sha256": "2fdc5fe632d62f49804299cf749a59b90f40bead20a4e94cb49d8d2eafd33215",
+        "uncompressedSha256": "d336892b3b5de68f45612a8a5f91c7b606d520e0c106d4d5dc1c64c0c6d21880",
+        "format": "allen-mesh-v1",
+        "vertexCount": 1091,
+        "triangleCount": 2174,
+        "boundsUm": [
+          [
+            8967.080078125,
+            9680.7099609375
+          ],
+          [
+            2711.93994140625,
+            5249.740234375
+          ],
+          [
+            2383.219970703125,
+            8981.5703125
+          ]
+        ]
+      },
+      "descendantIds": [
+        1084,
+        10699,
+        10700,
+        10701
+      ],
+      "voxelCount": 7283,
+      "volumeMm3": 0.9103750000000003,
+      "centroidVoxel": [
+        186.499,
+        72.035,
+        113.808
+      ],
+      "centroidUm": [
+        9324.962,
+        3601.771,
+        5690.395
+      ],
+      "focusVoxel": [
+        186,
+        72,
+        59
+      ],
+      "focusUm": [
+        9300,
+        3600,
+        2950
+      ],
+      "boundsVoxel": [
+        [
+          179,
+          193
+        ],
+        [
+          55,
+          106
+        ],
+        [
+          47,
+          180
+        ]
+      ],
+      "alignment": {
+        "meshAnnotationExtentMaxDifferenceUm": 50.26,
+        "note": "The official smoothed mesh is not an exact isosurface of the coarser annotation. Extent differences are reported, not corrected by moving or stretching the mesh."
+      }
+    },
+    {
+      "id": 502,
+      "acronym": "SUB",
+      "name": "Subiculum",
+      "color": "#4FC244",
+      "parentId": 822,
+      "structureIdPath": [
+        997,
+        8,
+        567,
+        688,
+        695,
+        1089,
+        822,
+        502
+      ],
+      "mesh": {
+        "url": "/data/meshes/502.bin.gz",
+        "compression": "gzip",
+        "bytes": 45924,
+        "uncompressedBytes": 93476,
+        "sha256": "e35dc16c6d1bcdd37499590a4b8e56534ad0571b5ced90ff57e76fd7b54eac7c",
+        "uncompressedSha256": "2df7f3ce4fc9b7e0e3a6a65adaa4905973034bf890b5d428faac9eef21123e23",
+        "format": "allen-mesh-v1",
+        "vertexCount": 2599,
+        "triangleCount": 5190,
+        "boundsUm": [
+          [
+            7549.60009765625,
+            9489.23046875
+          ],
+          [
+            1677.5899658203125,
+            5615.18994140625
+          ],
+          [
+            1660.6300048828125,
+            9717.240234375
+          ]
+        ]
+      },
+      "descendantIds": [
+        502,
+        509,
+        829,
+        845,
+        837,
+        518,
+        853,
+        870,
+        861
+      ],
+      "voxelCount": 16959,
+      "volumeMm3": 2.1198750000000004,
+      "centroidVoxel": [
+        178.587,
+        64.544,
+        113.909
+      ],
+      "centroidUm": [
+        8929.347,
+        3227.207,
+        5695.471
+      ],
+      "focusVoxel": [
+        182,
+        61,
+        56
+      ],
+      "focusUm": [
+        9100,
+        3050,
+        2800
+      ],
+      "boundsVoxel": [
+        [
+          151,
+          189
+        ],
+        [
+          33,
+          113
+        ],
+        [
+          33,
+          195
+        ]
+      ],
+      "alignment": {
+        "meshAnnotationExtentMaxDifferenceUm": 39.23,
+        "note": "The official smoothed mesh is not an exact isosurface of the coarser annotation. Extent differences are reported, not corrected by moving or stretching the mesh."
+      }
+    },
+    {
+      "id": 484682470,
+      "acronym": "ProS",
+      "name": "Prosubiculum",
+      "color": "#58BA48",
+      "parentId": 822,
+      "structureIdPath": [
+        997,
+        8,
+        567,
+        688,
+        695,
+        1089,
+        822,
+        484682470
+      ],
+      "mesh": {
+        "url": "/data/meshes/484682470.bin.gz",
+        "compression": "gzip",
+        "bytes": 40212,
+        "uncompressedBytes": 82172,
+        "sha256": "9c2f7b6d4c6fcc0b1f4f2e5253b0e00ea2cde03fb8cc29c69c18b1d5456809bf",
+        "uncompressedSha256": "cfd16e9a57e8e90789e370eb9c102b625a12573239893868bd5cc9987a537a50",
+        "format": "allen-mesh-v1",
+        "vertexCount": 2295,
+        "triangleCount": 4552,
+        "boundsUm": [
+          [
+            7661.22998046875,
+            9189.5498046875
+          ],
+          [
+            1594.0899658203125,
+            5883.10986328125
+          ],
+          [
+            1552.4300537109375,
+            9821.3896484375
+          ]
+        ]
+      },
+      "descendantIds": [
+        484682470,
+        484682475,
+        484682479,
+        484682483,
+        484682487,
+        484682492,
+        484682496,
+        484682500,
+        484682504
+      ],
+      "voxelCount": 10119,
+      "volumeMm3": 1.2648750000000002,
+      "centroidVoxel": [
+        177.44,
+        73.376,
+        113.966
+      ],
+      "centroidUm": [
+        8872.018,
+        3668.796,
+        5698.305
+      ],
+      "focusVoxel": [
+        181,
+        72,
+        47
+      ],
+      "focusUm": [
+        9050,
+        3600,
+        2350
+      ],
+      "boundsVoxel": [
+        [
+          154,
+          183
+        ],
+        [
+          31,
+          119
+        ],
+        [
+          31,
+          197
+        ]
+      ],
+      "alignment": {
+        "meshAnnotationExtentMaxDifferenceUm": 66.89,
+        "note": "The official smoothed mesh is not an exact isosurface of the coarser annotation. Extent differences are reported, not corrected by moving or stretching the mesh."
+      }
+    },
+    {
+      "id": 589508447,
+      "acronym": "HATA",
+      "name": "Hippocampo-amygdalar transition area",
+      "color": "#33B932",
+      "parentId": 822,
+      "structureIdPath": [
+        997,
+        8,
+        567,
+        688,
+        695,
+        1089,
+        822,
+        589508447
+      ],
+      "mesh": {
+        "url": "/data/meshes/589508447.bin.gz",
+        "compression": "gzip",
+        "bytes": 12800,
+        "uncompressedBytes": 25472,
+        "sha256": "c12ac91ebed9a191ad1cf66fe5747555d3bc7c1a15424d53017093adc23ee7d5",
+        "uncompressedSha256": "cabbe6c2038f76d629c246a6f84b3afef8210f7ec0908cf6666831c47fb1d319",
+        "format": "allen-mesh-v1",
+        "vertexCount": 710,
+        "triangleCount": 1412,
+        "boundsUm": [
+          [
+            8015.0400390625,
+            9271.25
+          ],
+          [
+            5290.2099609375,
+            6259.77001953125
+          ],
+          [
+            2452.97998046875,
+            8912.2197265625
+          ]
+        ]
+      },
+      "descendantIds": [
+        589508447
+      ],
+      "voxelCount": 3388,
+      "volumeMm3": 0.4235000000000001,
+      "centroidVoxel": [
+        175.698,
+        117.583,
+        113.652
+      ],
+      "centroidUm": [
+        8784.888,
+        5879.162,
+        5682.615
+      ],
+      "focusVoxel": [
+        176,
+        118,
+        61
+      ],
+      "focusUm": [
+        8800,
+        5900,
+        3050
+      ],
+      "boundsVoxel": [
+        [
+          160,
+          186
+        ],
+        [
+          105,
+          126
+        ],
+        [
+          48,
+          180
+        ]
+      ],
+      "alignment": {
+        "meshAnnotationExtentMaxDifferenceUm": 87.78,
+        "note": "The official smoothed mesh is not an exact isosurface of the coarser annotation. Extent differences are reported, not corrected by moving or stretching the mesh."
+      }
+    },
+    {
+      "id": 484682508,
+      "acronym": "APr",
+      "name": "Area prostriata",
+      "color": "#33B932",
+      "parentId": 822,
+      "structureIdPath": [
+        997,
+        8,
+        567,
+        688,
+        695,
+        1089,
+        822,
+        484682508
+      ],
+      "mesh": {
+        "url": "/data/meshes/484682508.bin.gz",
+        "compression": "gzip",
+        "bytes": 10279,
+        "uncompressedBytes": 20396,
+        "sha256": "6619e058d36bedd1290eee0ae3e05e67dabb6bf733204251ae32a0db76f063b2",
+        "uncompressedSha256": "cf90c88b68965b9e8bea3c5d0b146359406f65ada9706582cb8460f02fa63f55",
+        "format": "allen-mesh-v1",
+        "vertexCount": 569,
+        "triangleCount": 1130,
+        "boundsUm": [
+          [
+            9299.2802734375,
+            10053.099609375
+          ],
+          [
+            1610.719970703125,
+            3046.89990234375
+          ],
+          [
+            2829.1201171875,
+            8547.6201171875
+          ]
+        ]
+      },
+      "descendantIds": [
+        484682508
+      ],
+      "voxelCount": 2678,
+      "volumeMm3": 0.3347500000000001,
+      "centroidVoxel": [
+        195.037,
+        46.241,
+        114.109
+      ],
+      "centroidUm": [
+        9751.83,
+        2312.043,
+        5705.433
+      ],
+      "focusVoxel": [
+        195,
+        46,
+        67
+      ],
+      "focusUm": [
+        9750,
+        2300,
+        3350
+      ],
+      "boundsVoxel": [
+        [
+          185,
+          201
+        ],
+        [
+          31,
+          64
+        ],
+        [
+          56,
+          172
+        ]
+      ],
+      "alignment": {
+        "meshAnnotationExtentMaxDifferenceUm": 153.1,
+        "note": "The official smoothed mesh is not an exact isosurface of the coarser annotation. Extent differences are reported, not corrected by moving or stretching the mesh."
+      }
     }
   ],
   "regionCatalog": {
     "url": "/data/adult-region-ids.json",
-    "regionCount": 65
+    "regionCount": 107
   },
   "meshFormat": {
     "name": "allen-mesh-v1",
@@ -6700,6 +10571,258 @@
         "filename": "797.obj",
         "bytes": 235389,
         "sha256": "3c77c726898f7ea33cfa3a5fe7d8a94fac87bf2ee57ccd4a43b03304c8fc79b9"
+      },
+      {
+        "url": "https://download.alleninstitute.org/informatics-archive/current-release/mouse_ccf/annotation/ccf_2017/structure_meshes/184.obj",
+        "filename": "184.obj",
+        "bytes": 133406,
+        "sha256": "2c437dba748b58ba2388c7dbe187ede872c0e15db1c804edb4925c66ec12f495"
+      },
+      {
+        "url": "https://download.alleninstitute.org/informatics-archive/current-release/mouse_ccf/annotation/ccf_2017/structure_meshes/993.obj",
+        "filename": "993.obj",
+        "bytes": 803378,
+        "sha256": "fede68a456c4c93f945dd91ce7fd838bf7524821c92353959e4e82c9186e9aff"
+      },
+      {
+        "url": "https://download.alleninstitute.org/informatics-archive/current-release/mouse_ccf/annotation/ccf_2017/structure_meshes/378.obj",
+        "filename": "378.obj",
+        "bytes": 567501,
+        "sha256": "1959ee39e23fc9e83a072e43cbc8d2bafb2bc33679cbd3189787d2ed87363819"
+      },
+      {
+        "url": "https://download.alleninstitute.org/informatics-archive/current-release/mouse_ccf/annotation/ccf_2017/structure_meshes/1057.obj",
+        "filename": "1057.obj",
+        "bytes": 195008,
+        "sha256": "f2239ae7f2a322c0037f7d604e04a4e3334724111982944be9ddfdd007aa4b39"
+      },
+      {
+        "url": "https://download.alleninstitute.org/informatics-archive/current-release/mouse_ccf/annotation/ccf_2017/structure_meshes/677.obj",
+        "filename": "677.obj",
+        "bytes": 213308,
+        "sha256": "29ef4207854d8f240870deac7b2b6aa430f5fb8747a6e01278303dc375eab683"
+      },
+      {
+        "url": "https://download.alleninstitute.org/informatics-archive/current-release/mouse_ccf/annotation/ccf_2017/structure_meshes/1011.obj",
+        "filename": "1011.obj",
+        "bytes": 153613,
+        "sha256": "bdaf3279b2e69a281d899f07e98949b2d0c9e3d9d6eaeaf314cc0126bd7fbe0d"
+      },
+      {
+        "url": "https://download.alleninstitute.org/informatics-archive/current-release/mouse_ccf/annotation/ccf_2017/structure_meshes/1027.obj",
+        "filename": "1027.obj",
+        "bytes": 95007,
+        "sha256": "970a21425c753593a5fbcb6c3797ed059ae51383149390dbbd627b76a3d7f684"
+      },
+      {
+        "url": "https://download.alleninstitute.org/informatics-archive/current-release/mouse_ccf/annotation/ccf_2017/structure_meshes/1018.obj",
+        "filename": "1018.obj",
+        "bytes": 183255,
+        "sha256": "80ce1d6cda56c46946b39cde3134a925558a78e3c44e9a0603c2d3d9f232f3c4"
+      },
+      {
+        "url": "https://download.alleninstitute.org/informatics-archive/current-release/mouse_ccf/annotation/ccf_2017/structure_meshes/402.obj",
+        "filename": "402.obj",
+        "bytes": 87847,
+        "sha256": "1d814a032722dc43585c501170a164fa40ed9be8ebb7353bab470ea6307ee8c8"
+      },
+      {
+        "url": "https://download.alleninstitute.org/informatics-archive/current-release/mouse_ccf/annotation/ccf_2017/structure_meshes/394.obj",
+        "filename": "394.obj",
+        "bytes": 93305,
+        "sha256": "fe53074e77b2562a3d3591960fd16759aedf188587da87a96f000b39b9721dea"
+      },
+      {
+        "url": "https://download.alleninstitute.org/informatics-archive/current-release/mouse_ccf/annotation/ccf_2017/structure_meshes/409.obj",
+        "filename": "409.obj",
+        "bytes": 132966,
+        "sha256": "5af062d1aeaebccd2f752e9803925c06a7b7042a4680231af44bb35fd186d525"
+      },
+      {
+        "url": "https://download.alleninstitute.org/informatics-archive/current-release/mouse_ccf/annotation/ccf_2017/structure_meshes/425.obj",
+        "filename": "425.obj",
+        "bytes": 97431,
+        "sha256": "93b194c897335b486c555845648f84d4f7b2714d7d125f5194023fc8c2aacd5f"
+      },
+      {
+        "url": "https://download.alleninstitute.org/informatics-archive/current-release/mouse_ccf/annotation/ccf_2017/structure_meshes/533.obj",
+        "filename": "533.obj",
+        "bytes": 122038,
+        "sha256": "7116f74361b0b577a6d08595e4e23a45021f04bc04edac83571e2616208c89fa"
+      },
+      {
+        "url": "https://download.alleninstitute.org/informatics-archive/current-release/mouse_ccf/annotation/ccf_2017/structure_meshes/312782574.obj",
+        "filename": "312782574.obj",
+        "bytes": 78153,
+        "sha256": "8a1acbef69f893b609599736fd2ee0a0788f7a3af7152a8631bd73d393d3bf02"
+      },
+      {
+        "url": "https://download.alleninstitute.org/informatics-archive/current-release/mouse_ccf/annotation/ccf_2017/structure_meshes/312782628.obj",
+        "filename": "312782628.obj",
+        "bytes": 140592,
+        "sha256": "fd45efe604fdd61da2557e38337d0d59c8246c9a86a69ecbba58240aeccd18e1"
+      },
+      {
+        "url": "https://download.alleninstitute.org/informatics-archive/current-release/mouse_ccf/annotation/ccf_2017/structure_meshes/31.obj",
+        "filename": "31.obj",
+        "bytes": 432044,
+        "sha256": "33eb0a685dcb06686a9036a850bbd36c8f112eeac1ad569a92ca7bfe871e166b"
+      },
+      {
+        "url": "https://download.alleninstitute.org/informatics-archive/current-release/mouse_ccf/annotation/ccf_2017/structure_meshes/714.obj",
+        "filename": "714.obj",
+        "bytes": 389227,
+        "sha256": "379ccc67118d27691ad02af9f410e2362d62efc727a383975098c524f52fdfc4"
+      },
+      {
+        "url": "https://download.alleninstitute.org/informatics-archive/current-release/mouse_ccf/annotation/ccf_2017/structure_meshes/95.obj",
+        "filename": "95.obj",
+        "bytes": 644737,
+        "sha256": "e7e151b2de8bf155d130258254a11f1c0c72fdb27e738edb78ef570f7606023e"
+      },
+      {
+        "url": "https://download.alleninstitute.org/informatics-archive/current-release/mouse_ccf/annotation/ccf_2017/structure_meshes/254.obj",
+        "filename": "254.obj",
+        "bytes": 674864,
+        "sha256": "6e6e7ee5000a7aa9b29181954f8b683b1e29934da4bb4dd4210d94ecd6795306"
+      },
+      {
+        "url": "https://download.alleninstitute.org/informatics-archive/current-release/mouse_ccf/annotation/ccf_2017/structure_meshes/22.obj",
+        "filename": "22.obj",
+        "bytes": 243926,
+        "sha256": "f775cd6632f3a916230d54c9769ca18ec9e8d51d9e62140a4b3c0be687225e06"
+      },
+      {
+        "url": "https://download.alleninstitute.org/informatics-archive/current-release/mouse_ccf/annotation/ccf_2017/structure_meshes/541.obj",
+        "filename": "541.obj",
+        "bytes": 304789,
+        "sha256": "667fe474f141ed1af9a0a3d05234ebb4505f1fac3f898d954665a0cbbe4281dd"
+      },
+      {
+        "url": "https://download.alleninstitute.org/informatics-archive/current-release/mouse_ccf/annotation/ccf_2017/structure_meshes/922.obj",
+        "filename": "922.obj",
+        "bytes": 153898,
+        "sha256": "370d22d5b695bec8536fe1c728626a5b9379b4a56401bf9334944c71bb6a5dd8"
+      },
+      {
+        "url": "https://download.alleninstitute.org/informatics-archive/current-release/mouse_ccf/annotation/ccf_2017/structure_meshes/895.obj",
+        "filename": "895.obj",
+        "bytes": 202258,
+        "sha256": "0baeb1ff299f7504190b5f27f6715472542639bf8e09fab7e0142cfed38199cc"
+      },
+      {
+        "url": "https://download.alleninstitute.org/informatics-archive/current-release/mouse_ccf/annotation/ccf_2017/structure_meshes/151.obj",
+        "filename": "151.obj",
+        "bytes": 81433,
+        "sha256": "6bcfa9b8485a7b69428078ce0583cf0312407690987d2dafc975854cf9e06933"
+      },
+      {
+        "url": "https://download.alleninstitute.org/informatics-archive/current-release/mouse_ccf/annotation/ccf_2017/structure_meshes/159.obj",
+        "filename": "159.obj",
+        "bytes": 400929,
+        "sha256": "36c6a11cb46e2a6cfecec82be9bbc624f3fa69cc1b4a6549b6d6be019a7f2e07"
+      },
+      {
+        "url": "https://download.alleninstitute.org/informatics-archive/current-release/mouse_ccf/annotation/ccf_2017/structure_meshes/589.obj",
+        "filename": "589.obj",
+        "bytes": 164121,
+        "sha256": "97ad354ca1b45f09e211b7b89beb2c49a61542668b4775850482b32341e7c848"
+      },
+      {
+        "url": "https://download.alleninstitute.org/informatics-archive/current-release/mouse_ccf/annotation/ccf_2017/structure_meshes/814.obj",
+        "filename": "814.obj",
+        "bytes": 77387,
+        "sha256": "c0d4a15586c03846359aa8eced38e9496e539efc94430c7e2df4c96de58f12ae"
+      },
+      {
+        "url": "https://download.alleninstitute.org/informatics-archive/current-release/mouse_ccf/annotation/ccf_2017/structure_meshes/961.obj",
+        "filename": "961.obj",
+        "bytes": 876878,
+        "sha256": "ac6cb03dbd3a8674ee17ede7509735959b332e73f57fb977bf70c5ae52dcd214"
+      },
+      {
+        "url": "https://download.alleninstitute.org/informatics-archive/current-release/mouse_ccf/annotation/ccf_2017/structure_meshes/619.obj",
+        "filename": "619.obj",
+        "bytes": 44725,
+        "sha256": "5b86d64403cc983e8a1b8d6fac4a4ad9e3f80a7b443c5949ba299c847fd25ae1"
+      },
+      {
+        "url": "https://download.alleninstitute.org/informatics-archive/current-release/mouse_ccf/annotation/ccf_2017/structure_meshes/631.obj",
+        "filename": "631.obj",
+        "bytes": 308762,
+        "sha256": "ccb0a4b42fb0e4dae6d3391040682393e28165e02d0c6acd72cd64679bcc170c"
+      },
+      {
+        "url": "https://download.alleninstitute.org/informatics-archive/current-release/mouse_ccf/annotation/ccf_2017/structure_meshes/788.obj",
+        "filename": "788.obj",
+        "bytes": 161465,
+        "sha256": "ac2ce2b09e8d0bf9941db8ebd3262f2f6000178bf9d04070e3f9e390dee12a53"
+      },
+      {
+        "url": "https://download.alleninstitute.org/informatics-archive/current-release/mouse_ccf/annotation/ccf_2017/structure_meshes/566.obj",
+        "filename": "566.obj",
+        "bytes": 136365,
+        "sha256": "945fc0b5fb413828ef63f7335c780a73c931606c122274e7c2feaf6a41a41dcc"
+      },
+      {
+        "url": "https://download.alleninstitute.org/informatics-archive/current-release/mouse_ccf/annotation/ccf_2017/structure_meshes/423.obj",
+        "filename": "423.obj",
+        "bytes": 250059,
+        "sha256": "f27b17fc3cd3075caddbffde5cf3f8b760d2735168e57d7cacd08714c43061af"
+      },
+      {
+        "url": "https://download.alleninstitute.org/informatics-archive/current-release/mouse_ccf/annotation/ccf_2017/structure_meshes/982.obj",
+        "filename": "982.obj",
+        "bytes": 21662,
+        "sha256": "23758cdc0c51e8668edbfacd0db9d96f39f18875c57f2fe481e4579441880bfb"
+      },
+      {
+        "url": "https://download.alleninstitute.org/informatics-archive/current-release/mouse_ccf/annotation/ccf_2017/structure_meshes/19.obj",
+        "filename": "19.obj",
+        "bytes": 48140,
+        "sha256": "6ce3d9c3104bbd4124f725ded5d94fa181874e8fca2f56910ba67143e529663d"
+      },
+      {
+        "url": "https://download.alleninstitute.org/informatics-archive/current-release/mouse_ccf/annotation/ccf_2017/structure_meshes/843.obj",
+        "filename": "843.obj",
+        "bytes": 154236,
+        "sha256": "a0536ebdac3ed8f6aa4779a95ff34e22b95d0afefa7ace522205c175bf774789"
+      },
+      {
+        "url": "https://download.alleninstitute.org/informatics-archive/current-release/mouse_ccf/annotation/ccf_2017/structure_meshes/1037.obj",
+        "filename": "1037.obj",
+        "bytes": 137959,
+        "sha256": "f4aa8d81652b005eedce4c4ac1eb8c5dfab691db80bc7e8cec1b2ccfc138fd98"
+      },
+      {
+        "url": "https://download.alleninstitute.org/informatics-archive/current-release/mouse_ccf/annotation/ccf_2017/structure_meshes/1084.obj",
+        "filename": "1084.obj",
+        "bytes": 127567,
+        "sha256": "c6066b38e0c7f0956bc91b7527d460f84381c24b833c88c0679729cea16a496b"
+      },
+      {
+        "url": "https://download.alleninstitute.org/informatics-archive/current-release/mouse_ccf/annotation/ccf_2017/structure_meshes/502.obj",
+        "filename": "502.obj",
+        "bytes": 322361,
+        "sha256": "2e9fb32dd8475e8217e91a76f1544cba2f9f8083b3e70954b6c0ac211e87a97f"
+      },
+      {
+        "url": "https://download.alleninstitute.org/informatics-archive/current-release/mouse_ccf/annotation/ccf_2017/structure_meshes/484682470.obj",
+        "filename": "484682470.obj",
+        "bytes": 282053,
+        "sha256": "026d683bd512af57fe57b5a4209a694fe7c5942e0416b8359dddf34dee154f4a"
+      },
+      {
+        "url": "https://download.alleninstitute.org/informatics-archive/current-release/mouse_ccf/annotation/ccf_2017/structure_meshes/589508447.obj",
+        "filename": "589508447.obj",
+        "bytes": 81665,
+        "sha256": "91b391191360a46967f9f9654824b5e60f6f378375c606963e135a3d087f8b9f"
+      },
+      {
+        "url": "https://download.alleninstitute.org/informatics-archive/current-release/mouse_ccf/annotation/ccf_2017/structure_meshes/484682508.obj",
+        "filename": "484682508.obj",
+        "bytes": 65080,
+        "sha256": "67257b242d1aafbe518f02caf9f2b38a5e984c5852cf4dad330ddcfdfa7c6203"
       }
     ],
     "originalHeaders": {
@@ -6737,5 +10860,124 @@
     "termsUrl": "https://alleninstitute.org/legal/terms-of-use",
     "citationPolicyUrl": "https://alleninstitute.org/citation-policy/",
     "usage": "Allen Institute Terms of Use apply. Research and other noncommercial uses are permitted with attribution. Commercial use requires the Institute's written permission."
-  }
+  },
+  "corticalCoverage": [
+    {
+      "rootId": 315,
+      "acronym": "Isocortex",
+      "regionIds": [
+        972,
+        44,
+        385,
+        985,
+        322,
+        1002,
+        184,
+        993,
+        378,
+        1057,
+        677,
+        1011,
+        1027,
+        1018,
+        402,
+        394,
+        409,
+        425,
+        533,
+        312782574,
+        312782628,
+        31,
+        714,
+        95,
+        254,
+        22,
+        541,
+        922,
+        895
+      ],
+      "annotationVoxelCount": 986098,
+      "coveredVoxelCount": 986098,
+      "coverageFraction": 1.0,
+      "overlapVoxelCount": 0,
+      "uncoveredLabels": []
+    },
+    {
+      "rootId": 695,
+      "acronym": "CTXpl",
+      "regionIds": [
+        972,
+        44,
+        382,
+        385,
+        985,
+        322,
+        507,
+        726,
+        463,
+        909,
+        1002,
+        184,
+        993,
+        378,
+        1057,
+        677,
+        1011,
+        1027,
+        1018,
+        402,
+        394,
+        409,
+        425,
+        533,
+        312782574,
+        312782628,
+        31,
+        714,
+        95,
+        254,
+        22,
+        541,
+        922,
+        895,
+        151,
+        159,
+        589,
+        814,
+        961,
+        619,
+        631,
+        788,
+        566,
+        423,
+        982,
+        19,
+        843,
+        1037,
+        1084,
+        502,
+        484682470,
+        589508447,
+        484682508
+      ],
+      "annotationVoxelCount": 1700484,
+      "coveredVoxelCount": 1657253,
+      "coverageFraction": 0.9745772380098843,
+      "overlapVoxelCount": 0,
+      "uncoveredLabels": [
+        {
+          "id": 698,
+          "acronym": "OLF",
+          "name": "Olfactory areas",
+          "voxelCount": 39798
+        },
+        {
+          "id": 1089,
+          "acronym": "HPF",
+          "name": "Hippocampal formation",
+          "voxelCount": 3433
+        }
+      ]
+    }
+  ]
 }

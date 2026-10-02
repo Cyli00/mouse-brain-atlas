@@ -3,6 +3,7 @@
 
 import argparse
 import array
+from collections import Counter
 import gzip
 import json
 import math
@@ -16,6 +17,8 @@ from data_assets import sha256
 def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--data", type=Path, default=Path(__file__).resolve().parents[1] / "public/data")
+    parser.add_argument("--source-cache", type=Path,
+                        help="Compare cached official OBJ files with their provenance hashes and packed payloads")
     args = parser.parse_args()
     manifest = json.loads((args.data / "manifest.json").read_text())
     ontology = json.loads((args.data / "ontology.json").read_text())
@@ -49,6 +52,35 @@ def main() -> None:
     print(f"Verified template and annotation: {voxel_count:,} voxels, {dimensions}, {spacing[0]} µm")
 
     region_ids = {region["id"] for region in manifest["regions"]}
+    for item in catalog:
+        assert all(item[key] == by_id[item["id"]][key] for key in ["id", "acronym", "name"])
+    label_counts = Counter(annotation)
+    for report in manifest["corticalCoverage"]:
+        root_id = report["rootId"]
+        selected = {identifier for identifier in region_ids if root_id in by_id[identifier]["structureIdPath"]}
+        assert selected == set(report["regionIds"])
+        counts = {label: count for label, count in label_counts.items()
+                  if label and root_id in by_id[label]["structureIdPath"]}
+        covered = 0
+        missing = []
+        for label, count in sorted(counts.items()):
+            parents = selected.intersection(by_id[label]["structureIdPath"])
+            assert len(parents) <= 1, f"Cortical overlap at label {label}: {parents}"
+            if parents:
+                covered += count
+            else:
+                missing.append({"id": label, "acronym": by_id[label]["acronym"],
+                                "name": by_id[label]["name"], "voxelCount": count})
+        assert report["annotationVoxelCount"] == sum(counts.values())
+        assert report["coveredVoxelCount"] == covered
+        assert report["coverageFraction"] == covered / sum(counts.values())
+        assert report["overlapVoxelCount"] == 0
+        assert report["uncoveredLabels"] == missing
+        if root_id == 315:
+            assert not missing
+        else:
+            assert {item["id"] for item in missing} == {698, 1089}
+        print(f"Verified {report['acronym']} coverage: {covered:,}/{sum(counts.values()):,} voxels, no overlaps")
     membership = {
         item["id"]: region_ids.intersection(item["structureIdPath"])
         for item in ontology
@@ -109,6 +141,34 @@ def main() -> None:
             assert min(values) >= -spacing[axis]
             assert max(values) <= dimensions[axis] * spacing[axis] + spacing[axis]
     print(f"Verified {len(meshes)} meshes: valid triangle indices, finite coordinates, Allen volume bounds")
+    if args.source_cache:
+        source_by_name = {source["filename"]: source for source in manifest["provenance"]["sources"]}
+        compared = 0
+        for mesh in meshes:
+            filename = Path(mesh["url"]).name.removesuffix(".bin.gz") + ".obj"
+            source_path = args.source_cache / filename
+            if not source_path.exists():
+                continue
+            source = source_by_name[filename]
+            data = source_path.read_bytes()
+            assert len(data) == source["bytes"]
+            assert sha256(data) == source["sha256"]
+            coordinates, indices = [], []
+            for line in data.decode().splitlines():
+                fields = line.split()
+                if fields and fields[0] == "v":
+                    coordinates.extend(float(value) for value in fields[1:4])
+                elif fields and fields[0] == "f":
+                    face = [int(value.split("/")[0]) - 1 for value in fields[1:]]
+                    for index in range(1, len(face) - 1):
+                        indices.extend([face[0], face[index], face[index + 1]])
+            raw = (struct.pack("<II", len(coordinates) // 3, len(indices) // 3)
+                   + struct.pack(f"<{len(coordinates)}f", *coordinates)
+                   + struct.pack(f"<{len(indices)}I", *indices))
+            assert raw == unpack(mesh), f"OBJ vertex or triangle mismatch: {filename}"
+            compared += 1
+        assert compared, "No cached official OBJ files found"
+        print(f"Verified {compared} packed mesh payloads against official OBJ vertices and triangles")
     differences = sorted(manifest["regions"], key=lambda region: region["alignment"]["meshAnnotationExtentMaxDifferenceUm"], reverse=True)
     print("Largest mesh/annotation extent differences: " + ", ".join(
         f"{region['acronym']} {region['alignment']['meshAnnotationExtentMaxDifferenceUm']} µm"

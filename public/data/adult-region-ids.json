@@ -323,5 +323,215 @@
     "id": 797,
     "acronym": "ZI",
     "name": "Zona incerta"
+  },
+  {
+    "id": 184,
+    "acronym": "FRP",
+    "name": "Frontal pole, cerebral cortex"
+  },
+  {
+    "id": 993,
+    "acronym": "MOs",
+    "name": "Secondary motor area"
+  },
+  {
+    "id": 378,
+    "acronym": "SSs",
+    "name": "Supplemental somatosensory area"
+  },
+  {
+    "id": 1057,
+    "acronym": "GU",
+    "name": "Gustatory areas"
+  },
+  {
+    "id": 677,
+    "acronym": "VISC",
+    "name": "Visceral area"
+  },
+  {
+    "id": 1011,
+    "acronym": "AUDd",
+    "name": "Dorsal auditory area"
+  },
+  {
+    "id": 1027,
+    "acronym": "AUDpo",
+    "name": "Posterior auditory area"
+  },
+  {
+    "id": 1018,
+    "acronym": "AUDv",
+    "name": "Ventral auditory area"
+  },
+  {
+    "id": 402,
+    "acronym": "VISal",
+    "name": "Anterolateral visual area"
+  },
+  {
+    "id": 394,
+    "acronym": "VISam",
+    "name": "Anteromedial visual area"
+  },
+  {
+    "id": 409,
+    "acronym": "VISl",
+    "name": "Lateral visual area"
+  },
+  {
+    "id": 425,
+    "acronym": "VISpl",
+    "name": "Posterolateral visual area"
+  },
+  {
+    "id": 533,
+    "acronym": "VISpm",
+    "name": "posteromedial visual area"
+  },
+  {
+    "id": 312782574,
+    "acronym": "VISli",
+    "name": "Laterointermediate area"
+  },
+  {
+    "id": 312782628,
+    "acronym": "VISpor",
+    "name": "Postrhinal area"
+  },
+  {
+    "id": 31,
+    "acronym": "ACA",
+    "name": "Anterior cingulate area"
+  },
+  {
+    "id": 714,
+    "acronym": "ORB",
+    "name": "Orbital area"
+  },
+  {
+    "id": 95,
+    "acronym": "AI",
+    "name": "Agranular insular area"
+  },
+  {
+    "id": 254,
+    "acronym": "RSP",
+    "name": "Retrosplenial area"
+  },
+  {
+    "id": 22,
+    "acronym": "PTLp",
+    "name": "Posterior parietal association areas"
+  },
+  {
+    "id": 541,
+    "acronym": "TEa",
+    "name": "Temporal association areas"
+  },
+  {
+    "id": 922,
+    "acronym": "PERI",
+    "name": "Perirhinal area"
+  },
+  {
+    "id": 895,
+    "acronym": "ECT",
+    "name": "Ectorhinal area"
+  },
+  {
+    "id": 151,
+    "acronym": "AOB",
+    "name": "Accessory olfactory bulb"
+  },
+  {
+    "id": 159,
+    "acronym": "AON",
+    "name": "Anterior olfactory nucleus"
+  },
+  {
+    "id": 589,
+    "acronym": "TT",
+    "name": "Taenia tecta"
+  },
+  {
+    "id": 814,
+    "acronym": "DP",
+    "name": "Dorsal peduncular area"
+  },
+  {
+    "id": 961,
+    "acronym": "PIR",
+    "name": "Piriform area"
+  },
+  {
+    "id": 619,
+    "acronym": "NLOT",
+    "name": "Nucleus of the lateral olfactory tract"
+  },
+  {
+    "id": 631,
+    "acronym": "COA",
+    "name": "Cortical amygdalar area"
+  },
+  {
+    "id": 788,
+    "acronym": "PAA",
+    "name": "Piriform-amygdalar area"
+  },
+  {
+    "id": 566,
+    "acronym": "TR",
+    "name": "Postpiriform transition area"
+  },
+  {
+    "id": 423,
+    "acronym": "CA2",
+    "name": "Field CA2"
+  },
+  {
+    "id": 982,
+    "acronym": "FC",
+    "name": "Fasciola cinerea"
+  },
+  {
+    "id": 19,
+    "acronym": "IG",
+    "name": "Induseum griseum"
+  },
+  {
+    "id": 843,
+    "acronym": "PAR",
+    "name": "Parasubiculum"
+  },
+  {
+    "id": 1037,
+    "acronym": "POST",
+    "name": "Postsubiculum"
+  },
+  {
+    "id": 1084,
+    "acronym": "PRE",
+    "name": "Presubiculum"
+  },
+  {
+    "id": 502,
+    "acronym": "SUB",
+    "name": "Subiculum"
+  },
+  {
+    "id": 484682470,
+    "acronym": "ProS",
+    "name": "Prosubiculum"
+  },
+  {
+    "id": 589508447,
+    "acronym": "HATA",
+    "name": "Hippocampo-amygdalar transition area"
+  },
+  {
+    "id": 484682508,
+    "acronym": "APr",
+    "name": "Area prostriata"
   }
 ]

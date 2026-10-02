@@ -6,7 +6,7 @@ import { LOCALE_STORAGE_KEY, setLocale, storedLocale, translateText } from "../s
 
 test("scientific content and all packaged vessel names have complete English translations", async () => {
   const strings = new Set<string>();
-  for (const path of ["regions", "embryo", "circuits", "white-matter"]) {
+  for (const path of ["regions", "cortical-regions", "embryo", "circuits", "white-matter"]) {
     const source = await readFile(new URL(`../src/data/${path}.ts`, import.meta.url), "utf8");
     const file = ts.createSourceFile(path, source, ts.ScriptTarget.Latest, true);
     const visit = (node: ts.Node) => {

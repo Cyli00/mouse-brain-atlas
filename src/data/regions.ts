@@ -1,3 +1,5 @@
+import { corticalRegionOutlines } from "./cortical-regions";
+
 export type BrainReference = {
   title: string;
   authors: string;
@@ -18,6 +20,7 @@ export type BrainRegion = {
   function: string;
   evidence: string;
   references: BrainReference[];
+  evidenceScope?: "anatomy";
 };
 
 export const atlasReferences: BrainReference[] = [
@@ -1250,6 +1253,21 @@ const functionalEvidence: Partial<Record<number, RegionEvidence>> = {
 
 export const brainRegions: BrainRegion[] = [
   ...coreBrainRegions,
+  ...corticalRegionOutlines.map((region): BrainRegion => ({
+    ...region,
+    evidenceScope: "anatomy",
+    summary: "采用 Allen CCFv3 2017 官方脑区表面，包含本体中属于该区的已标注下级分区。英文名称、缩写和结构编号保留官方定义。",
+    function: "用于查看这一结构的位置、范围及其与邻近脑区的关系。此条目未收录特定功能实验。",
+    evidence: "依据 Allen 解剖本体和官方 CCFv3 表面。解剖标签支持命名与定位，不证明独立的行为功能；未标注到细分区域的体素不会被推定归属。",
+    references: [atlasReferences[0], {
+      title: "Allen Mouse Brain Atlas structure ontology · graph 1",
+      authors: "Allen Institute for Brain Science",
+      year: 2026,
+      journal: "Allen structure graph 1 · API checked 2026-10-03",
+      url: "https://api.brain-map.org/api/v2/structure_graph_download/1.json",
+      finding: "以官方结构 ID 对照英文名称、缩写、颜色及祖先层级。中文名称仅作显示译名，英文名称与 ID 用于核对来源。",
+    }],
+  })),
   ...additionalRegionOutlines.map((region): BrainRegion => ({
     ...region,
     evidence:

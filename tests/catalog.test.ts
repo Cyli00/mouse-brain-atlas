@@ -7,7 +7,9 @@ import {
   type BrainRegion,
 } from "../src/data/regions";
 import { brainCircuits } from "../src/data/circuits";
+import { corticalRegionOutlines } from "../src/data/cortical-regions";
 import { embryoStages } from "../src/data/embryo";
+import { readWorkspaceRoute, workspaceUrl } from "../src/lib/workspace-route";
 
 const publicRoot = new URL("../public/", import.meta.url);
 const readJson = async (url: string) =>
@@ -17,9 +19,20 @@ const readJson = async (url: string) =>
 const adultManifest = await readJson("/data/manifest.json");
 const adultCatalog: { id: number; acronym: string; name: string }[] =
   await readJson("/data/adult-region-ids.json");
+type AdultStructure = {
+  id: number;
+  acronym: string;
+  name: string;
+  color: string;
+  structureIdPath: number[];
+};
+const adultOntology: AdultStructure[] = await readJson("/data/ontology.json");
+const adultOntologyById = new Map(
+  adultOntology.map((structure) => [structure.id, structure]),
+);
 const adultManifestById = new Map<
   number,
-  { id: number; acronym: string; mesh: { url: string }; focusVoxel: number[] }
+  AdultStructure & { mesh: { url: string }; focusVoxel: number[] }
 >(adultManifest.regions.map((region: { id: number }) => [region.id, region]));
 
 function verifyReference(reference: BrainReference) {
@@ -47,9 +60,9 @@ function verifyRegionText(region: BrainRegion) {
   region.references.forEach(verifyReference);
 }
 
-test("all 65 adult region descriptions resolve to the same Allen IDs as the packaged meshes", () => {
-  assert.equal(brainRegions.length, 65);
-  assert.equal(new Set(brainRegions.map((region) => region.id)).size, 65);
+test("all 107 adult directory entries retain official identities and resolve to packaged meshes", () => {
+  assert.equal(brainRegions.length, 107);
+  assert.equal(new Set(brainRegions.map((region) => region.id)).size, 107);
   const sortedIds = (rows: { id: number }[]) =>
     rows.map((row) => row.id).sort((a, b) => a - b);
   assert.deepEqual(sortedIds(brainRegions), sortedIds(adultCatalog));
@@ -59,11 +72,59 @@ test("all 65 adult region descriptions resolve to the same Allen IDs as the pack
   );
   for (const region of brainRegions) {
     const anatomy = adultManifestById.get(region.id)!;
+    const official = adultOntologyById.get(region.id)!;
+    assert.ok(official, `unknown Allen structure ${region.id}`);
     assert.equal(region.acronym, anatomy.acronym);
     assert.equal(region.acronym, catalogById.get(region.id)!.acronym);
+    assert.equal(region.acronym, official.acronym);
+    assert.equal(region.englishName, official.name);
+    assert.equal(region.englishName, anatomy.name);
+    assert.equal(region.englishName, catalogById.get(region.id)!.name);
+    assert.equal(region.color, official.color);
+    assert.equal(region.color, anatomy.color);
     assert.ok(anatomy.mesh.url.startsWith("/data/meshes/"));
     assert.equal(anatomy.focusVoxel.length, 3);
     verifyRegionText(region);
+  }
+});
+
+test("new cortical entries preserve anatomical evidence, official hierarchy and shareable selection", () => {
+  assert.equal(corticalRegionOutlines.length, 42);
+  const directoryById = new Map(brainRegions.map((region) => [region.id, region]));
+  const categoryRoots = new Map([
+    ["大脑皮层", 315],
+    ["嗅觉系统", 698],
+    ["海马结构", 1089],
+  ]);
+  const config = { embryonic: false, regions: brainRegions, initialId: 382 };
+  for (const outline of corticalRegionOutlines) {
+    const region = directoryById.get(outline.id)!;
+    const official = adultOntologyById.get(outline.id)!;
+    assert.ok(region, `${outline.acronym} must be selectable`);
+    assert.equal(region.name, outline.name);
+    assert.equal(region.evidenceScope, "anatomy");
+    assert.deepEqual(
+      new Set(region.references.map((reference) => reference.url)),
+      new Set([
+        "https://doi.org/10.1016/j.cell.2020.04.007",
+        "https://api.brain-map.org/api/v2/structure_graph_download/1.json",
+      ]),
+      `${outline.acronym} must cite its anatomical sources`,
+    );
+    const categoryRoot = categoryRoots.get(region.category);
+    assert.ok(categoryRoot, `unsupported cortical category ${region.category}`);
+    assert.ok(
+      official.structureIdPath.includes(categoryRoot),
+      `${outline.acronym} must remain in its official cortical branch`,
+    );
+    const url = workspaceUrl("https://atlas.example/", {
+      selected: region.id,
+      embryonic: false,
+      sliceSource: "allen",
+      embryoLevel: "fine",
+      mapView: true,
+    });
+    assert.equal(readWorkspaceRoute(config, url.search).selectedId, region.id);
   }
 });
 

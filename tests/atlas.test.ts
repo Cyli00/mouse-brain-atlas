@@ -365,7 +365,7 @@ test("the browser loader reads the actual Allen volume and preserves its binary 
   assert.deepEqual(atlas.dimensions, [264, 160, 228]);
   assert.equal(atlas.spacing, 50);
   assert.equal(atlas.rootId, 997);
-  assert.equal(manifest.regions.length, 65);
+  assert.equal(manifest.regions.length, 107);
   const count = 264 * 160 * 228;
   assert.equal(atlas.template.length, count);
   assert.equal(atlas.annotation.length, count);
